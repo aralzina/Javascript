@@ -386,7 +386,7 @@ var TABLE_FUNCTIONS = {
           : (increaseBy += 0)
         // column data here
         let hdr = row['HEADER']
-        if (columns[hdr]) {
+        if (typeof columns[hdr] !== 'undefined') {
           columns[hdr]++
         }
       })
