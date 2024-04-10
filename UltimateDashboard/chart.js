@@ -1,3 +1,64 @@
+/**
+ * If all legend items are visible, hide all others except the clicked item
+ * If the selected item isn't visible, hide all others and show only the clicked item
+ * If all other items are hidden and the selected item already is, show all again
+ * @param {*} e
+ * @param {*} legendItem
+ * @param {*} legend
+ */
+const legendHideAllHandler = (e, legendItem, legend) => {
+  const index = legendItem.datasetIndex
+  const ci = legend.chart
+
+  // this will go one of two ways...
+  // if the item clicked is already shown, then undo the filter entirely
+  // otherwise only show the clicked item
+  let selected = false
+  let others = true
+
+  legend.chart.data.datasets.forEach((d, i) => {
+    if (i === index) {
+      if (ci.isDatasetVisible(index)) {
+        selected = true
+      }
+    } else {
+      if (!ci.isDatasetVisible(i)) {
+        others = false
+      }
+    }
+  })
+  // if this is already visible and other aren't
+  // make all visible
+  if (selected && !others) {
+    legend.chart.data.datasets.forEach((d, i) => {
+      ci.show(i)
+      d.hidden = false
+    })
+  } else {
+    //otherwise only show the clicked item
+    legend.chart.data.datasets.forEach((d, i) => {
+      if (i !== index) {
+        ci.hide(i)
+        d.hidden = true
+      }
+    })
+
+    ci.show(index)
+    legendItem.hidden = false
+  }
+
+  ci.update()
+}
+
+/**
+ *
+ * @param {*} dataset
+ * @param {*} axes
+ * @param {*} chartBy
+ * @param {*} xAxisDataType
+ * @param {*} titles
+ * @returns
+ */
 var chart_data_args = function (dataset, axes, chartBy, xAxisDataType, titles) {
   let xName = ''
   let yName = ''
@@ -156,7 +217,7 @@ var CHART_DATA = {
 
     // add labels to results
     results['data']['labels'] = xAxisNames
-
+    results.options.plugins.legend.onClick = legendHideAllHandler
     // good riddance
     return results
   },
