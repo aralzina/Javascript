@@ -328,9 +328,6 @@ var TABLE_FUNCTIONS = {
   },
   QDO: function (data, input) {
     function L0 (data, input) {
-      // current date
-      let d = new Date()
-
       // create row for employee data
       let row = create('tr')
       input[2].push(row)
@@ -346,10 +343,28 @@ var TABLE_FUNCTIONS = {
       let columns = {}
       input.push(columns)
 
+      /*
       // how many months between min date and now
       let total_columns = monthDiff(data[0]['min_date'], d)
       let colDate = new Date(data[0]['min_date'])
+      */
 
+      // Updated 4/10/24
+      // Pre-determine the max amount of data presented
+      // Let's start with last 3 months including current month
+      let total_columns = 3
+      // loop and create column name map
+      // and set default value to 0
+      for (let i = total_columns - 1; i >= 0; i--) {
+        let colDate = new Date()
+        colDate.setMonth(colDate.getMonth() - i)
+        let month = (colDate.getMonth() + 1).toString()
+        let year = (colDate.getYear() - 100).toString()
+        let hdr = month + '/' + year
+        columns[hdr] = 0
+      }
+
+      /*
       // loop and create column name map
       // and set default value to 0
       for (let i = 0; i <= total_columns; i++) {
@@ -359,16 +374,23 @@ var TABLE_FUNCTIONS = {
         let year = (tempDate.getYear() - 100).toString()
         let hdr = month + '/' + year
         columns[hdr] = 0
-      }
+      }*/
 
       // tally up how many QDOs for each month
+      let increaseBy = 0
       data.forEach(row => {
-        row['created'].getMonth() === d.getMonth()
-          ? input[0]++
-          : (input[0] += 0)
+        row['created'].getMonth() === new Date().getMonth()
+          ? increaseBy === 0
+            ? increaseBy++
+            : (increaseBy += 0)
+          : (increaseBy += 0)
         // column data here
-        columns[row['HEADER']]++
+        let hdr = row['HEADER']
+        if (columns[hdr]) {
+          columns[hdr]++
+        }
       })
+      input[0] += increaseBy
 
       // create cells for each column and apply value
       Object.keys(columns).forEach(k => {
