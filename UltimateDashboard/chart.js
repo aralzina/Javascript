@@ -130,7 +130,15 @@ var chart_data_args = function (dataset, axes, chartBy, xAxisDataType, titles) {
   }
 }
 
+/**
+ * All chart Data functions
+ */
 var CHART_DATA = {
+  /**
+   * Availability graphs
+   * @param {*} args
+   * @returns
+   */
   AVAILABILITY: function (args) {
     // pull data out of args
     //  args
@@ -221,6 +229,11 @@ var CHART_DATA = {
     // good riddance
     return results
   },
+  /**
+   * QDO Graph
+   * @param {*} args
+   * @returns
+   */
   QDO: function (args) {
     // pull data out of args
     //  args
@@ -380,6 +393,11 @@ var CHART_DATA = {
     }
     return cfg
   },
+  /**
+   * Good Catch graph
+   * @param {*} args
+   * @returns
+   */
   GOOD_CATCH: function (args) {
     // pull data out of args
     //  args

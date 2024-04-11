@@ -97,7 +97,14 @@ function otherRecursion (dataset, func) {
   return results
 }
 
-// Create table components from datasets
+/**
+ * Functions that are fed into recursion functions
+ * for aggregating datasets. Each function takes the
+ * same args and is titled for the datasetit works for
+ * @param {Array} data the
+ * @param {Array} input
+ * @returns {Array}
+ */
 var TABLE_FUNCTIONS = {
   UE: function (data, input) {
     let UE_GOALS = { GREEN: 80, YELLOW: 75 }
@@ -857,15 +864,14 @@ var TABLE_FUNCTIONS = {
   }
 }
 
-/* 
-    Use this function instead of nested loops. It works
-    and there are no worries about having to nest loops
-    via manual coding.
-  
-    args = data,columns
-    data: XMLHTTPRequest data
-    columns: list of column names in reverse order ["col3","col2","col1"]
-  */
+/**
+ * Use this function instead of nested loops. It works
+ * and there are no worries about having to nest loops
+ * via manual coding.
+ * @param {Array} data XMLHTTPRequest data
+ * @param {Array} columns list of column names in reverse order ["col3","col2","col1"]
+ * @returns
+ */
 function loop (data, columns) {
   let dictionary = {}
   let column = columns.pop()
@@ -882,15 +888,24 @@ function loop (data, columns) {
   return dictionary
 }
 
-/*
-    joinData takes in 2 datasets and joins dataset2 to dataset1
-    where column1 = column2 and returns a single joined dataset
-  */
+/**
+ * joinData takes in 2 datasets and joins dataset2 to dataset1
+ * where column1 = column2 and returns a single joined dataset
+ * @param {*} dataset1
+ * @param {*} dataset2
+ * @param {String} column1
+ * @param {String} column2
+ * @returns
+ */
 function joinData (dataset1, dataset2, column1, column2) {
-  /*
-    used to verify name doesn't already exist. Adds a number
-    to the end of the column name if it does
-    */
+  /**
+   * used to verify name doesn't already exist. Adds a number
+   * to the end of the column name if it does
+   * @param {*} row
+   * @param {*} key
+   * @param {Number} num
+   * @returns {String}
+   */
   function checkColumnName (row, key, num) {
     let result = ''
     if (typeof row[key] !== 'undefined') {
@@ -924,10 +939,12 @@ function joinData (dataset1, dataset2, column1, column2) {
   return dataset1
 }
 
-/*
-    The purpose of getDepth() is to return the number of dictionaries
-    until the array of data is reached
-  */
+/**
+ *  The purpose of getDepth() is to return the number of dictionaries
+ * until the array of data is reached
+ * @param {*} dataset
+ * @returns {Number}
+ */
 function getDepth (dataset) {
   let depth = 0
   if (!Array.isArray(dataset)) {
@@ -940,6 +957,12 @@ function getDepth (dataset) {
   return depth
 }
 
+/**
+ * Compare two dicts and return if they're the same or not
+ * @param {HTMLCollection|Map} dict1
+ * @param {HTMLCollection|Map} dict2
+ * @returns {boolean}
+ */
 function compareDicts (dict1, dict2) {
   let keys1 = Object.keys(dict1)
   let keys2 = Object.keys(dict2)
