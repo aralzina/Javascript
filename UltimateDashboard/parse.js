@@ -71,15 +71,18 @@ function query (p) {
               100
             ).toFixed(1)
             let legend =
-              '<table><tbody><tr><td style="background-color: lime;"><span>&gt;=' +
-              target.toString() +
+              '<table><tbody><tr><td style="background-color: lime;"><span>&gt;' +
+              (target * 0.75).toString() +
               '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
               (target * 0.75).toString() +
+              '% and &gt;' +
+              (target * 0.5).toString() +
               '%</span></td></tr><td style="background-color: red;"><span>&lt;=' +
               (target * 0.5).toString() +
               '%</span></td></tr></tbody></table>'
-
-            DATA_NOTES.QDO.push(legend)
+            if (DATA_NOTES.QDO[DATA_NOTES.QDO.length - 1] !== legend) {
+              DATA_NOTES.QDO.push(legend)
+            }
             PARSE_FUNCTIONS.QDO(cleanData(data.value))
             LOAD_STATUS.QDO = true
             break
