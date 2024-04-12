@@ -50,6 +50,11 @@ function query (p) {
       //we want query with data that will be > 1
       if (data.value.length > 0) {
         let q = p.QUERY
+
+        // setup date for legend
+        let d = new Date()
+        let dt = { month: d.getMonth() + 1, year: d.getYear() + 1900 }
+
         // case for query
         switch (q) {
           //cached datasets
@@ -64,13 +69,11 @@ function query (p) {
             break
 
           case SHARED_DATASETS.QDO.QUERY_TYPE:
-            let d = new Date()
-            let dt = { month: d.getMonth() + 1, year: d.getYear() + 1900 }
-            let target = (
+            let qdoTarget = (
               (d.getDate() / daysInMonth(dt.year, dt.month)) *
               100
             ).toFixed(1)
-            let legend =
+            let qdoLegend =
               '<table><tbody><tr><th>Goal for ' +
               dt.month.toString() +
               '/' +
@@ -78,16 +81,16 @@ function query (p) {
               '/' +
               dt.year.toString() +
               '</th></tr><tr><td style="background-color: lime;"><span>&gt;' +
-              (target * 0.75).toString() +
+              (qdoTarget * 0.75).toString() +
               '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
-              (target * 0.75).toString() +
+              (qdoTarget * 0.75).toString() +
               '% and &gt;' +
-              (target * 0.5).toString() +
+              (qdoTarget * 0.5).toString() +
               '%</span></td></tr><td style="background-color: red;"><span>&lt;=' +
-              (target * 0.5).toString() +
+              (qdoTarget * 0.5).toString() +
               '%</span></td></tr></tbody></table>'
-            if (DATA_NOTES.QDO[DATA_NOTES.QDO.length - 1] !== legend) {
-              DATA_NOTES.QDO.push(legend)
+            if (DATA_NOTES.QDO[DATA_NOTES.QDO.length - 1] !== qdoLegend) {
+              DATA_NOTES.QDO.push(qdoLegend)
             }
             PARSE_FUNCTIONS.QDO(cleanData(data.value))
             LOAD_STATUS.QDO = true
@@ -104,10 +107,33 @@ function query (p) {
             break
 
           case SHARED_DATASETS.GOOD_CATCH.QUERY_TYPE:
+            let gcTarget = (
+              (daysIntoQtr() / daysInQtr(getQtr(d.getMonth()))) *
+              100
+            ).toFixed(1)
+            let gcLegend =
+              '<table><tbody><tr><th>Goal for ' +
+              dt.month.toString() +
+              '/' +
+              d.getDate().toString() +
+              '/' +
+              dt.year.toString() +
+              '</th></tr><tr><td style="background-color: lime;"><span>&gt;' +
+              (gcTarget * 0.75).toString() +
+              '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
+              (gcTarget * 0.75).toString() +
+              '% and &gt;' +
+              (gcTarget * 0.5).toString() +
+              '%</span></td></tr><td style="background-color: red;"><span>&lt;=' +
+              (gcTarget * 0.5).toString() +
+              '%</span></td></tr></tbody></table>'
             DATA_NOTES.GC = [
               'Data last refreshed on ' + data.value[0]['REFRESH_DATE'],
               'Percentage reflects current % vs days left in qtr'
             ]
+            if (DATA_NOTES.GC[DATA_NOTES.GC.length - 1] !== gcLegend) {
+              DATA_NOTES.GC.push(gcLegend)
+            }
             PARSE_FUNCTIONS.GOOD_CATCH(cleanData(data.value))
             LOAD_STATUS.GC = true
             break
