@@ -71,7 +71,13 @@ function query (p) {
               100
             ).toFixed(1)
             let legend =
-              '<table><tbody><tr><td style="background-color: lime;"><span>&gt;' +
+              '<table><tbody><tr><th>Goal for ' +
+              dt.month.toString() +
+              '/' +
+              d.getDate().toString() +
+              '/' +
+              dt.year.toString() +
+              '</th></tr><tr><td style="background-color: lime;"><span>&gt;' +
               (target * 0.75).toString() +
               '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
               (target * 0.75).toString() +
