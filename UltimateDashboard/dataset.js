@@ -423,14 +423,16 @@ var TABLE_FUNCTIONS = {
 
       // if at least 1 employee meeting goal then calculate percentage
       input[0] > 0
-        ? (cellVal = parseFloat(getPercentage(input[0], input[1])))
+        ? (cellVal = parseFloat(
+            getPercentage(input[0], Object.keys(data).length)
+          ))
         : (cellVal = 0)
       // create limits in regards to how many
       // days in the month are left
       let d = new Date()
       let dt = { month: d.getMonth() + 1, year: d.getYear() + 1900 }
       let target = (
-        (d.getDay() / daysInMonth(dt.year, dt.month)) *
+        (d.getDate() / daysInMonth(dt.year, dt.month)) *
         100
       ).toFixed(1)
       let lw = (0.75 * target).toFixed(1)
@@ -508,7 +510,7 @@ var TABLE_FUNCTIONS = {
       let d = new Date()
       let dt = { month: d.getMonth() + 1, year: d.getYear() + 1900 }
       let target = (
-        (d.getDay() / daysInMonth(dt.year, dt.month)) *
+        (d.getDate() / daysInMonth(dt.year, dt.month)) *
         100
       ).toFixed(1)
       let lw = (0.75 * target).toFixed(1)
@@ -886,6 +888,22 @@ function loop (data, columns) {
     }
   }
   return dictionary
+}
+
+function mapIt (data, columns) {
+  let map = new Map()
+  let column = columns.pop()
+  let values = unique(data, column)
+
+  for (let i = 0; i < values.length; i++) {
+    let newData = dataEquals(data, column, values[i])
+    if (columns.length > 0) {
+      map.set(values[i], mapIt(newData, JSON.parse(JSON.stringify(columns))))
+    } else {
+      map.set(values[i], newData)
+    }
+  }
+  return map
 }
 
 /**

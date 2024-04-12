@@ -131,8 +131,8 @@ var PARSE_FUNCTIONS = {
         )
 
         // break data apart by shift
-        let newData = loop(data, ['MANAGER_NAME', 'area', 'SHIFT'])
-        Object.keys(newData).forEach(shift => {
+        let newData = loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
+        /*Object.keys(newData).forEach(shift => {
           Object.keys(newData[shift]).forEach(area => {
             Object.keys(newData[shift][area]).forEach(manager => {
               let filteredData = dataEquals(
@@ -152,7 +152,7 @@ var PARSE_FUNCTIONS = {
               })
             })
           })
-        })
+        })*/
         return newData
       }
 
