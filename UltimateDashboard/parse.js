@@ -74,20 +74,20 @@ function query (p) {
               100
             ).toFixed(1)
             let qdoLegend =
-              '<table><tbody><tr><th>Goal for ' +
+              '<table style="margin: auto;"><tbody><tr><th>Goal for ' +
               dt.month.toString() +
               '/' +
               d.getDate().toString() +
               '/' +
               dt.year.toString() +
               '</th></tr><tr><td style="background-color: lime;"><span>&gt;' +
-              (qdoTarget * 0.75).toString() +
+              (qdoTarget * 0.75).toFixed(1).toString() +
               '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
-              (qdoTarget * 0.75).toString() +
+              (qdoTarget * 0.75).toFixed(1).toString() +
               '% and &gt;' +
-              (qdoTarget * 0.5).toString() +
+              (qdoTarget * 0.5).toFixed(1).toString() +
               '%</span></td></tr><td style="background-color: red;"><span>&lt;=' +
-              (qdoTarget * 0.5).toString() +
+              (qdoTarget * 0.5).toFixed(1).toString() +
               '%</span></td></tr></tbody></table>'
             if (DATA_NOTES.QDO[DATA_NOTES.QDO.length - 1] !== qdoLegend) {
               DATA_NOTES.QDO.push(qdoLegend)
@@ -112,20 +112,20 @@ function query (p) {
               100
             ).toFixed(1)
             let gcLegend =
-              '<table><tbody><tr><th>Goal for ' +
+              '<table style="margin: auto;"><tbody><tr><th>Goal for ' +
               dt.month.toString() +
               '/' +
               d.getDate().toString() +
               '/' +
               dt.year.toString() +
               '</th></tr><tr><td style="background-color: lime;"><span>&gt;' +
-              (gcTarget * 0.75).toString() +
+              (gcTarget * 0.75).toFixed(1).toString() +
               '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
-              (gcTarget * 0.75).toString() +
+              (gcTarget * 0.75).toFixed(1).toString() +
               '% and &gt;' +
-              (gcTarget * 0.5).toString() +
+              (gcTarget * 0.5).toFixed(1).toString() +
               '%</span></td></tr><td style="background-color: red;"><span>&lt;=' +
-              (gcTarget * 0.5).toString() +
+              (gcTarget * 0.5).toFixed(1).toString() +
               '%</span></td></tr></tbody></table>'
             DATA_NOTES.GC = [
               'Data last refreshed on ' + data.value[0]['REFRESH_DATE'],
@@ -181,30 +181,7 @@ var PARSE_FUNCTIONS = {
           'Module Equipment Technician'
         )
 
-        // break data apart by shift
-        let newData = loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
-        /*Object.keys(newData).forEach(shift => {
-          Object.keys(newData[shift]).forEach(area => {
-            Object.keys(newData[shift][area]).forEach(manager => {
-              let filteredData = dataEquals(
-                DATASETS.EMPLOYEE,
-                'MANAGER_NAME',
-                manager
-              )
-              filteredData = dataEquals(filteredData, 'SHIFT', shift)
-              let employees = unique(filteredData, 'FULL_NAME')
-              newData[shift][area][manager] = {}
-              employees.forEach(employee => {
-                newData[shift][area][manager][employee] = dataEquals(
-                  data,
-                  'FULL_NAME',
-                  employee
-                )
-              })
-            })
-          })
-        })*/
-        return newData
+        return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
       }
 
       // filter QDO dataset with employee dataset then

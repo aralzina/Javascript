@@ -890,6 +890,12 @@ function loop (data, columns) {
   return dictionary
 }
 
+/**
+ * Not used ... same thing as loop but returns a Map
+ * @param {*} data
+ * @param {*} columns
+ * @returns {Map}
+ */
 function mapIt (data, columns) {
   let map = new Map()
   let column = columns.pop()
