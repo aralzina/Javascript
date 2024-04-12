@@ -64,6 +64,22 @@ function query (p) {
             break
 
           case SHARED_DATASETS.QDO.QUERY_TYPE:
+            let d = new Date()
+            let dt = { month: d.getMonth() + 1, year: d.getYear() + 1900 }
+            let target = (
+              (d.getDate() / daysInMonth(dt.year, dt.month)) *
+              100
+            ).toFixed(1)
+            let legend =
+              '<table><tbody><tr><td style="background-color: lime;"><span>&gt;=' +
+              target.toString() +
+              '%</span></td></tr><td style="background-color: yellow;"><span>&lt;=' +
+              (target * 0.75).toString() +
+              '%</span></td></tr><td style="background-color: red;"><span>&lt;=' +
+              (target * 0.5).toString() +
+              '%</span></td></tr></tbody></table>'
+
+            DATA_NOTES.QDO.push(legend)
             PARSE_FUNCTIONS.QDO(cleanData(data.value))
             LOAD_STATUS.QDO = true
             break
