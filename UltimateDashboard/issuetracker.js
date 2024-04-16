@@ -1,3 +1,6 @@
+/**
+ * Keys used for building SKYNET form
+ */
 const SKYNET_KEYS = [
   'FACILITY',
   'REPORT_NAME',
@@ -28,13 +31,27 @@ const SKYNET_KEYS = [
   'COMMENTS'
 ]
 
-function submitRequest () {
+function submitRequest2 () {
   let requester
   let request = getId('request-form').value
 }
+function submitRequest (oFormElement) {
+  var xhr = new XMLHttpRequest()
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // empty the form and switch tabs to open items after pulling the data
+      // todo: setup script to email distribution list that a new request exists
+    } else {
+      alert('Error saving to database. Please, try again.')
+    }
+  }
+  xhr.withCredentials = true
+  xhr.open(oFormElement.method, oFormElement.getAttribute('action'), true)
+  xhr.send(new FormData(oFormElement))
+  return false
+}
 
-//form
-function submitRequest () {
+function buildForm () {
   /**
    * SKYNET Key Config
    * REPORT_NAME - Name of this report:   'ULTIMATE_DASHBOARD'
@@ -50,7 +67,9 @@ function submitRequest () {
    * PK_NAMES:                            'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID'
    * OF_NAMES:                            'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
    */
+
   let args = {
+    FACILITY: 'F32',
     REPORT_NAME: 'ULTIMATE_DASHBOARD',
     PK1: 'TRACKER',
     PK2: document.getElementById('tracker-type').selectedOptions[0].value,
@@ -67,77 +86,58 @@ function submitRequest () {
   // logic tests
   if (args.PK2 === '') {
     alert('Please select a request type before submitting.')
-    return
+    return false
   }
 
   if (args.COMMENTS.length === 0) {
     alert('Please type a request before submitting.')
-    return
+    return false
   }
 
   // create the form
-  let div = document.createElement('div')
   let form = document.createElement('form')
-  let frame = document.createElement('iframe')
-  let br = document.createElement('br')
-  let submitButton = document.createElement('input')
 
-  submitButton.setAttribute('type', 'submit')
-  submitButton.setAttribute('value', 'Submit')
-  submitButton.setAttribute('onsubmit', 'return submitComments()')
-
-  div.className = 'hidden_div'
-  div.setAttribute('name', 'COMMENTS_DIV')
-  div.setAttribute('id', 'COMMENTS_DIV')
-
-  frame.className = 'hidden_frame'
-  frame.setAttribute('id', 'COMMENTS_FRAME')
-  frame.setAttribute('name', 'COMMENTS_FRAME')
-  frame.setAttribute('src', '')
-
-  form.className = 'hidden_form'
+  //form.className = 'hidden_form'
   form.setAttribute('name', 'COMMENTS_FORM')
   form.setAttribute('method', 'post')
   form.setAttribute('action', 'https://' + PAGE_BASE_URL + SKYNET_URL)
   form.setAttribute('enctype', 'multipart/form-data')
-  form.setAttribute('target', 'COMMENTS_FRAME')
+  //form.setAttribute('target', 'COMMENTS_FRAME')
 
-  //append all to div
-  div.appendChild(form)
-  div.appendChild(br)
-  div.appendChild(frame)
+  // Generate all inputs and append them to the form
+  SKYNET_KEYS.forEach(key => {
+    let val
+    typeof args[key] !== 'undefined' ? (val = args[key]) : (val = '')
+    form.appendChild(createInput('hidden', key, val))
+  })
 
-  form.appendChild(createInput('hidden', 'PROCESS', ''))
-  form.appendChild(createInput('hidden', 'LOT', ''))
-  form.appendChild(createInput('hidden', 'OPERATION', ''))
-  form.appendChild(createInput('hidden', 'MODULE', ''))
-  form.appendChild(createInput('hidden', 'CEID', ''))
-  form.appendChild(createInput('hidden', 'PK_NAMES', ''))
-  form.appendChild(createInput('hidden', 'OF_NAMES', ''))
+  // create button
+  let submitButton = createInput('submit', 'submit', 'submit')
+
+  // append the final input for no toolbar
   form.appendChild(createInput('hidden', 'rc:Toolbar', 'false'))
-  form.appendChild(createInput('hidden', 'FACILITY', 'F32'))
-  form.appendChild(createInput('hidden', 'ENTITY', ''))
-  form.appendChild(createInput('hidden', 'PK1', PK1))
-  form.appendChild(createInput('hidden', 'PK2', PK2))
-  form.appendChild(createInput('hidden', 'PK3', PK3))
-  form.appendChild(createInput('hidden', 'PK4', ''))
-  form.appendChild(createInput('hidden', 'PK5', ''))
-  form.appendChild(createInput('hidden', 'OF1', OF1))
-  form.appendChild(createInput('hidden', 'OF1', OF2))
-  form.appendChild(createInput('hidden', 'OF1', OF3))
-  form.appendChild(createInput('hidden', 'REPORT', REPORT_NAME))
-  form.appendChild(createInput('hidden', 'COMMENT', COMMENTS))
+
+  // append submit button
   form.appendChild(submitButton)
 
-  document.getElementsByTagName('body')[0].appendChild(div)
+  form.setAttribute('onSubmit', 'return submitRequest(this)')
 
   try {
+    // click the button
     submitButton.click()
-    setTimeout(function () {
-      div.parentNode.removeChild(div)
-    }, 60 * 1000)
   } catch (e) {
     console.log('Error submitting ' + type + ' - ' + comment)
     console.log(e)
+    return false
   }
+  return true
+}
+
+//create a form input
+function createInput (type, name, value) {
+  let input = document.createElement('input')
+  input.setAttribute('type', type)
+  input.setAttribute('name', name)
+  input.setAttribute('value', value)
+  return input
 }
