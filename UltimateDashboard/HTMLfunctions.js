@@ -47,7 +47,9 @@ function factoryTableOutline (category, subCategories) {
       btn.title = 'Click for graph'
       hdr.appendChild(btn)
       let newTitle = subCategories[i]
+      btn.title = 'QDO (Monthly PAS[Progression Against Schedule])'
       btn.innerHTML = newTitle
+
       btn.onclick = function (event) {
         try {
           let args = chart_data_args(DATASETS.QDO, {}, 'area', undefined, {})
