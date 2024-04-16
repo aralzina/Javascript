@@ -31,10 +31,23 @@ const SKYNET_KEYS = [
   'COMMENTS'
 ]
 
-function submitRequest2 () {
-  let requester
-  let request = getId('request-form').value
+/**
+ * Default Args for skynet form
+ * REPORT_NAME - Name of this report:   'ULTIMATE_DASHBOARD'
+ * @returns
+ */
+const DEFAULT_SKYNET_ARGS = () => {
+  return {
+    FACILITY: 'F32',
+    REPORT_NAME: 'ULTIMATE_DASHBOARD'
+  }
 }
+
+/**
+ *
+ * @param {*} oFormElement the form being sent off
+ * @returns
+ */
 function submitRequest (oFormElement) {
   var xhr = new XMLHttpRequest()
   xhr.onload = function () {
@@ -51,10 +64,13 @@ function submitRequest (oFormElement) {
   return false
 }
 
-function buildForm () {
+/**
+ *
+ * @returns
+ */
+function requestForm () {
   /**
    * SKYNET Key Config
-   * REPORT_NAME - Name of this report:   'ULTIMATE_DASHBOARD'
    * PK1 - Component:                     'TRACKER'
    * PK2 - Type:                          'REQUEST' | 'BUG-REPORT'
    * PK3 - Request ID:                    '...'  // DATE OF REQUEST(Date.getTime())
@@ -68,32 +84,40 @@ function buildForm () {
    * OF_NAMES:                            'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
    */
 
-  let args = {
-    FACILITY: 'F32',
-    REPORT_NAME: 'ULTIMATE_DASHBOARD',
-    PK1: 'TRACKER',
-    PK2: document.getElementById('tracker-type').selectedOptions[0].value,
-    PK3: new Date().getTime(),
-    OF1: document.cookie.split('IDSID=')[1].split(';')[0],
-    OF2: 'CREATE',
-    OF3: 'OPEN',
-    PK_NAMES: 'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID',
-    OF_NAMES:
-      'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;',
-    COMMENTS: document.getElementById('request-form').value.trim()
-  }
+  let args = DEFAULT_SKYNET_ARGS()
+  args.PK1 = 'TRACKER'
+  args.PK2 = document.getElementById('tracker-type').selectedOptions[0].value
+  args.PK3 = new Date().getTime()
+  args.OF1 = document.cookie.split('IDSID=')[1].split(';')[0]
+  args.OF2 = 'CREATE'
+  args.OF3 = 'OPEN'
+  args.PK_NAMES = 'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID'
+  args.OF_NAMES =
+    'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
+  args.COMMENTS = document.getElementById('request-form').value.trim()
 
-  // logic tests
+  // logic tests for this submission
+  // length of request type
   if (args.PK2 === '') {
     alert('Please select a request type before submitting.')
     return false
   }
 
+  // length of comments needs to be more than 0
   if (args.COMMENTS.length === 0) {
     alert('Please type a request before submitting.')
     return false
   }
+  return buildForm(args, 'submitRequest')
+}
 
+/**
+ *
+ * @param {Dict | Map} args form arguments
+ * @param {string} func function name
+ * @returns
+ */
+function buildForm (args, func) {
   // create the form
   let form = document.createElement('form')
 
@@ -120,7 +144,7 @@ function buildForm () {
   // append submit button
   form.appendChild(submitButton)
 
-  form.setAttribute('onSubmit', 'return submitRequest(this)')
+  form.setAttribute('onSubmit', 'return ' + func + '(this)')
 
   try {
     // click the button
@@ -133,7 +157,13 @@ function buildForm () {
   return true
 }
 
-//create a form input
+/**
+ * Create an input element
+ * @param {string} type
+ * @param {string} name
+ * @param {string} value
+ * @returns
+ */
 function createInput (type, name, value) {
   let input = document.createElement('input')
   input.setAttribute('type', type)
