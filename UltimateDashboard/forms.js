@@ -48,12 +48,17 @@ const DEFAULT_SKYNET_ARGS = () => {
  * @param {*} oFormElement the form being sent off
  * @returns
  */
-function submitForm (oFormElement) {
+function submitRequest (oFormElement) {
   var xhr = new XMLHttpRequest()
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status < 300) {
       // empty the form and switch tabs to open items after pulling the data
       // todo: setup script to email distribution list that a new request exists
+      try {
+        document.getElementById('request-form').value = ''
+      } catch (e) {
+        console.log('Error clearing form')
+      }
     } else {
       alert('Error saving to database. Please, try again.')
     }
@@ -129,7 +134,7 @@ function excludeForm () {
 
   let args = DEFAULT_SKYNET_ARGS()
 
-  return buildForm(args, 'submitForm')
+  return buildForm(args, 'submitRequest')
 }
 
 /**
