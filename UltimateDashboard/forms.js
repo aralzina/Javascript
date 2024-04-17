@@ -83,14 +83,21 @@ function requestForm () {
    * PK1 - Component:                     'TRACKER'
    * PK2 - Type:                          'REQUEST' | 'BUG-REPORT'
    * PK3 - Request ID:                    '...'  // DATE OF REQUEST(Date.getTime())
+   * PK4 - NA:                            -------------------------------------
+   * PK5 - NA:                            -------------------------------------
    * OF1 - Requester                      'IDSID'
    * OF2 - Last Action                    'CREATE'
    * OF3 - Status:                        'OPEN'
    * OF4 - Assigned To                    '' // will get added later
    * OF5 - ECD:                           '' // will get added later
-   * COMMENT:                            'USER REQUEST'
-   * PK_NAMES:                            'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID'
-   * OF_NAMES:                            'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
+   * OF6 - NA:                            -------------------------------------
+   * OF7 - NA:                            -------------------------------------
+   * OF8 - NA:                            -------------------------------------
+   * OF9 - NA:                            -------------------------------------
+   * OF10 - NA:                           -------------------------------------
+   * COMMENT:                             'USER REQUEST'
+   * PK_NAMES:                            'COMPONENT|TYPE|REQUEST_ID|na|na'
+   * OF_NAMES:                            'REQUESTER|LAST_ACTION|STATUS|ASSIGNED_TO|ECD|na|na|na|na|na'
    */
 
   let args = DEFAULT_SKYNET_ARGS()
@@ -100,9 +107,8 @@ function requestForm () {
   args.OF1 = document.cookie.split('IDSID=')[1].split(';')[0]
   args.OF2 = 'CREATE'
   args.OF3 = 'OPEN'
-  args.PK_NAMES = 'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID'
-  args.OF_NAMES =
-    'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
+  args.PK_NAMES = 'COMPONENT|TYPE|REQUEST_ID|na|na'
+  args.OF_NAMES = 'REQUESTER|LAST_ACTION|STATUS|ASSIGNED_TO|ECD|na|na|na|na|na'
   args.COMMENT = document.getElementById('request-form').value.trim()
 
   // logic tests for this submission
