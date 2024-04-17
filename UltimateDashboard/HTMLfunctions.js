@@ -315,8 +315,8 @@ function makeModal (content) {
   }
 
   // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target == modal) {
+  modal.onclick = function (event) {
+    if (event.target === modal) {
       modal.parentNode.removeChild(modal)
     }
   }
