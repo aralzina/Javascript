@@ -48,7 +48,7 @@ const DEFAULT_SKYNET_ARGS = () => {
  * @param {*} oFormElement the form being sent off
  * @returns
  */
-function submitRequest (oFormElement) {
+function submitForm (oFormElement) {
   var xhr = new XMLHttpRequest()
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status < 300) {
@@ -111,6 +111,27 @@ function requestForm () {
   return buildForm(args, 'submitRequest')
 }
 
+function excludeForm () {
+  /**
+   * SKYNET Key Config
+   * PK1 - :                          ''
+   * PK2 - :                          '' | ''
+   * PK3 - :                          '...'  // DATE OF REQUEST(Date.getTime())
+   * OF1 - :                          ''
+   * OF2 - :                          ''
+   * OF3 - :                          ''
+   * OF4 - :                          '' // will get added later
+   * OF5 - :                          '' // will get added later
+   * COMMENTS:                        ''
+   * PK_NAMES:                        'PK1=;PK2=;PK3=;'
+   * OF_NAMES:                        'OF1=;OF2=;OF3=;OF4=;OF5=;'
+   */
+
+  let args = DEFAULT_SKYNET_ARGS()
+
+  return buildForm(args, 'submitForm')
+}
+
 /**
  *
  * @param {Dict | Map} args form arguments
@@ -170,4 +191,111 @@ function createInput (type, name, value) {
   input.setAttribute('name', name)
   input.setAttribute('value', value)
   return input
+}
+
+function html_tracker_window () {
+  // config
+  const BUTTON_CONFIG = [
+    {
+      className: 'tablinks',
+      textContent: 'Open Items',
+      onclick: event => {
+        changeTab(event, 'Open Items')
+      }
+    },
+    {
+      className: 'tablinks',
+      textContent: 'Closed Items',
+      onclick: event => {
+        changeTab(event, 'Closed Items')
+      }
+    },
+    {
+      className: 'tablinks',
+      id: 'defaultOpen',
+      textContent: 'Submit Request',
+      onclick: event => {
+        changeTab(event, 'Submit Request')
+      }
+    }
+  ]
+
+  const TAB_CONFIG = [
+    {
+      id: 'Open Items',
+      className: 'tabcontent',
+      innerHTML: '<h3>Open Issues/Requests</h3>'
+    },
+    {
+      id: 'Closed Items',
+      className: 'tabcontent',
+      innerHTML: '<h3>Closed Items</h3>'
+    },
+    {
+      id: 'Submit Request',
+      className: 'tabcontent',
+      innerHTML:
+        '<div class="request-box"> <h2>New Request</h2> <form> <div class="user-box"> <select style="margin-bottom: 25px;" id="tracker-type" required> <option value="">--Please choose a request type--</option> <option value="REQUEST">Feature Request/Suggestion</option> <option value="BUG-REPORT">Bug Report</option> </select> </div> <div class="user-box"> <textarea id="request-form" rows="4" cols="40" style="resize: none;" required></textarea> <label for="request-form">Request</label> </div> <a href="#"> <span></span> <span></span> <span></span> <span></span> Submit </a> </form> </div>'
+    }
+  ]
+
+  // parent div
+  let parent = create('div', { className: 'tracker-window' })
+
+  // tab wrapper
+  let tab_div = create('div', { className: 'tab' })
+  parent.appendChild(tab_div)
+
+  // add buttons
+  BUTTON_CONFIG.forEach(btn => {
+    tab_div.appendChild(create('button', btn))
+  })
+
+  // tab content
+  TAB_CONFIG.forEach(tab => {
+    tab_div.appendChild(create('div', tab))
+  })
+
+  // request form
+  // change width of modal-content to better fit request box
+  setTimeout(() => {
+    let mc = document.getElementsByClassName('modal-content')[0]
+    mc.style.transition = '0.3s'
+    mc.style.width = 'max-content'
+    document.getElementById('defaultOpen').click()
+    try {
+      document.getElementById('idsid').value = document.cookie
+        .split('IDSID=')[1]
+        .split(';')[0]
+    } catch (e) {}
+  }, 2)
+
+  makeModal(parent)
+}
+
+//function html_exclusion_window () {}
+
+// Comment this out later
+
+/**
+ * Quick create an HTML element
+ * @param {string} type type of element to create
+ * @param {Map | Dict} args id, className, style, etc.
+ * @returns
+ */
+function create (type, args) {
+  // make the element
+  let element = document.createElement(type)
+
+  // if any args are inclucded, assign them
+  if (typeof args !== 'undefined') {
+    Object.keys(args).forEach(key => {
+      try {
+        element[key] = args[key]
+      } catch (e) {
+        console.log('Error assigning args to ' + type + ' element')
+      }
+    })
+  }
+  return element
 }
