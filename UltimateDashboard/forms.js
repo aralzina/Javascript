@@ -140,7 +140,9 @@ function excludeForm () {
  */
 function buildForm (args, func) {
   // create the form
-  let form = document.createElement('form')
+  let form = create('form', { className: 'skynet-form' })
+  let parent = document.getElementsByClassName('main-content')[0]
+  parent.appendChild(form)
 
   //form.className = 'hidden_form'
   form.setAttribute('name', 'COMMENTS_FORM')
@@ -170,6 +172,9 @@ function buildForm (args, func) {
   try {
     // click the button
     submitButton.click()
+    setTimeout(function () {
+      parent.removeChild(form)
+    }, 20 * 1000)
   } catch (e) {
     console.log('Error submitting ' + type + ' - ' + comment)
     console.log(e)
@@ -235,7 +240,7 @@ function html_tracker_window () {
       id: 'Submit Request',
       className: 'tabcontent',
       innerHTML:
-        '<div class="request-box"> <h2>New Request</h2> <form> <div class="user-box"> <select style="margin-bottom: 25px;" id="tracker-type" required> <option value="">--Please choose a request type--</option> <option value="REQUEST">Feature Request/Suggestion</option> <option value="BUG-REPORT">Bug Report</option> </select> </div> <div class="user-box"> <textarea id="request-form" rows="4" cols="40" style="resize: none;" required></textarea> <label for="request-form">Request</label> </div> <a href="#"> <span></span> <span></span> <span></span> <span></span> Submit </a> </form> </div>'
+        '<div class="request-box"> <h2>New Request</h2> <form> <div class="user-box"> <select style="margin-bottom: 25px;" id="tracker-type" required> <option value="">--Please choose a request type--</option> <option value="REQUEST">Feature Request/Suggestion</option> <option value="BUG-REPORT">Bug Report</option> </select> </div> <div class="user-box"> <textarea id="request-form" rows="4" cols="40" style="resize: none;" required></textarea> <label for="request-form">Request</label> </div> <a onClick="requestForm()"> <span></span> <span></span> <span></span> <span></span> Submit </a> </form> </div>'
     }
   ]
 
@@ -274,28 +279,3 @@ function html_tracker_window () {
 }
 
 //function html_exclusion_window () {}
-
-// Comment this out later
-
-/**
- * Quick create an HTML element
- * @param {string} type type of element to create
- * @param {Map | Dict} args id, className, style, etc.
- * @returns
- */
-function create (type, args) {
-  // make the element
-  let element = document.createElement(type)
-
-  // if any args are inclucded, assign them
-  if (typeof args !== 'undefined') {
-    Object.keys(args).forEach(key => {
-      try {
-        element[key] = args[key]
-      } catch (e) {
-        console.log('Error assigning args to ' + type + ' element')
-      }
-    })
-  }
-  return element
-}
