@@ -62,12 +62,26 @@ function getOffset (el) {
 }
 
 /**
- *
- * @param {String} type
- * @returns HTML element of type provided
+ * Quick create an HTML element
+ * @param {string} type type of element to create
+ * @param {Map | Dict} args id, className, style, etc.
+ * @returns
  */
-function create (type) {
-  return document.createElement(type)
+function create (type, args) {
+  // make the element
+  let element = document.createElement(type)
+
+  // if any args are inclucded, assign them
+  if (typeof args !== 'undefined') {
+    Object.keys(args).forEach(key => {
+      try {
+        element[key] = args[key]
+      } catch (e) {
+        console.log('Error assigning args to ' + type + ' element')
+      }
+    })
+  }
+  return element
 }
 
 function log (text) {
