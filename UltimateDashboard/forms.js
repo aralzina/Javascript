@@ -146,7 +146,7 @@ function excludeForm () {
 function buildForm (args, func) {
   // create the form
   let form = create('form', { className: 'skynet-form' })
-  let parent = document.getElementsByClassName('main-content')[0]
+  let parent = document.getElementById('main-content')
   parent.appendChild(form)
 
   //form.className = 'hidden_form'
