@@ -28,7 +28,7 @@ const SKYNET_KEYS = [
   'OF9',
   'OF10',
   'OF_NAMES',
-  'COMMENTS'
+  'COMMENT'
 ]
 
 /**
@@ -88,7 +88,7 @@ function requestForm () {
    * OF3 - Status:                        'OPEN'
    * OF4 - Assigned To                    '' // will get added later
    * OF5 - ECD:                           '' // will get added later
-   * COMMENTS:                            'USER REQUEST'
+   * COMMENT:                            'USER REQUEST'
    * PK_NAMES:                            'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID'
    * OF_NAMES:                            'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
    */
@@ -103,7 +103,7 @@ function requestForm () {
   args.PK_NAMES = 'PK1=COMPONENT;PK2=TYPE;PK3=REQUEST_ID'
   args.OF_NAMES =
     'OF1=REQUESTER;OF2=LAST_ACTION;OF3=STATUS;OF4=ASSIGNED_TO;OF5=ECD;'
-  args.COMMENTS = document.getElementById('request-form').value.trim()
+  args.COMMENT = document.getElementById('request-form').value.trim()
 
   // logic tests for this submission
   // length of request type
@@ -113,7 +113,7 @@ function requestForm () {
   }
 
   // length of comments needs to be more than 0
-  if (args.COMMENTS.length === 0) {
+  if (args.COMMENT.length === 0) {
     alert('Please type a request before submitting.')
     return false
   }
@@ -131,7 +131,7 @@ function excludeForm () {
    * OF3 - :                          ''
    * OF4 - :                          '' // will get added later
    * OF5 - :                          '' // will get added later
-   * COMMENTS:                        ''
+   * COMMENT:                        ''
    * PK_NAMES:                        'PK1=;PK2=;PK3=;'
    * OF_NAMES:                        'OF1=;OF2=;OF3=;OF4=;OF5=;'
    */
