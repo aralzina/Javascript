@@ -3,7 +3,7 @@
  */
 const SKYNET_KEYS = [
   'FACILITY',
-  'REPORT_NAME',
+  'REPORT',
   'PROCESS',
   'LOT',
   'OPERATION',
@@ -33,13 +33,13 @@ const SKYNET_KEYS = [
 
 /**
  * Default Args for skynet form
- * REPORT_NAME - Name of this report:   'ULTIMATE_DASHBOARD'
+ * REPORT - Name of this report:   'ULTIMATE_DASHBOARD'
  * @returns
  */
 const DEFAULT_SKYNET_ARGS = () => {
   return {
     FACILITY: 'F32',
-    REPORT_NAME: 'ULTIMATE_DASHBOARD'
+    REPORT: 'ULTIMATE_DASHBOARD'
   }
 }
 
@@ -60,7 +60,11 @@ function submitRequest (oFormElement) {
         console.log('Error clearing form')
       }
     } else {
-      alert('Error saving to database. Please, try again.')
+      alert(
+        'Error saving to database. Server reports error as: ' +
+          this.responseText
+      )
+      console.log(this.responseText)
     }
   }
   xhr.withCredentials = true
