@@ -359,7 +359,7 @@ function openDetails (rid) {
   data.forEach(row => {
     if (row['ACTION_TYPE'] === 'SUBMISSION') {
       let stat
-      row['ASSIGNED_TO'].trim().length === 0
+      data[1]['ASSIGNED_TO'].trim().length === 0
         ? (stat = row['STATUS'] + ' - not assigned')
         : (stat = row['STATUS'] + ' - assigned')
       tableData +=
