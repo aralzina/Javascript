@@ -348,13 +348,14 @@ function addLoader (element) {
   element.appendChild(create('div', { className: 'on-demand-loader' }))
 }
 
+// these functions refer to the open items request box
 function openDetails (rid) {
   let details = document.getElementById('open-item-details')
   details.innerHTML = ''
 
   // get all list items and toggle the active class if they triggered this
   let refBtns = document.getElementsByClassName('open-items-list-item')
-  for (let i = 0; refBtns.length; i++) {
+  for (let i = 0; i < refBtns.length; i++) {
     if (refBtns[i].classList.contains('active')) {
       refBtns[i].classList.toggle('active')
     }
@@ -495,6 +496,7 @@ function buildOpenItemBox (openItemsData) {
   //details children
   // function will pass data in to make this on the fly
 }
+// end request functions
 
 // Functions that change HTML animations
 function loadingStart () {}
