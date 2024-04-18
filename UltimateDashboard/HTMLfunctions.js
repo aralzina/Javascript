@@ -359,9 +359,13 @@ function openDetails (rid) {
   data.forEach(row => {
     if (row['ACTION_TYPE'] === 'SUBMISSION') {
       let stat
-      data[1]['ASSIGNED_TO'].trim().length === 0
-        ? (stat = row['STATUS'] + ' - not assigned')
-        : (stat = row['STATUS'] + ' - assigned')
+      if (typeof data[1] !== 'undefined') {
+        data[1]['ASSIGNED_TO'].trim().length === 0
+          ? (stat = row['STATUS'] + ' - not assigned')
+          : (stat = row['STATUS'] + ' - assigned')
+      } else {
+        stat = row['STATUS'] + ' - not assigned'
+      }
       tableData +=
         '<tr><th><span class="span-label">Request Type</span></th><td><span class="span-field">' +
         row['TYPE'] +
@@ -474,6 +478,9 @@ function buildOpenItemBox (openItemsData) {
 
   appendChildren(ul, elements.li)
 
+  try {
+    elements.li[0].click()
+  } catch (e) {}
   //details children
   // function will pass data in to make this on the fly
 }
