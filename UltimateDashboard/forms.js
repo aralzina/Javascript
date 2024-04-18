@@ -274,7 +274,7 @@ function html_tracker_window () {
       id: 'Submit Request',
       className: 'tabcontent',
       innerHTML:
-        '<div class="request-box"> <h2>New Request</h2> <form> <div class="user-box"> <select style="margin-bottom: 25px;" id="tracker-type" required> <option value="">--Please choose a request type--</option> <option value="REQUEST">Feature Request/Suggestion</option> <option value="BUG-REPORT">Bug Report</option> </select> </div> <div class="user-box"> <textarea id="request-form" rows="4" cols="40" style="resize: none;" required></textarea> <label for="request-form">Request</label> </div> <a onClick="requestForm()"> <span></span> <span></span> <span></span> <span></span> Submit </a> </form> </div>'
+        '<div class="request-box"> <h2>New Request</h2> <form> <div class="user-box"> <select style="margin-bottom: 25px;" id="tracker-type" required> <option value="">--Please choose a request type--</option> <option value="REQUEST">Feature Request/Suggestion</option> <option value="BUG-REPORT">Bug Report</option> </select> </div> <div class="user-box"> <textarea id="request-form" rows="4" cols="40" style="resize: none;" required></textarea> <label for="request-form">Request/Bug description</label> </div> <a onClick="requestForm()"> <span></span> <span></span> <span></span> <span></span> Submit </a> </form> </div>'
     }
   ]
 
