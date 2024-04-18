@@ -81,9 +81,9 @@ function requestForm () {
   /**
    * SKYNET Key Config
    * PK1 - Component:                     'TRACKER'
-   * PK2 - Type:                          'REQUEST' | 'BUG-REPORT'
+   * PK2 - Request Type:                  'REQUEST' | 'BUG-REPORT'
    * PK3 - Request ID:                    '...'  // DATE OF REQUEST(Date.getTime())
-   * PK4 - NA:                            -------------------------------------
+   * PK4 - Action Field:                  'SUBMISSION' | 'UPDATE'
    * PK5 - NA:                            -------------------------------------
    * OF1 - Requester                      'IDSID'
    * OF2 - Last Action                    'CREATE'
@@ -96,7 +96,7 @@ function requestForm () {
    * OF9 - NA:                            -------------------------------------
    * OF10 - NA:                           -------------------------------------
    * COMMENT:                             'USER REQUEST'
-   * PK_NAMES:                            'COMPONENT|TYPE|REQUEST_ID|na|na'
+   * PK_NAMES:                            'COMPONENT|TYPE|REQUEST_ID|ACTION_TYPE|na'
    * OF_NAMES:                            'REQUESTER|LAST_ACTION|STATUS|ASSIGNED_TO|ECD|na|na|na|na|na'
    */
 
@@ -104,10 +104,11 @@ function requestForm () {
   args.PK1 = 'TRACKER'
   args.PK2 = document.getElementById('tracker-type').selectedOptions[0].value
   args.PK3 = new Date().getTime()
+  args.PK4 = 'SUBMISSION'
   args.OF1 = document.cookie.split('IDSID=')[1].split(';')[0]
   args.OF2 = 'CREATE'
   args.OF3 = 'OPEN'
-  args.PK_NAMES = 'COMPONENT|TYPE|REQUEST_ID|na|na'
+  args.PK_NAMES = 'COMPONENT|TYPE|REQUEST_ID|ACTION_TYPE|na'
   args.OF_NAMES = 'REQUESTER|LAST_ACTION|STATUS|ASSIGNED_TO|ECD|na|na|na|na|na'
   args.COMMENT = document.getElementById('request-form').value.trim()
 
@@ -293,4 +294,28 @@ function html_tracker_window () {
   makeModal(parent)
 }
 
+/**
+ * to use: toggle 'pause on caught exceptions' in the sources tab
+ * in developer options. Then manually assign values into 'input'
+ * using the console. If this isn't done, the submission will error
+ * @param {*} args
+ */
+function manual_form_submission (args) {
+  let FAKE_EXCEPTION = {}
+  let input = DEFAULT_SKYNET_ARGS()
+
+  // loop all the keys and pull that data from args
+  SKYNET_KEYS.forEach(key => {
+    typeof args[key] !== 'undefined'
+      ? (input[key] = args[key])
+      : typeof input[key] !== 'undefined'
+      ? (input[key] = input[key])
+      : (input[key] = '')
+  })
+  try {
+    throw FAKE_EXCEPTION
+  } catch (e) {}
+
+  buildForm(input, 'submitRequest')
+}
 //function html_exclusion_window () {}
