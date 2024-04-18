@@ -113,6 +113,22 @@ function requestForm () {
   args.OF_NAMES = 'REQUESTER|LAST_ACTION|STATUS|ASSIGNED_TO|ECD|na|na|na|na|na'
   args.COMMENT = document.getElementById('request-form').value.trim()
 
+  /* TEMPLATE FOR MANUAL SUBMISSION
+  let args = DEFAULT_SKYNET_ARGS()
+  args.PK1 = 'TRACKER'
+  args.PK2 = 'BUG-REPORT'
+  args.PK3 = '1713399019259'
+  args.PK4 = 'UPDATE'
+  args.OF1 = 'aralzina'
+  args.OF2 = 'ASSIGNED'
+  args.OF3 = 'OPEN'
+  args.OF4 = 'aralzina'
+  args.OF5 = '4/23/2024'
+  args.PK_NAMES = 'COMPONENT|TYPE|REQUEST_ID|ACTION_TYPE|na'
+  args.OF_NAMES = 'REQUESTER|LAST_ACTION|STATUS|ASSIGNED_TO|ECD|na|na|na|na|na'
+  args.COMMENT = 'Manually assigned this to myself so that I can build HTML to display it.'
+  (delete this later)  */
+
   // logic tests for this submission
   // length of request type
   if (args.PK2 === '') {
@@ -216,6 +232,7 @@ function createInput (type, name, value) {
 }
 
 function html_tracker_window () {
+  query(buildParameters(SHARED_DATASETS.REQUEST, '', false))
   // config
   const BUTTON_CONFIG = [
     {
@@ -275,7 +292,11 @@ function html_tracker_window () {
 
   // tab content
   TAB_CONFIG.forEach(tab => {
-    tab_div.appendChild(create('div', tab))
+    let ele = create('div', tab)
+    tab_div.appendChild(ele)
+    if (tab.id !== 'Submit Request') {
+      addLoader(ele)
+    }
   })
 
   // request form

@@ -344,6 +344,137 @@ function makeGraph (chartData) {
   makeModal(content)
 }
 
+function addLoader (element) {
+  element.appendChild(create('div', { className: 'on-demand-loader' }))
+}
+
+function openDetails (rid) {
+  let details = document.getElementById('open-item-details')
+  details.innerHTML = ''
+
+  // make table
+  let table = create('table')
+  let data = dataEquals(DATASETS.REQUEST, 'REQUEST_ID', rid)
+  let tableData = ''
+  data.forEach(row => {
+    if (row['ACTION_TYPE'] === 'SUBMISSION') {
+      let stat
+      row['ASSIGNED_TO'].trim().length === 0
+        ? (stat = row['STATUS'] + ' - not assigned')
+        : (stat = row['STATUS'] + ' - assigned')
+      tableData +=
+        '<tr><th><span class="span-label">Request Type</span></th><td><span class="span-field">' +
+        row['TYPE'] +
+        '</span></td></tr>'
+      tableData +=
+        '<tr><th><span class="span-label">Request ID</span></th><td><span class="span-field">' +
+        row['REQUEST_ID'] +
+        '</span></td></tr>'
+      tableData +=
+        '<tr><th><span class="span-label">Requester</span></th><td><span class="span-field">' +
+        row['REQUESTER'] +
+        '</span></td></tr>'
+      tableData +=
+        '<tr><th><span class="span-label">Status</span></th><td><span class="span-field">' +
+        stat +
+        '</span></td></tr>'
+      tableData +=
+        '<tr><th><span class="span-label">Original Request</span></th><td><span class="span-field">' +
+        row['COMMENT'].trim() +
+        '</span></td></tr>'
+    } else {
+      let assignedTo
+
+      row['ASSIGNED_TO'].trim().length > 0
+        ? (assignedTo = row['ASSIGNED_TO'].trim())
+        : (assignedTo = 'Not Assigned')
+      if (assignedTo !== 'Not Assigned') {
+        tableData +=
+          '<tr><th><span class="span-label">Assigned To</span></th><td><span class="span-field">' +
+          assignedTo +
+          '</span></td></tr>'
+        tableData +=
+          '<tr><th><span class="span-label">Update</span></th><td><span class="span-field">' +
+          row['COMMENT'] +
+          '</span></td></tr>'
+        tableData +=
+          '<tr><th><span class="span-label">ECD</span></th><td><span class="span-field">' +
+          row['ECD'] +
+          '</span></td></tr>'
+      }
+    }
+  })
+  table.innerHTML = tableData
+}
+
+function buildOpenItemBox (openItemsData) {
+  const TEXT_VALUES = {
+    title: 'Open Item Tracker',
+    list_header: 'Open Items'
+  }
+
+  let container = document.getElementById('Open Items')
+  container.innerHTML = ''
+
+  // parent
+  let box = create('div', { id: 'open-items-box' })
+
+  container.appendChild(box)
+
+  //children
+  let title = create('h2', { textContent: TEXT_VALUES.title })
+  let wrapper = create('div', { id: 'open-items-wrapper' })
+
+  // append children to parent
+  appendChildren(box, [title, wrapper])
+
+  // wrapper children
+  let list = create('div', { id: 'open-items-list' })
+  let details = create('div', { id: 'open-item-details' })
+
+  //append wrapper children to wrapper
+  appendChildren(wrapper, [list, details])
+
+  // list children
+  let list_header = create('span', { textContent: TEXT_VALUES.list_header })
+  let ul = create('ul')
+
+  //append list children
+  appendChildren(list, [list_header, ul])
+
+  //some function to add items to list and wire them
+  //doThatThing()
+  let listItems = data => {
+    let results = {
+      li: [],
+      details: {}
+    }
+
+    //filter data to only include SUBMISSION items
+    let subData = dataEquals(data, 'ACTION_TYPE', 'SUBMISSION')
+    subData.forEach(row => {
+      results.li.push(
+        create('li', {
+          id: row['REQUEST_ID'],
+          className: 'open-items-list-item',
+          textContent:
+            'ID #' + row['REQUEST_NUM'].toString() + ' - ' + row['TYPE'],
+          onclick: 'openDetails(this.id)'
+        })
+      )
+    })
+
+    return results
+  }
+
+  let elements = listItems(openItemsData)
+
+  appendChildren(ul, elements.li)
+
+  //details children
+  // function will pass data in to make this on the fly
+}
+
 // Functions that change HTML animations
 function loadingStart () {}
 function loadingEnd () {
@@ -367,6 +498,18 @@ function loadingEnd () {
 }
 
 // Utility Functions
+function appendChildren (parent, children) {
+  children.forEach(child => {
+    try {
+      parent.appendChild(child)
+    } catch (e) {
+      console.log(
+        'Failed to append ' + child.toString() + ' to ' + parent.toString()
+      )
+    }
+  })
+}
+
 function cleanChildNodes (element) {
   let children = element.childNodes
   let removeList = []

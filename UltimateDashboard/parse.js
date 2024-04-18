@@ -137,6 +137,11 @@ function query (p) {
             PARSE_FUNCTIONS.GOOD_CATCH(cleanData(data.value))
             LOAD_STATUS.GC = true
             break
+
+          case SHARED_DATASETS.REQUEST:
+            DATASETS.REQUEST = cleanData(data.value)
+            buildOpenItemBox(DATASETS.REQUEST)
+            break
           default:
             console.log('Error switching on query name')
             break
