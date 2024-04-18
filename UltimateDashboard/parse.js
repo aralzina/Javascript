@@ -138,7 +138,7 @@ function query (p) {
             LOAD_STATUS.GC = true
             break
 
-          case SHARED_DATASETS.REQUEST:
+          case SHARED_DATASETS.REQUEST.QUERY_TYPE:
             DATASETS.REQUEST = cleanData(data.value)
             buildOpenItemBox(DATASETS.REQUEST)
             break
