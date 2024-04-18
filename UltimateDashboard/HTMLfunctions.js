@@ -405,6 +405,8 @@ function openDetails (rid) {
     }
   })
   table.innerHTML = tableData
+
+  details.appendChild(table)
 }
 
 function buildOpenItemBox (openItemsData) {
@@ -453,15 +455,16 @@ function buildOpenItemBox (openItemsData) {
     //filter data to only include SUBMISSION items
     let subData = dataEquals(data, 'ACTION_TYPE', 'SUBMISSION')
     subData.forEach(row => {
-      results.li.push(
-        create('li', {
-          id: row['REQUEST_ID'],
-          className: 'open-items-list-item',
-          textContent:
-            'ID #' + row['REQUEST_NUM'].toString() + ' - ' + row['TYPE'],
-          onclick: 'openDetails(this.id)'
-        })
-      )
+      let li = create('li', {
+        id: row['REQUEST_ID'],
+        className: 'open-items-list-item',
+        textContent:
+          'ID #' + row['REQUEST_NUM'].toString() + ' - ' + row['TYPE']
+      })
+      li.onclick = function () {
+        openDetails(this.id)
+      }
+      results.li.push(li)
     })
 
     return results
