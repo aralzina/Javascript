@@ -352,6 +352,17 @@ function openDetails (rid) {
   let details = document.getElementById('open-item-details')
   details.innerHTML = ''
 
+  // get all list items and toggle the active class if they triggered this
+  let refBtns = document.getElementsByClassName('open-items-list-item')
+  for (let i = 0; refBtns.length; i++) {
+    if (refBtns[i].classList.contains('active')) {
+      refBtns[i].classList.toggle('active')
+    }
+    if (refBtns[i].id === rid) {
+      refBtns[i].classList.toggle('active')
+    }
+  }
+
   // make table
   let table = create('table')
   let data = dataEquals(DATASETS.REQUEST, 'REQUEST_ID', rid)
