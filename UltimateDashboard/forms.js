@@ -59,6 +59,7 @@ function submitRequest (oFormElement) {
       } catch (e) {
         console.log('Error clearing form')
       }
+      alert('Request successfully submitted.')
     } else {
       alert(
         'Error saving to database. Server reports error as: ' +
