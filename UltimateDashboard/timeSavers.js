@@ -87,3 +87,13 @@ function create (type, args) {
 function log (text) {
   console.log(text)
 }
+
+/**
+ * Simple function to return element by id without
+ * having to type the full js out
+ * @param {string} id string of type to create
+ * @returns {HTMLElement} returns element of type input
+ */
+function id (id) {
+  return document.getElementById(id)
+}
