@@ -247,13 +247,13 @@ function html_tracker_window () {
         changeTab(event, 'Open Items')
       }
     },
-    {
+    /*{
       className: 'tablinks',
       textContent: 'Closed Items',
       onclick: event => {
         changeTab(event, 'Closed Items')
       }
-    },
+    },*/
     {
       className: 'tablinks',
       id: 'defaultOpen',
