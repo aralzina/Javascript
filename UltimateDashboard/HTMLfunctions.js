@@ -69,7 +69,8 @@ function factoryTableOutline (category, subCategories) {
       btn.title = 'Click for graph'
       hdr.appendChild(btn)
       let newTitle = subCategories[i]
-      btn.innerHTML = newTitle
+      btn.innerHTML = newTitle + ' Quarterly PAS'
+      btn.title = 'Good Catch (Quarterly PAS[Progression Against Schedule])'
       btn.onclick = function (event) {
         try {
           let args = chart_data_args(
@@ -498,20 +499,12 @@ function buildOpenItemBox (openItemsData) {
 }
 // end request functions
 
-// Functions that change HTML animations
-function loadingStart () {}
+/**
+ * End main loading animation
+ */
 function loadingEnd () {
   if (!doneLoading) {
     setTimeout(function () {
-      //let cloudL = [getClass('cloud-container-left')[0], getId('small-cloud1'), getId('small-cloud2')]
-      //let cloudR = [getClass('cloud-container-right')[0], getId('small-cloud3'), getId('small-cloud4')]
-      /*
-            for (let i = 0; i < 3; i++) {
-              cloudL[i].classList.toggle('vanish')
-              cloudR[i].classList.toggle('vanish')
-            }
-            */
-
       document
         .getElementsByClassName('loader-wrapper')[0]
         .classList.toggle('vanish')
@@ -521,6 +514,11 @@ function loadingEnd () {
 }
 
 // Utility Functions
+/**
+ * Easier way to append multiple childen using an ordered list
+ * @param {HTMLElement} parent element to append children to
+ * @param {Array} children Array of children to append
+ */
 function appendChildren (parent, children) {
   children.forEach(child => {
     try {

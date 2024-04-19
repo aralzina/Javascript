@@ -60,6 +60,8 @@ function submitRequest (oFormElement) {
         console.log('Error clearing form')
       }
       alert('Request successfully submitted.')
+      // requery open items
+      query(buildParameters(SHARED_DATASETS.REQUEST, '', false))
     } else {
       alert(
         'Error saving to database. Server reports error as: ' +
@@ -231,6 +233,9 @@ function createInput (type, name, value) {
   return input
 }
 
+/**
+ * Build the bug/request tracker window
+ */
 function html_tracker_window () {
   query(buildParameters(SHARED_DATASETS.REQUEST, '', false))
   // config
@@ -265,11 +270,11 @@ function html_tracker_window () {
       className: 'tabcontent',
       innerHTML: '<h3>Open Issues/Requests</h3>'
     },
-    {
+    /*{
       id: 'Closed Items',
       className: 'tabcontent',
       innerHTML: '<h3>Closed Items</h3>'
-    },
+    },*/
     {
       id: 'Submit Request',
       className: 'tabcontent',
@@ -316,6 +321,8 @@ function html_tracker_window () {
   makeModal(parent)
 }
 
+function html_exclusion_window () {}
+
 /**
  * to use: toggle 'pause on caught exceptions' in the sources tab
  * in developer options. Then manually assign values into 'input'
@@ -340,4 +347,3 @@ function manual_form_submission (args) {
 
   buildForm(input, 'submitRequest')
 }
-//function html_exclusion_window () {}
