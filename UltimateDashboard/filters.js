@@ -37,14 +37,15 @@ function removeElement (arr, element) {
  * @returns {Array} the initial array
  */
 function addElement (arr, element) {
-  // add the element
-  arr.push(element)
+  if (!arr.includes(element)) {
+    // add the element
+    arr.push(element)
 
-  //sort the array
-  arr.sort((a, b) => {
-    return a < b ? -1 : a > b ? 1 : 0
-  })
-
+    //sort the array
+    arr.sort((a, b) => {
+      return a < b ? -1 : a > b ? 1 : 0
+    })
+  }
   // return the initial array
   return arr
 }
@@ -79,6 +80,7 @@ function addFilter (name, data, column) {
   $('.chosen-select').chosen({
     no_results_text: 'Oops, nothing found!'
   })
+
   $('#' + column + '-select').on('change', function (evt, params) {
     //log(evt)
     //log(params)
@@ -88,36 +90,46 @@ function addFilter (name, data, column) {
     if (typeof params.deselected !== 'undefined') {
       FILTER[column] = removeElement(FILTER[column], params.deselected)
     }
-    updateFilters(evt.target)
+
+    if (column === 'FunctionalArea') {
+      updateFilters(evt.target)
+    }
   })
 }
 
 function updateFilters (caller) {
-  let names = Object.keys(FILTER)
+  //let names = Object.keys(FILTER) need to define an order
+  let names = ['FunctionalArea', 'Ceid']
   let data = global_filter_data
 
-  // Filter out dataset
-  names.forEach(name => {
-    let select = $('#' + name + '-select')
-    if (select.attr('id') !== caller.id) {
-      let arrFilter = FILTER[name]
-      if (arrFilter.length > 0) {
-        data = dataIn(data, name, arrFilter)
+  // Filter out dataset first
+  if (FILTER[names[0]].length > 0 && typeof FILTER[names[0]] !== 'undefined') {
+    names.forEach(name => {
+      if (typeof FILTER[name] !== 'undefined') {
+        if (FILTER[name].length > 0) {
+          data = dataIn(data, name, FILTER[name])
+        }
       }
-    }
-  })
+    })
+  }
 
   // Iterate selects and update the options
-  names.forEach(name => {
+  for (let i = 1; i < names.length; i++) {
+    let name = names[i]
     let select = $('#' + name + '-select')
     if (select.attr('id') !== caller.id) {
       let optionNames = unique(data, name)
-      let text = '<option value=""></option>'
+      console.log(name)
+      console.log(optionNames)
+      select[0].innerHTML = ''
+      let oList = []
+      oList.push(create('option'))
+      oList[0].setAttribute('value', '')
       optionNames.forEach(op => {
-        text += '<option>' + op + '</option>'
+        oList.push(create('option', { textContent: op }))
       })
-      select.innerHTML = text
+      appendChildren(select[0], oList)
       select.trigger('chosen:updated')
     }
-  })
+  }
 }
