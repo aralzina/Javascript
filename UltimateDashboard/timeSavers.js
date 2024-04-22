@@ -46,10 +46,6 @@ function getClass (className) {
   return document.getElementsByClassName(className)
 }
 
-function getId (Id) {
-  return document.getElementById(Id)
-}
-
 function getOffset (el) {
   var _x = 0
   var _y = 0
@@ -64,7 +60,7 @@ function getOffset (el) {
 /**
  * Quick create an HTML element
  * @param {string} type type of element to create
- * @param {Map | Dict} args id, className, style, etc.
+ * @param {Map | undefined} args id, className, style, etc.
  * @returns
  */
 function create (type, args) {
@@ -84,6 +80,10 @@ function create (type, args) {
   return element
 }
 
+/**
+ * Because I hate typing cosole.log(...)
+ * @param {*} text anything really...
+ */
 function log (text) {
   console.log(text)
 }

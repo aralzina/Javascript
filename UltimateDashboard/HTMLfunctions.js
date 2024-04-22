@@ -508,7 +508,7 @@ function loadingEnd () {
       document
         .getElementsByClassName('loader-wrapper')[0]
         .classList.toggle('vanish')
-      getId('body-wrapper').classList.toggle('zoom-out')
+      id('body-wrapper').classList.toggle('zoom-out')
     }, 2000)
   }
 }
@@ -517,9 +517,12 @@ function loadingEnd () {
 /**
  * Easier way to append multiple childen using an ordered list
  * @param {HTMLElement} parent element to append children to
- * @param {Array} children Array of children to append
+ * @param {Array<HTMLElement> | HTMLElement} children Array of children to append
  */
 function appendChildren (parent, children) {
+  if (!Array.isArray(children)) {
+    children = [children]
+  }
   children.forEach(child => {
     try {
       parent.appendChild(child)
