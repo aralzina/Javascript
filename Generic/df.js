@@ -1,23 +1,4 @@
 /**
- * Remove the useless ID data from data received from PBI
- * @param {Array<Map>} data
- * @returns {Array<Map>}
- */
-function cleanData (data) {
-  let result = []
-
-  let keys = Object.keys(data[0])
-  for (let i = 0; i < data.length; i++) {
-    let row = {}
-    for (let j = 1; j < keys.length; j++) {
-      row[keys[j]] = data[i][keys[j]]
-    }
-    result.push(row)
-  }
-  return result
-}
-
-/**
  *   return a list of data where the key provided matches the value provided exactly
  * @param {*} data
  * @param {string} key key to filter on
@@ -140,18 +121,33 @@ function unique (data, key) {
   return results
 }
 
-function doubleFilter (dataset1, dataset2, column1, column2) {
-  // get unique values from dataset2
-  let u = unique(dataset2, column2)
+/**
+ *  Convert csv file into JSON
+ * @param {string} csv
+ * @returns {JSON}
+ */
+function csvJSON (csv) {
+  // split lines out
+  var lines = csv.split('\n')
 
-  // filter dataset1 by unique values from dataset2
-  dataset1 = dataIn(dataset1, column1, u)
+  var result = []
 
-  // get unique values from dataset1
-  u = unique(dataset1, column1)
+  // set headers from first row
+  var headers = lines[0].split(',')
 
-  // filter dataset 2 by unique values from dataset2
-  dataset2 = dataIn(dataset2, column2, u)
+  // loop the rest to get data
+  for (var i = 1; i < lines.length; i++) {
+    var obj = {}
+    var currentline = lines[i].split(',')
 
-  return [dataset1, dataset2]
+    for (var j = 0; j < headers.length; j++) {
+      try {
+        obj[headers[j]] = currentline[j].replace('\r', '')
+      } catch (e) {}
+    }
+    result.push(obj)
+  }
+
+  //return result as JSON
+  return JSON.parse(JSON.stringify(result))
 }
