@@ -110,7 +110,8 @@ function updateFilters (caller) {
   // Filter out dataset first
   if (FILTER[FILTER_ORDER[0]].length > 0) {
     // only filter the data for the filter order and each one before it.
-    for (let i = 0; i < callerIndex; i++) {
+
+    for (let i = 0; i < callerIndex === 0 ? -1 : callerIndex; i++) {
       if (FILTER[FILTER_ORDER[i]].length > 0) {
         data = dataIn(data, FILTER_ORDER[i], FILTER[FILTER_ORDER[i]])
       }
