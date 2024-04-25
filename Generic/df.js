@@ -142,12 +142,19 @@ function csvJSON (csv) {
 
     for (var j = 0; j < headers.length; j++) {
       try {
-        obj[headers[j]] = currentline[j].replace('\r', '')
+        if (typeof currentline[j] !== 'undefined') {
+          if (currentline[j].length > 0) {
+            obj[headers[j]] = currentline[j].replace('\r', '')
+          }
+        }
       } catch (e) {}
     }
     result.push(obj)
   }
 
+  try {
+    throw {}
+  } catch (e) {}
   //return result as JSON
   return JSON.parse(JSON.stringify(result))
 }

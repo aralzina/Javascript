@@ -1,3 +1,5 @@
+var FILTER_ORDER = []
+
 /**
  *
  * @param {Array} arr initial array
@@ -57,6 +59,10 @@ function addFilter (name, data, column) {
   if (typeof FILTER[column] === 'undefined') {
     FILTER[column] = new Array()
   }
+
+  // add to filter order This will determine in what order the data is filtered
+  FILTER_ORDER.push(column)
+
   let form = $('#report-filter-form')
 
   let span = create('span')
@@ -98,24 +104,22 @@ function addFilter (name, data, column) {
 }
 
 function updateFilters (caller) {
-  //let names = Object.keys(FILTER) need to define an order
-  let names = ['FunctionalArea', 'Ceid']
   let data = global_filter_data
-
+  let callerName = caller.id
+  let callerIndex = FILTER_ORDER.indexOf(callerName)
   // Filter out dataset first
-  if (FILTER[names[0]].length > 0 && typeof FILTER[names[0]] !== 'undefined') {
-    names.forEach(name => {
-      if (typeof FILTER[name] !== 'undefined') {
-        if (FILTER[name].length > 0) {
-          data = dataIn(data, name, FILTER[name])
-        }
+  if (FILTER[FILTER_ORDER[0]].length > 0) {
+    // only filter the data for the filter order and each one before it.
+    for (let i = 0; i <= callerIndex; i++) {
+      if (FILTER[FILTER_ORDER[i]].length > 0) {
+        data = dataIn(data, FILTER_ORDER[i], FILTER[FILTER_ORDER[i]])
       }
-    })
+    }
   }
 
   // Iterate selects and update the options
-  for (let i = 1; i < names.length; i++) {
-    let name = names[i]
+  for (let i = callerIndex; i < FILTER_ORDER.length - 1; i++) {
+    let name = FILTER_ORDER[i]
     let select = $('#' + name + '-select')
     if (select.attr('id') !== caller.id) {
       let optionNames = unique(data, name)
