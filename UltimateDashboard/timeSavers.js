@@ -46,9 +46,10 @@ function sort (data, asc) {
  * Quick create an HTML element
  * @param {string} type type of element to create
  * @param {Map | undefined} args id, className, style, etc.
+ * @param {Map | undefined} attrs any attributes using the setAttributes function
  * @returns
  */
-function create (type, args) {
+function create (type, args, attrs) {
   // make the element
   let element = document.createElement(type)
 
@@ -59,6 +60,17 @@ function create (type, args) {
         element[key] = args[key]
       } catch (e) {
         console.log('Error assigning args to ' + type + ' element')
+      }
+    })
+  }
+
+  //if any attributes are included, set them
+  if (typeof attrs !== 'undefined') {
+    Object.keys(attrs).forEach(attr => {
+      try {
+        element.setAttribute(attr, attrs[attr])
+      } catch (e) {
+        log('Error adding attr ' + attr.toString() + ' to element')
       }
     })
   }
