@@ -183,11 +183,9 @@ function addFilter (name, key) {
   // add to filter order This will determine in what order the data is filtered
   FILTER_ORDER.push(key)
 
-  let form = $('#report-filter-form')
+  let form = $('#report-filter-form')[0]
 
-  let span = create('span')
-  span.textContent = name
-  span.className = 'form-span'
+  let span = create('span', { textContent: name, className: 'form-span' })
   let select = create(
     'select',
     {
@@ -195,7 +193,6 @@ function addFilter (name, key) {
       id: key + '-select'
     },
     {
-      name: key + '[]',
       multiple: 'multiple',
       'data-placeholder': 'Select an option...',
       style: 'width: 160px'
