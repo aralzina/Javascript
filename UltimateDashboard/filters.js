@@ -181,7 +181,9 @@ function addFilter (name, key) {
   }
 
   // add to filter order This will determine in what order the data is filtered
-  FILTER_ORDER.push(key)
+  if (!FILTER_ORDER.includes(key)) {
+    FILTER_ORDER.push(key)
+  }
 
   let form = $('#report-filter-form')[0]
 

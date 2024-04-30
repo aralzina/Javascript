@@ -55,6 +55,21 @@ function create (type, args, attrs) {
   return element
 }
 
+function getClass (className) {
+  return document.getElementsByClassName(className)
+}
+
+function getOffset (el) {
+  var _x = 0
+  var _y = 0
+  while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+    _x += el.offsetLeft - el.scrollLeft
+    _y += el.offsetTop - el.scrollTop
+    el = el.offsetParent
+  }
+  return { top: _y, left: _x }
+}
+
 /**
  * Simple function to return element by id without
  * having to type the full js out
@@ -74,6 +89,29 @@ function log (text) {
 }
 
 /**
+ * Get rid of duplicate rows within an array
+ * @param {Array} data array to remove duplicates from
+ * @returns {Array} array with no duplicates
+ */
+function removeDuplicates (data) {
+  let results = []
+  data.forEach(row => {
+    let found = false
+    let rowData = JSON.stringify(row)
+    results.forEach(result => {
+      let resultData = JSON.stringify(result)
+      if (rowData === resultData) {
+        found = true
+      }
+    })
+    if (found === false) {
+      results.push(row)
+    }
+  })
+  return results
+}
+
+/**
  * Simple sort
  * @param {Array} data
  * @param {boolean|undefined} asc - optional - defaults to true
@@ -81,15 +119,11 @@ function log (text) {
  */
 function sort (data, asc) {
   // make sure asc is a boolean even if not provided
-  asc ? (asc = true) : (asc = false)
+  asc = typeof asc !== 'undefined' ? asc : true
 
   // sort
   data.sort(a, b => {
-    if (asc) {
-      return a < b ? -1 : a > b ? 1 : 0
-    } else {
-      return a < b ? 1 : a > b ? -1 : 0
-    }
+    return asc ? (a < b ? -1 : a > b ? 1 : 0) : a < b ? 1 : a > b ? -1 : 0
   })
 
   return data
@@ -104,15 +138,21 @@ function sort (data, asc) {
  */
 function sortBy (data, col, asc) {
   // make sure asc is a boolean even if not provided
-  asc ? (asc = true) : (asc = false)
+  asc = typeof asc !== 'undefined' ? asc : true
 
   // sort
   data.sort((a, b) => {
-    if (asc) {
-      return a[col] < b[col] ? -1 : a[col] > b ? 1 : 0
-    } else {
-      return a[col] < b[col] ? 1 : a[col] > b ? -1 : 0
-    }
+    return asc
+      ? a[col] < b[col]
+        ? -1
+        : a[col] > b
+        ? 1
+        : 0
+      : a[col] < b[col]
+      ? 1
+      : a[col] > b
+      ? -1
+      : 0
   })
   return data
 }

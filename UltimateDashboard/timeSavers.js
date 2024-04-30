@@ -1,45 +1,23 @@
 /**
- * Predefined sort function instead of having to
- * @param {Dict|Map} data a dictionary to sort
- * @param {String} col the column to sort by
- * @param {boolean|undefined} asc (optional) - defaults to true
- * @returns {Dict|Map} returns sorted dictionary/HTML collection even though the dict is already sorted
+ * Easier way to append multiple childen using an ordered list
+ * @param {HTMLElement} parent element to append children to
+ * @param {Array<HTMLElement> | HTMLElement} children Array of children to append
  */
-function sortBy (data, col, asc) {
-  // make sure asc is a boolean even if not provided
-  asc ? (asc = true) : (asc = false)
+function appendChildren (parent, children) {
+  // if a single element is passed, make it an array anyways
+  if (!Array.isArray(children)) {
+    children = [children]
+  }
 
-  // sort
-  data.sort((a, b) => {
-    if (asc) {
-      return a[col] < b[col] ? -1 : a[col] > b ? 1 : 0
-    } else {
-      return a[col] < b[col] ? 1 : a[col] > b ? -1 : 0
+  children.forEach(child => {
+    try {
+      parent.appendChild(child)
+    } catch (e) {
+      console.log(
+        'Failed to append ' + child.toString() + ' to ' + parent.toString()
+      )
     }
   })
-  return data
-}
-
-/**
- * Simple sort
- * @param {Array} data
- * @param {boolean|undefined} asc - optional - defaults to true
- * @returns {Array}
- */
-function sort (data, asc) {
-  // make sure asc is a boolean even if not provided
-  asc ? (asc = true) : (asc = false)
-
-  // sort
-  data.sort(a, b => {
-    if (asc) {
-      return a < b ? -1 : a > b ? 1 : 0
-    } else {
-      return a < b ? 1 : a > b ? -1 : 0
-    }
-  })
-
-  return data
 }
 
 /**
@@ -77,24 +55,6 @@ function create (type, args, attrs) {
   return element
 }
 
-/**
- * Because I hate typing cosole.log(...)
- * @param {*} text anything really...
- */
-function log (text) {
-  console.log(text)
-}
-
-/**
- * Simple function to return element by id without
- * having to type the full js out
- * @param {string} id string of type to create
- * @returns {HTMLElement} returns element of type input
- */
-function id (id) {
-  return document.getElementById(id)
-}
-
 function getClass (className) {
   return document.getElementsByClassName(className)
 }
@@ -108,4 +68,91 @@ function getOffset (el) {
     el = el.offsetParent
   }
   return { top: _y, left: _x }
+}
+
+/**
+ * Simple function to return element by id without
+ * having to type the full js out
+ * @param {string} id string of type to create
+ * @returns {HTMLElement} returns element of type input
+ */
+function id (id) {
+  return document.getElementById(id)
+}
+
+/**
+ * Because I hate typing cosole.log(...)
+ * @param {*} text anything really...
+ */
+function log (text) {
+  console.log(text)
+}
+
+/**
+ * Get rid of duplicate rows within an array
+ * @param {Array} data array to remove duplicates from
+ * @returns {Array} array with no duplicates
+ */
+function removeDuplicates (data) {
+  let results = []
+  data.forEach(row => {
+    let found = false
+    let rowData = JSON.stringify(row)
+    results.forEach(result => {
+      let resultData = JSON.stringify(result)
+      if (rowData === resultData) {
+        found = true
+      }
+    })
+    if (found === false) {
+      results.push(row)
+    }
+  })
+  return results
+}
+
+/**
+ * Simple sort
+ * @param {Array} data
+ * @param {boolean|undefined} asc - optional - defaults to true
+ * @returns {Array}
+ */
+function sort (data, asc) {
+  // make sure asc is a boolean even if not provided
+  asc = typeof asc !== 'undefined' ? asc : true
+
+  // sort
+  data.sort(a, b => {
+    return asc ? (a < b ? -1 : a > b ? 1 : 0) : a < b ? 1 : a > b ? -1 : 0
+  })
+
+  return data
+}
+
+/**
+ * Predefined sort function instead of having to
+ * @param {Dict|Map} data a dictionary to sort
+ * @param {String} col the column to sort by
+ * @param {boolean|undefined} asc (optional) - defaults to true
+ * @returns {Dict|Map} returns sorted dictionary/HTML collection even though the dict is already sorted
+ */
+function sortBy (data, col, asc) {
+  // make sure asc is a boolean even if not provided
+  asc = typeof asc !== 'undefined' ? asc : true
+
+  // sort
+  data.sort((a, b) => {
+    return asc
+      ? a[col] < b[col]
+        ? -1
+        : a[col] > b
+        ? 1
+        : 0
+      : a[col] < b[col]
+      ? 1
+      : a[col] > b
+      ? -1
+      : 0
+  })
+  return data
 }
