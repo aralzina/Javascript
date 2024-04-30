@@ -122,7 +122,7 @@ function sort (data, asc) {
   asc = typeof asc !== 'undefined' ? asc : true
 
   // sort
-  data.sort(a, b => {
+  data.sort((a, b) => {
     return asc ? (a < b ? -1 : a > b ? 1 : 0) : a < b ? 1 : a > b ? -1 : 0
   })
 
