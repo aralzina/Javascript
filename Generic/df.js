@@ -98,6 +98,11 @@ function dataNotLike (data, key, value) {
  * @returns {Array} array of unique values
  */
 function unique (data, key) {
+  // if data has nothing in it... return
+  if (data.length === 0) {
+    return []
+  }
+
   // make a deep copy of the data so that the initial data isn't sorted
   data = JSON.parse(JSON.stringify(data))
 
