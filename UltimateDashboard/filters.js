@@ -44,6 +44,12 @@ function addFilter (name, key) {
  * - Add them, wire them, etc...
  */
 function filterConfig () {
+  // get previously used filters
+  let chosen = {}
+  FILTER_ORDER.forEach(v => {
+    chosen[v] = localStorage.getItem(v) === null ? [] : localStorage.getItem(v)
+  })
+
   // add filters but only populate the first one
   addFilter('Process', FILTER_ORDER[0])
 
@@ -52,7 +58,7 @@ function filterConfig () {
   // update filter section
   let f1 = $('#' + FILTER_ORDER[0] + '-select')
   f1.select2({
-    data: selectDataFormat(MAPPING, FILTER_ORDER[0])
+    data: selectDataFormat(MAPPING, FILTER_ORDER[0], chosen[FILTER_ORDER[0]])
   })
   f1.on('change', event => {
     updateFilter(event, 0)
@@ -65,7 +71,8 @@ function filterConfig () {
 
   // loop additional filters and turn them into select2 objects
   for (let i = 1; i < FILTER_ORDER.length; i++) {
-    $('#' + FILTER_ORDER[i] + '-select').select2()
+    let data = preloadSelect(chosen[FILTER_ORDER[i]])
+    $('#' + FILTER_ORDER[i] + '-select').select2({ data: data })
   }
 }
 
@@ -91,10 +98,22 @@ function getFilterSelections () {
  * @param {*} key specific column/key to get from data
  * @returns {Array} an array of data formatted for select2
  */
-function selectDataFormat (data, key) {
+function selectDataFormat (data, key, chosen) {
   return unique(data, key).map((v, i, a) => {
-    return { id: i.toString(), text: v }
+    return typeof chosen !== 'undefined'
+      ? chosen.includes(v)
+        ? { id: i.toString(), text: v, selected: true }
+        : { id: i.toString(), text: v }
+      : { id: i.toString(), text: v }
   })
+}
+
+function preloadSelect (data) {
+  let results = []
+  data.forEach((v, i, a) => {
+    results.push({ id: i.toString(), text: v, selected: true })
+  })
+  return results
 }
 
 /**
@@ -184,6 +203,11 @@ function updateFilter (event, id) {
       updateFilter(event, i)
     })
   }
+
+  // store selections in local storage for use when reloading the browser
+  FILTER_ORDER.forEach(v => {
+    localStorage.setItem(v, chosen[v])
+  })
 }
 
 function loadFrame () {
