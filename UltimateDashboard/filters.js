@@ -110,6 +110,7 @@ function selectDataFormat (data, key, chosen) {
 
 function preloadSelect (data) {
   let results = []
+  data = !Array.isArray(data) ? [data] : data
   data.forEach((v, i, a) => {
     results.push({ id: i.toString(), text: v, selected: true })
   })
