@@ -226,10 +226,7 @@ function loadFrame () {
   let selections = getFilterSelections()
   selections.site = ['F32']
   selections.indicators = ['Issues', 'E3-Health']
-  let args =
-    'https://dots.intel.com/ui/dots?grouping=REV&orientation=SITE-PROCESS&useCeidGroup=false&showBO=closed&menu=closed&tab=E3-Health'
-  args =
-    'https://dots.intel.com/ui/pages/e3/e3-health?grouping=REV&orientation=SITE-PROCESS&useCeidGroup=false&period=013wf'
+  let args = DOTS_BASE_URL
   Object.keys(selections).forEach(key => {
     if (selections[key].length > 0) {
       switch (key) {
