@@ -1,7 +1,12 @@
 /**
  * Side Filter Config
  */
-const FILTER_ORDER = ['Process', 'FunctionalArea', 'Module', 'Ceid']
+const FILTER_ORDER = [
+  'Process',
+  'FunctionalArea',
+  //'Module',
+  'Ceid'
+]
 /**
  * Filter Mapping - Pulled manually from DOTS
  */
@@ -66,13 +71,16 @@ function filterConfig () {
 
   // add additional filters
   addFilter('Area Selection', FILTER_ORDER[1])
-  addFilter('Module Selection', FILTER_ORDER[2])
-  addFilter('Ceid Selection', FILTER_ORDER[3])
+  //addFilter('Module Selection', FILTER_ORDER[2])
+  addFilter('Ceid Selection', FILTER_ORDER[2])
 
   // loop additional filters and turn them into select2 objects
   for (let i = 1; i < FILTER_ORDER.length; i++) {
     let data = preloadSelect(chosen[FILTER_ORDER[i]])
     $('#' + FILTER_ORDER[i] + '-select').select2({ data: data })
+  }
+  if (chosen[FILTER_ORDER[0].length > 0]) {
+    f1.trigger('change')
   }
 }
 
