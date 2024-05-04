@@ -559,3 +559,53 @@ function scrubEmptyTextNodes (element) {
     scrubEmptyTextNodes(children[i])
   }
 }
+
+// Maybe use a dict of true/false values
+var CUSTOM_OPTIONS = {
+  AVAILABILITY: {
+    1270: false,
+    1274: false,
+    5053: false
+  },
+  GOOD_CATCH: false,
+  QDO: false
+}
+// Custom Table
+
+function customOutline () {
+  let table, head, body, tr, th, span, td
+
+  table = id('custom-table')
+  head = create('thead')
+  body = create('tbody')
+  appendChildren(table, [head, body])
+
+  tr = create('tr')
+  appendChildren(head, tr)
+
+  th = create('th', { className: 'title-th' }, { colspan: '3' })
+  appendChildren(tr, th)
+
+  span = create('span', { textContent: 'CUSTOM INDICATORS' })
+  appendChildren(th, span)
+
+  tr = create('tr')
+  appendChildren(head, tr)
+
+  th = [
+    create('th', { textContent: 'Category' }),
+    create('th', { textContent: 'Hdr1' }),
+    create('th', { textContent: 'Hdr2' })
+  ]
+  appendChildren(tr, th)
+
+  tr = create('tr')
+  appendChildren(body, tr)
+
+  td = [
+    create('th', { textContent: 'TestRowHeader' }),
+    create('td', { textContent: 'TestCell' }),
+    create('td', { textContent: 'TestCell' })
+  ]
+  appendChildren(tr, td)
+}
