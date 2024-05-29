@@ -142,6 +142,23 @@ function query (p) {
             DATASETS.REQUEST = cleanData(data.value)
             buildOpenItemBox(DATASETS.REQUEST)
             break
+
+          case SHARED_DATASETS.COS_ENTITY_1270:
+            PARSE_FUNCTIONS.COS_ENTITY(data.value)
+            break
+
+          case SHARED_DATASETS.COS_ENTITY_1274:
+            PARSE_FUNCTIONS.COS_ENTITY(data.value)
+            break
+
+          case SHARED_DATASETS.COS_LINEVIEW_1270:
+            PARSE_FUNCTIONS.COS_LINEVIEW(data.value)
+            break
+
+          case SHARED_DATASETS.COS_LINEVIEW_1274:
+            PARSE_FUNCTIONS.COS_LINEVIEW(data.value)
+            break
+
           default:
             console.log('Error switching on query name')
             break
