@@ -143,19 +143,19 @@ function query (p) {
             buildOpenItemBox(DATASETS.REQUEST)
             break
 
-          case SHARED_DATASETS.COS_CEID_1270:
+          case SHARED_DATASETS.COS_CEID_1270.QUERY_TYPE:
             PARSE_FUNCTIONS.COS_ENTITY(data.value)
             break
 
-          case SHARED_DATASETS.COS_CEID_1274:
+          case SHARED_DATASETS.COS_CEID_1274.QUERY_TYPE:
             PARSE_FUNCTIONS.COS_ENTITY(data.value)
             break
 
-          case SHARED_DATASETS.COS_LINEVIEW_1270:
+          case SHARED_DATASETS.COS_LINEVIEW_1270.QUERY_TYPE:
             PARSE_FUNCTIONS.COS_LINEVIEW(data.value)
             break
 
-          case SHARED_DATASETS.COS_LINEVIEW_1274:
+          case SHARED_DATASETS.COS_LINEVIEW_1274.QUERY_TYPE:
             PARSE_FUNCTIONS.COS_LINEVIEW(data.value)
             break
 
