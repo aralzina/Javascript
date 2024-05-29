@@ -160,3 +160,73 @@ function doubleFilter (dataset1, dataset2, column1, column2) {
 
   return [dataset1, dataset2]
 }
+
+function CustomException (message) {
+  const error = new Error(message)
+  return error
+}
+CustomException.prototype = Object.create(Error.prototype)
+
+/**
+ * Perform a union join on two dict/map type datasets
+ * @param {*} data1 first dataset
+ * @param {*} data2 second dataset
+ * @param {String} sortColumn column name to sort by
+ * @param {boolean | undefined} asc Optional - defaults to true
+ * @returns {*} first dataset with second appended
+ * @throws Error if datasets dont have the same columns
+ */
+function union (data1, data2, sortColumn, asc) {
+  let keys1, keys2
+
+  keys1 = Object.keys(data1[0])
+  keys2 = Object.keys(data2[0])
+
+  // check for header continuity - checks if data2 columns are in data1
+  keys1.forEach(k1 => {
+    if (!keys2.includes(k1)) {
+      // Throw exception if mismatch
+      throw CustomException(
+        `Column mismatch: ${k1} not found in second dataset`
+      )
+    }
+  })
+
+  // check for header continuity - checks if data1 columns are in data2
+  keys2.forEach(k2 => {
+    if (!keys1.includes(k2)) {
+      // Throw exception if mismatch
+      throw CustomException(
+        `Column mismatch: '${k2}' not found in first dataset`
+      )
+    }
+  })
+
+  // add rows to initial data
+  data2.forEach(row => {
+    data1.push(row)
+  })
+
+  if (typeof sortColumn !== 'undefined') {
+    return sortBy(data1, sortColumn, asc)
+  }
+
+  return data1
+}
+
+/**
+ * Returns only data that matches the value provided
+ * @param {*} data
+ * @param {*} key key name to filter on
+ * @param {*} value value to include
+ * @returns {Dict|Map}
+ */
+function dataLike (data, key, value) {
+  let results = []
+  data.forEach(row => {
+    if (row[key].toUpperCase().includes(value)) {
+      results.push(row)
+    }
+  })
+  return results
+}
