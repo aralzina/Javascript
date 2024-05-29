@@ -90,6 +90,80 @@ function dataNotLike (data, key, value) {
 }
 
 /**
+ * Returns only data that matches the value provided
+ * @param {*} data
+ * @param {*} key key name to filter on
+ * @param {*} value value to include
+ * @returns {Dict|Map}
+ */
+function dataLike (data, key, value) {
+  let results = []
+  data.forEach(row => {
+    if (row[key].toUpperCase().includes(value)) {
+      results.push(row)
+    }
+  })
+  return results
+}
+
+/**
+ * Perform a union join on two dict/map type datasets
+ * @param {*} data1 first dataset
+ * @param {*} data2 second dataset
+ * @param {String} sortColumn column name to sort by
+ * @param {boolean | undefined} asc Optional - defaults to true
+ * @returns {*} first dataset with second appended
+ * @throws Error if datasets dont have the same columns
+ */
+function union (data1, data2, sortColumn, asc) {
+  let keys1, keys2
+
+  keys1 = Object.keys(data1)
+  keys2 = Object.keys(data2)
+
+  // check for header continuity - checks if data2 columns are in data1
+  keys1.forEach(k1 => {
+    let keyCheck = false
+    keys2.forEach(k2 => {
+      if (k1 === k2) {
+        keyCheck = true
+      }
+    })
+
+    // Throw exception if mismatch
+    if (!keyCheck) {
+      throw `Column mismatch: ${k1} not found in second dataset\nColumnList1: ${keys1}\nColumnList2: ${keys2}`
+    }
+  })
+
+  // check for header continuity - checks if data1 columns are in data2
+  keys2.forEach(k2 => {
+    let keyCheck = false
+    keys2.forEach(k1 => {
+      if (k2 === k1) {
+        keyCheck = true
+      }
+    })
+
+    // Throw exception if mismatch
+    if (!keyCheck) {
+      throw `Column mismatch: ${k1} not found in second dataset\nColumnList2: ${keys2}\nColumnList1: ${keys1}`
+    }
+  })
+
+  // add rows to initial data
+  data2.forEach(row => {
+    data1.push(row)
+  })
+
+  if (typeof sortColumn !== 'undefined') {
+    return sortBy(data1, sortColumn, asc)
+  }
+
+  return data1
+}
+
+/**
  * Takes in data and column name and returns how many unique values are in the column
  * Function expects that the data from JSON.parse() 'data.value' will be supplied and that
  * the function only needs to reference data instead of data.value

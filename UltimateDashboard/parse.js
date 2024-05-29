@@ -294,5 +294,23 @@ var PARSE_FUNCTIONS = {
       ])
       fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[1], GCds)
     }
+  },
+  COS_ENTITY: function (data) {
+    let pid = data[0].PROCESS_ID
+    DATASETS.COS_ENTITY =
+      DATASETS.COS_ENTITY.length === 0 ? data : union(DATASETS.COS_ENTITY, data)
+    pid === '1270'
+      ? (LOAD_STATUS.COS_ENTITY_1270 = true)
+      : (LOAD_STATUS.COS_ENTITY_1274 = true)
+  },
+  COS_LINEVIEW: function (data) {
+    let pid = data[0].PROCESS_ID
+    DATASETS.COS_LINEVIEW =
+      DATASETS.COS_LINEVIEW.length === 0
+        ? data
+        : union(DATASETS.COS_LINEVIEW, data)
+    pid === '1270'
+      ? (LOAD_STATUS.COS_LINEVIEW_1270 = true)
+      : (LOAD_STATUS.COS_LINEVIEW_1274 = true)
   }
 }

@@ -549,6 +549,7 @@ function cleanChildNodes (element) {
     element.removeChild(item)
   })
 }
+
 function scrubEmptyTextNodes (element) {
   // remove all junk from current element's childrens
   cleanChildNodes(element)
