@@ -144,11 +144,11 @@ function query (p) {
             break
 
           case SHARED_DATASETS.COS_CEID_1270.QUERY_TYPE:
-            PARSE_FUNCTIONS.COS_ENTITY(data.value)
+            PARSE_FUNCTIONS.COS_CEID(data.value)
             break
 
           case SHARED_DATASETS.COS_CEID_1274.QUERY_TYPE:
-            PARSE_FUNCTIONS.COS_ENTITY(data.value)
+            PARSE_FUNCTIONS.COS_CEID(data.value)
             break
 
           case SHARED_DATASETS.COS_LINEVIEW_1270.QUERY_TYPE:
@@ -312,13 +312,13 @@ var PARSE_FUNCTIONS = {
       fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[1], GCds)
     }
   },
-  COS_ENTITY: function (data) {
+  COS_CEID: function (data) {
     let pid = data[0].PROCESS_ID
-    DATASETS.COS_ENTITY =
-      DATASETS.COS_ENTITY.length === 0 ? data : union(DATASETS.COS_ENTITY, data)
+    DATASETS.COS_CEID =
+      DATASETS.COS_CEID.length === 0 ? data : union(DATASETS.COS_CEID, data)
     pid === '1270'
-      ? (LOAD_STATUS.COS_ENTITY_1270 = true)
-      : (LOAD_STATUS.COS_ENTITY_1274 = true)
+      ? (LOAD_STATUS.COS_CEID_1270 = true)
+      : (LOAD_STATUS.COS_CEID_1274 = true)
   },
   COS_LINEVIEW: function (data) {
     let pid = data[0].PROCESS_ID
