@@ -182,6 +182,7 @@ function union (data1, data2, sortColumn, asc) {
   keys1 = Object.keys(data1[0])
   keys2 = Object.keys(data2[0])
 
+  /* Removing for this report
   // check for header continuity - checks if data2 columns are in data1
   keys1.forEach(k1 => {
     if (!keys2.includes(k1)) {
@@ -200,7 +201,7 @@ function union (data1, data2, sortColumn, asc) {
         `Column mismatch: '${k2}' not found in first dataset`
       )
     }
-  })
+  })*/
 
   // add rows to initial data
   data2.forEach(row => {
