@@ -573,7 +573,7 @@ var CUSTOM_OPTIONS = {
 }
 // Custom Table
 
-function customOutline () {
+function customOutline (args) {
   let table, head, body, tr, th, span, td
 
   table = id('custom-table')
@@ -595,18 +595,20 @@ function customOutline () {
 
   th = [
     create('th', { textContent: 'Category' }),
-    create('th', { textContent: 'Hdr1' }),
-    create('th', { textContent: 'Hdr2' })
+    create('th')
+    //create('th', { textContent: 'Hdr2' })
   ]
   appendChildren(tr, th)
 
-  tr = create('tr')
-  appendChildren(body, tr)
+  args['ROW'].forEach(row => {
+    tr = create('tr')
+    appendChildren(body, tr)
 
-  td = [
-    create('th', { textContent: 'TestRowHeader' }),
-    create('td', { textContent: 'TestCell' }),
-    create('td', { textContent: 'TestCell' })
-  ]
-  appendChildren(tr, td)
+    td = [
+      create('th', { textContent: row['TITLE'] }),
+      create('td', { innerHTML: row['CONTENT'] })
+      //create('td', { textContent: 'TestCell' })
+    ]
+    appendChildren(tr, td)
+  })
 }
