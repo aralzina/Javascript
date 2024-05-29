@@ -143,11 +143,11 @@ function query (p) {
             buildOpenItemBox(DATASETS.REQUEST)
             break
 
-          case SHARED_DATASETS.COS_ENTITY_1270:
+          case SHARED_DATASETS.COS_CEID_1270:
             PARSE_FUNCTIONS.COS_ENTITY(data.value)
             break
 
-          case SHARED_DATASETS.COS_ENTITY_1274:
+          case SHARED_DATASETS.COS_CEID_1274:
             PARSE_FUNCTIONS.COS_ENTITY(data.value)
             break
 
