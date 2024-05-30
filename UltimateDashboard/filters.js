@@ -49,6 +49,12 @@ function addFilter (name, key) {
  * - Add them, wire them, etc...
  */
 function filterConfig () {
+  let button = create('button', {
+    textContent: 'Apply Filters',
+    onclick: function (e) {
+      COS()
+    }
+  })
   // get previously used filters
   let chosen = {}
   FILTER_ORDER.forEach(v => {
