@@ -51,12 +51,15 @@ function addFilter (name, key) {
 function filterConfig () {
   let form = $('#report-filter-form')[0]
 
-  let button = create('button', {
-    textContent: 'Apply Filters',
-    onclick: function (e) {
-      COS()
+  let button = create(
+    'button',
+    {
+      textContent: 'Apply Filters'
+    },
+    {
+      onclick: 'queryCOS()'
     }
-  })
+  )
 
   // get previously used filters
   let chosen = {}
