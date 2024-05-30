@@ -49,7 +49,7 @@ function addFilter (name, key) {
  * - Add them, wire them, etc...
  */
 function filterConfig () {
-  let form = $('#report-filter-form')[0]
+  let formParent = $('#report-filter-form')[0].parentNode
 
   let button = create('button', {
     textContent: 'Apply Filters',
@@ -90,7 +90,7 @@ function filterConfig () {
     f1.trigger('change')
   }
 
-  form.appendChild(button)
+  formParent.appendChild(button)
 }
 
 /**
