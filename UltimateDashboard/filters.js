@@ -49,12 +49,15 @@ function addFilter (name, key) {
  * - Add them, wire them, etc...
  */
 function filterConfig () {
+  let form = $('#report-filter-form')[0]
+
   let button = create('button', {
     textContent: 'Apply Filters',
     onclick: function (e) {
       COS()
     }
   })
+
   // get previously used filters
   let chosen = {}
   FILTER_ORDER.forEach(v => {
@@ -88,6 +91,8 @@ function filterConfig () {
   if (chosen[FILTER_ORDER[0].length > 0]) {
     f1.trigger('change')
   }
+
+  form.appendChild(button)
 }
 
 /**
