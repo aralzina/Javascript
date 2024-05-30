@@ -159,6 +159,9 @@ function query (p) {
             PARSE_FUNCTIONS.COS_LINEVIEW(data.value)
             break
 
+          case SHARED_DATASETS.COS_COMMENTS.QUERY_TYPE:
+            PARSE_FUNCTIONS.COS_COMMENTS(data.value)
+            break
           default:
             console.log('Error switching on query name')
             break
@@ -329,5 +332,9 @@ var PARSE_FUNCTIONS = {
     pid === '1270'
       ? (LOAD_STATUS.COS_LINEVIEW_1270 = true)
       : (LOAD_STATUS.COS_LINEVIEW_1274 = true)
+  },
+  COS_COMMENTS: function (data) {
+    DATASETS.COS_COMMENTS = data
+    LOAD_STATUS.COS_COMMENTS = true
   }
 }
