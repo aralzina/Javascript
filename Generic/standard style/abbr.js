@@ -33,24 +33,12 @@ function create (type, args, attrs) {
 
   // if any args are included, assign them
   if (typeof args !== 'undefined') {
-    Object.keys(args).forEach(key => {
-      try {
-        element[key] = args[key]
-      } catch (e) {
-        console.log('Error assigning args to ' + type + ' element')
-      }
-    })
+    element = addProp(element, args)
   }
 
   //if any attributes are included, set them
   if (typeof attrs !== 'undefined') {
-    Object.keys(attrs).forEach(attr => {
-      try {
-        element.setAttribute(attr, attrs[attr])
-      } catch (e) {
-        log('Error adding attr ' + attr.toString() + ' to element')
-      }
-    })
+    element = addAttr(element, attrs)
   }
   return element
 }
@@ -157,16 +145,6 @@ function sortBy (data, col, asc) {
   return data
 }
 
-function basicTable () {
-  results = {
-    table: create('table'),
-    thead: create('thead'),
-    tbody: create('tbody')
-  }
-  appendChildren(results.table, [results.thead, results.tbody])
-  return results
-}
-
 /**
  * Quick way to add multpile attributes to an HTML element
  * ex. element.addAttribute('key','val')
@@ -179,7 +157,7 @@ function addAttr (element, args) {
     try {
       element[key] = args[key]
     } catch (e) {
-      console.log('Error assigning args to ' + type + ' element')
+      console.log('Error assigning' + key + ' to element')
     }
   })
   return element
@@ -201,4 +179,14 @@ function addProp (element, args) {
     }
   })
   return element
+}
+
+function basicTable () {
+  results = {
+    table: create('table'),
+    thead: create('thead'),
+    tbody: create('tbody')
+  }
+  appendChildren(results.table, [results.thead, results.tbody])
+  return results
 }

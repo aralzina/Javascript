@@ -38,6 +38,7 @@ function create (type, args, attrs) {
 
   //if any attributes are included, set them
   if (typeof attrs !== 'undefined') {
+    element = addAttr(element, attrs)
   }
   return element
 }
@@ -156,7 +157,7 @@ function addAttr (element, args) {
     try {
       element[key] = args[key]
     } catch (e) {
-      console.log('Error assigning args to ' + type + ' element')
+      console.log('Error assigning' + key + ' to element')
     }
   })
   return element
