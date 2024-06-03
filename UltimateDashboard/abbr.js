@@ -33,12 +33,24 @@ function create (type, args, attrs) {
 
   // if any args are included, assign them
   if (typeof args !== 'undefined') {
-    element = addProp(element, args)
+    Object.keys(args).forEach(key => {
+      try {
+        element[key] = args[key]
+      } catch (e) {
+        console.log('Error assigning args to ' + type + ' element')
+      }
+    })
   }
 
   //if any attributes are included, set them
   if (typeof attrs !== 'undefined') {
-    element = addAttr(element, attrs)
+    Object.keys(attrs).forEach(attr => {
+      try {
+        element.setAttribute(attr, attrs[attr])
+      } catch (e) {
+        log('Error adding attr ' + attr.toString() + ' to element')
+      }
+    })
   }
   return element
 }
