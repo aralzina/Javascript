@@ -33,24 +33,11 @@ function create (type, args, attrs) {
 
   // if any args are included, assign them
   if (typeof args !== 'undefined') {
-    Object.keys(args).forEach(key => {
-      try {
-        element[key] = args[key]
-      } catch (e) {
-        console.log('Error assigning args to ' + type + ' element')
-      }
-    })
+    element = addProp(element, args)
   }
 
   //if any attributes are included, set them
   if (typeof attrs !== 'undefined') {
-    Object.keys(attrs).forEach(attr => {
-      try {
-        element.setAttribute(attr, attrs[attr])
-      } catch (e) {
-        log('Error adding attr ' + attr.toString() + ' to element')
-      }
-    })
   }
   return element
 }
@@ -155,4 +142,50 @@ function sortBy (data, col, asc) {
       : 0
   })
   return data
+}
+
+/**
+ * Quick way to add multpile attributes to an HTML element
+ * ex. element.addAttribute('key','val')
+ * @param {HTMLElement} element the element to add the attribures
+ * @param {*} args a dict|map of attrs to be added
+ * @returns {HTMLElement}
+ */
+function addAttr (element, args) {
+  Object.keys(args).forEach(key => {
+    try {
+      element[key] = args[key]
+    } catch (e) {
+      console.log('Error assigning args to ' + type + ' element')
+    }
+  })
+  return element
+}
+
+/**
+ * Quick way to add multiple properties to an HTML element
+ * ex. element[key] = val
+ * @param {HTMLElement} element
+ * @param {*} attr
+ * @returns {HTMLElement}
+ */
+function addProp (element, args) {
+  Object.keys(args).forEach(key => {
+    try {
+      element.setAttribute(key, args[key])
+    } catch (e) {
+      log('Error adding attr ' + key.toString() + ' to element')
+    }
+  })
+  return element
+}
+
+function basicTable () {
+  results = {
+    table: create('table'),
+    thead: create('thead'),
+    tbody: create('tbody')
+  }
+  appendChildren(results.table, [results.thead, results.tbody])
+  return results
 }

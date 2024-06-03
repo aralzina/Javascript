@@ -162,6 +162,15 @@ function query (p) {
           case SHARED_DATASETS.COS_COMMENTS.QUERY_TYPE:
             PARSE_FUNCTIONS.COS_COMMENTS(data.value)
             break
+
+          case SHARED_DATASETS.COS_ENTITY_STATUS_1270.QUERY_TYPE:
+            PARSE_FUNCTIONS.COS_ENTITY_STATUS(data.value)
+            break
+
+          case SHARED_DATASETS.COS_ENTITY_STATUS_1274.QUERY_TYPE:
+            PARSE_FUNCTIONS.COS_ENTITY_STATUS(data.value)
+            break
+
           default:
             console.log('Error switching on query name')
             break
@@ -336,5 +345,15 @@ var PARSE_FUNCTIONS = {
   COS_COMMENTS: function (data) {
     DATASETS.COS_COMMENTS = data
     LOAD_STATUS.COS_COMMENTS = true
+  },
+  COS_ENTITY_STATUS: function (data) {
+    let pid = data[0].PROCESS_ID
+    DATASETS.COS_ENTITY_STATUS =
+      DATASETS.COS_ENTITY_STATUS.length === 0
+        ? data
+        : union(DATASETS.COS_ENTITY_STATUS, data)
+    pid === '1270'
+      ? (LOAD_STATUS.COS_ENTITY_STATUS_1270 = true)
+      : (LOAD_STATUS.COS_ENTITY_STATUS_1274 = true)
   }
 }
