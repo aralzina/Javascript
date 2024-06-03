@@ -164,7 +164,7 @@ function sortBy (data, col, asc) {
  * @param {*} args a dict|map of attrs to be added
  * @returns {HTMLElement}
  */
-function addAttr (element, args) {
+function addProp (element, args) {
   Object.keys(args).forEach(key => {
     try {
       element[key] = args[key]
@@ -182,7 +182,7 @@ function addAttr (element, args) {
  * @param {*} attr
  * @returns {HTMLElement}
  */
-function addProp (element, args) {
+function addAttr (element, args) {
   Object.keys(args).forEach(key => {
     try {
       element.setAttribute(key, args[key])
