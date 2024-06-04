@@ -171,6 +171,9 @@ function query (p) {
             PARSE_FUNCTIONS.COS_ENTITY_STATUS(data.value)
             break
 
+          case SHARED_DATASETS.TRACERS.QUERY_TYPE:
+            PARSE_FUNCTIONS.TRACERS(data.value)
+            break
           default:
             console.log('Error switching on query name')
             break
@@ -355,5 +358,9 @@ var PARSE_FUNCTIONS = {
     pid === '1270'
       ? (LOAD_STATUS.COS_ENTITY_STATUS_1270 = true)
       : (LOAD_STATUS.COS_ENTITY_STATUS_1274 = true)
+  },
+  TRACERS: function (data) {
+    LOAD_STATUS.TRACERS = true
+    DATASETS.TRACERS = data
   }
 }
