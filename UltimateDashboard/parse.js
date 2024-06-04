@@ -174,6 +174,15 @@ function query (p) {
           case SHARED_DATASETS.TRACERS.QUERY_TYPE:
             PARSE_FUNCTIONS.TRACERS(data.value)
             break
+
+          case SHARED_DATASETS.EFIT.QUERY_TYPE:
+            PARSE_FUNCTIONS.EFIT(data.value)
+            break
+
+          case SHARED_DATASETS.ILM.QUERY_TYPE:
+            PARSE_FUNCTIONS.ILM(data.value)
+            break
+
           default:
             console.log('Error switching on query name')
             break
@@ -362,5 +371,13 @@ var PARSE_FUNCTIONS = {
   TRACERS: function (data) {
     LOAD_STATUS.TRACERS = true
     DATASETS.TRACERS = data
+  },
+  EFIT: function (data) {
+    LOAD_STATUS.EFIT = true
+    DATASETS.EFT = data
+  },
+  ILM: function (data) {
+    LOAD_STATUS.ILM = true
+    DATASETS.ILM = data
   }
 }
