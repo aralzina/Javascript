@@ -374,7 +374,7 @@ var PARSE_FUNCTIONS = {
   },
   EFIT: function (data) {
     LOAD_STATUS.EFIT = true
-    DATASETS.EFT = data
+    DATASETS.EFIT = data
   },
   ILM: function (data) {
     LOAD_STATUS.ILM = true
