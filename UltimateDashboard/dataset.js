@@ -629,11 +629,22 @@ var TABLE_FUNCTIONS = {
       let columns = {}
       input.push(columns)
 
+      // get current quarter
+      let currentQtr = `${(new Date().getYear() + 1900).toString()} Q${getQtr(
+        new Date().getMonth()
+      )}`
+
       // how many months between min date and now
       let uniqueVals = unique(DATASETS.GOOD_CATCH, 'qtr')
       let total_columns = uniqueVals.length
       let start = total_columns - 4
-      start < 0 ? (start = 0) : (start = start)
+      start = start < 0 ? 0 : start
+
+      // push current qtr if not in there yet
+      if (!uniqueVals.includes(currentQtr)) {
+        uniqueVals.push(currentQtr)
+        start++
+      }
 
       // loop and create column name map
       // and set default value to 0
