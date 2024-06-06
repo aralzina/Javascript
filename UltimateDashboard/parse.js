@@ -183,6 +183,21 @@ function query (p) {
             PARSE_FUNCTIONS.ILM(data.value)
             break
 
+          case SHARED_DATASETS.COS_CEID.QUERY_TYPE:
+            LOAD_STATUS.COS_CEID = true
+            DATASETS.COS_CEID = data.value
+            break
+
+          case SHARED_DATASETS.COS_ENTITY_STATUS.QUERY_TYPE:
+            LOAD_STATUS.COS_ENTITY_STATUS = true
+            DATASETS.COS_ENTITY_STATUS = data.value
+            break
+
+          case SHARED_DATASETS.COS_LINEVIEW.QUERY_TYPE:
+            LOAD_STATUS.COS_LINEVIEW = true
+            DATASETS.COS_LINEVIEW = data.value
+            break
+
           default:
             console.log('Error switching on query name')
             break
