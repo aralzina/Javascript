@@ -42,11 +42,11 @@ var daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 var getQtr = function (month) {
   let test = (month + 1) / 12
   let qtr
-  test < 0.25
+  test <= 0.25
     ? (qtr = 1)
-    : test < 0.5
+    : test <= 0.5
     ? (qtr = 2)
-    : test < 0.75
+    : test <= 0.75
     ? (qtr = 3)
     : (qtr = 4)
   return qtr
