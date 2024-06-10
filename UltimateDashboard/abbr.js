@@ -202,3 +202,14 @@ function basicTable () {
   appendChildren(results.table, [results.thead, results.tbody])
   return results
 }
+
+function getIdsid () {
+  let idsid
+  try {
+    idsid = document.cookie.split('IDSID=')[1].split(';')[0]
+  } catch (e) {
+    idsid = ''
+    log(e)
+  }
+  return idsid
+}
