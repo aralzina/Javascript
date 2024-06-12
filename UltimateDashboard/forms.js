@@ -311,11 +311,8 @@ function html_tracker_window () {
     mc.style.transition = '0.3s'
     mc.style.width = 'max-content'
     document.getElementById('defaultOpen').click()
-    try {
-      document.getElementById('idsid').value = document.cookie
-        .split('IDSID=')[1]
-        .split(';')[0]
-    } catch (e) {}
+    document.getElementById('idsid').value = getIdsid()
+   
   }, 2)
 
   makeModal(parent)

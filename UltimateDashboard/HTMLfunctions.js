@@ -587,18 +587,8 @@ function customOutline (args) {
   th = create('th', { className: 'title-th' }, { colspan: '3' })
   appendChildren(tr, th)
 
-  span = create('span', { textContent: 'CUSTOM INDICATORS' })
+  span = create('span', { textContent: 'COS Dashboard Data' })
   appendChildren(th, span)
-
-  tr = create('tr')
-  appendChildren(head, tr)
-
-  th = [
-    create('th', { textContent: 'Category' }),
-    create('th')
-    //create('th', { textContent: 'Hdr2' })
-  ]
-  appendChildren(tr, th)
 
   args['ROW'].forEach(row => {
     tr = create('tr')
