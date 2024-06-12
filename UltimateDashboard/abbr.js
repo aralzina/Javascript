@@ -208,7 +208,7 @@ function getIdsid () {
   try {
     idsid = document.cookie.split('IDSID=')[1].split(';')[0]
   } catch (e) {
-    idsid = ''
+    idsid = '%'
     log(e)
   }
   return idsid
