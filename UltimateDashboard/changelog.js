@@ -22,7 +22,10 @@ const changelog = [
     changes: [
       {
         section: 'Menu',
-        comments: ['Replaced old menu with a nested menu.']
+        comments: [
+          'Replaced old menu with a nested menu.',
+          'Added Changelog to the menu'
+        ]
       },
       {
         section: 'Main Content Section',
