@@ -18,6 +18,7 @@ function moduleTableOutline () {
 function factoryTableOutline (category, subCategories) {
   // make 4 columns ( 4 shifts)
   let colNum = 4
+
   let rows = []
   // make total number of rows needed
   for (let i = 0; i < subCategories.length; i++) {
@@ -34,13 +35,17 @@ function factoryTableOutline (category, subCategories) {
 
   // loop and build cells for each row
   for (let i = 0; i < subCategories.length; i++) {
-    let cellNum = 4
     let row = rows[i]
     // make and add subcat column
-    let hdr = create('th')
+    let hdr = create(
+      'th',
+      { textContent: subCategories[i] },
+      { style: 'padding: 0px 1px;' }
+    )
     hdr.textContent = subCategories[i]
+    // for adding graph buttons
     if (subCategories[i] === CATEGORIES.People[0]) {
-      hdr.setAttribute('style', 'padding: 0px 1px;')
+      // original
       hdr.innerHTML = ''
       let btn = create('button')
       btn.setAttribute('style', 'width:100%;height:100%;')
@@ -49,7 +54,6 @@ function factoryTableOutline (category, subCategories) {
       let newTitle = subCategories[i]
       btn.title = 'QDO (Monthly PAS[Progression Against Schedule])'
       btn.innerHTML = newTitle
-
       btn.onclick = function (event) {
         try {
           let args = chart_data_args(DATASETS.QDO, {}, 'area', undefined, {})
@@ -62,7 +66,6 @@ function factoryTableOutline (category, subCategories) {
       }
     }
     if (subCategories[i] === CATEGORIES.People[1]) {
-      hdr.setAttribute('style', 'padding: 0px 1px;')
       hdr.innerHTML = ''
       let btn = create('button')
       btn.setAttribute('style', 'width:100%;height:100%;')
@@ -89,7 +92,6 @@ function factoryTableOutline (category, subCategories) {
       }
     }
     if (subCategories[i] === CATEGORIES.Velocity[0]) {
-      hdr.setAttribute('style', 'padding: 0px 1px;')
       hdr.innerHTML = ''
       let btn = create('button')
       btn.setAttribute('style', 'width:100%;height:100%;')
@@ -113,7 +115,6 @@ function factoryTableOutline (category, subCategories) {
       }
     }
     if (subCategories[i] === CATEGORIES.Velocity[1]) {
-      hdr.setAttribute('style', 'padding: 0px 1px;')
       hdr.innerHTML = ''
       let btn = create('button')
       btn.setAttribute('style', 'width:100%;height:100%;')
@@ -134,16 +135,13 @@ function factoryTableOutline (category, subCategories) {
         makeGraph(CHART_DATA.AVAILABILITY(args))
       }
     }
+
     row.appendChild(hdr)
     for (let j = 0; j < colNum; j++) {
       let cell = create('td')
       cell.className = 'td-content'
-      cell.id =
-        category.toLowerCase() +
-        '-' +
-        subCategories[i].toLowerCase() +
-        '-' +
-        (j + 4).toString()
+      // removing end that indicates shift
+      cell.id = category.toLowerCase() + '-' + subCategories[i].toLowerCase()
       cell.innerHTML =
         "<div class='cell-content'> <div class='cell-header'></div> <div class='cell-body hidden'></div></div>"
       row.appendChild(cell)
@@ -154,15 +152,18 @@ function factoryTableOutline (category, subCategories) {
     tbody.appendChild(row)
   })
 }
+
 function fillCells (category, subcategory, dataset) {
-  let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase() + '-'
+  // removing end hyphen
+  let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase()
   let keys = Object.keys(dataset)
   keys.forEach(key => {
-    let id = base_id + key.toString()
+    let id = base_id //+ "-" +key.toString()
     let element = document.getElementById(id)
     let mainFunc = null
     let func = null
     let footer = null
+    // make footer data and set function to use
     if (category === CATEGORY_KEYS.PEOPLE) {
       if (subcategory === CATEGORIES.People[0]) {
         mainFunc = countRecursion
@@ -610,54 +611,54 @@ function customOutline (args) {
  */
 const default_gauge_opts = args => {
   /* advanced options
-    
-        // Colors by percentage
-        percentColors = [
-            [0.0, '#a9d70b'],
-            [0.5, '#f9c802'],
-            [1.0, '#ff0000']
-        ]
-    
-        // value labels
-        staticLabels: {
-            font: "10px sans-serif",  // Specifies font
-            labels: [100, 130, 150, 220.1, 260, 300],  // Print labels at these values
-            color: "#000000",  // Optional: Label text color
-            fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-        },
-                     
-        // static zones
-        staticZones: [
-            {strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4},
-            {strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2},
-            {strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1},
-            {strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8},
-            {strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6}
-        ], 
         
-        // Varying heights to above example
-        {strokeStyle: "rgb(80,80,80)", min: 2470, max: 2530, height: 1.3}
-              
-        // tick marks
-        renderTicks: {
-            divisions: 5,
-            divWidth: 1.1,
-            divLength: 0.7,
-            divColor: #333333,
-            subDivisions: 3,
-            subLength: 0.5,
-            subWidth: 0.6,
-            subColor: #666666
-        }
-    
-        // gauge pointer tip icon
-        pointer: {
-            // Extra optional pointer options:
-            iconPath: 'myicon.png',  // Icon image source
-            iconScale: 1,    // Size scaling factor
-            iconAngle: 90.0  // Rotation offset angle, degrees
-        },
-        */
+            // Colors by percentage
+            percentColors = [
+                [0.0, '#a9d70b'],
+                [0.5, '#f9c802'],
+                [1.0, '#ff0000']
+            ]
+        
+            // value labels
+            staticLabels: {
+                font: "10px sans-serif",  // Specifies font
+                labels: [100, 130, 150, 220.1, 260, 300],  // Print labels at these values
+                color: "#000000",  // Optional: Label text color
+                fractionDigits: 0  // Optional: Numerical precision. 0=round off.
+            },
+                         
+            // static zones
+            staticZones: [
+                {strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4},
+                {strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2},
+                {strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1},
+                {strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8},
+                {strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6}
+            ], 
+            
+            // Varying heights to above example
+            {strokeStyle: "rgb(80,80,80)", min: 2470, max: 2530, height: 1.3}
+                  
+            // tick marks
+            renderTicks: {
+                divisions: 5,
+                divWidth: 1.1,
+                divLength: 0.7,
+                divColor: #333333,
+                subDivisions: 3,
+                subLength: 0.5,
+                subWidth: 0.6,
+                subColor: #666666
+            }
+        
+            // gauge pointer tip icon
+            pointer: {
+                // Extra optional pointer options:
+                iconPath: 'myicon.png',  // Icon image source
+                iconScale: 1,    // Size scaling factor
+                iconAngle: 90.0  // Rotation offset angle, degrees
+            },
+            */
 
   var opts = {
     angle: 0.0, // The span of the gauge arc
@@ -1007,13 +1008,13 @@ function InventoryGauge (data) {
     limitMax: true,
     limitMin: true,
     /*
-        staticLabels: {
-            font: '10px sans-serif', // Specifies font
-            labels: [drumBeat], // Print labels at these values
-            color: '#000000', // Optional: Label text color
-            fractionDigits: 0 // Optional: Numerical precision. 0=round off.
-        },
-        */
+            staticLabels: {
+                font: '10px sans-serif', // Specifies font
+                labels: [drumBeat], // Print labels at these values
+                color: '#000000', // Optional: Label text color
+                fractionDigits: 0 // Optional: Numerical precision. 0=round off.
+            },
+            */
     renderTicks: {
       divisions: 10,
       divWidth: 1,
