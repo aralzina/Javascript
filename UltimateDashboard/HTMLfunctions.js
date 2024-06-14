@@ -158,10 +158,10 @@ function factoryTableOutline (category, subCategories) {
 
 function fillCells (category, subcategory, dataset) {
   // removing end hyphen
-  let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase()
+  let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase() + '-'
   let keys = Object.keys(dataset)
   keys.forEach(key => {
-    let id = base_id //+ "-" +key.toString()
+    let id = base_id + '-' + key.toString()
     let element = document.getElementById(id)
     let mainFunc = null
     let func = null
