@@ -140,8 +140,11 @@ function factoryTableOutline (category, subCategories) {
     for (let j = 0; j < colNum; j++) {
       let cell = create('td')
       cell.className = 'td-content'
-      // removing end that indicates shift
-      cell.id = category.toLowerCase() + '-' + subCategories[i].toLowerCase()
+      cell.id =
+        category.toLowerCase() +
+        '-' +
+        subCategories[i].toLowerCase() +
+        (j + 4).toString()
       cell.innerHTML =
         "<div class='cell-content'> <div class='cell-header'></div> <div class='cell-body hidden'></div></div>"
       row.appendChild(cell)
