@@ -162,7 +162,7 @@ function fillCells (category, subcategory, dataset) {
   let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase() + '-'
   let keys = Object.keys(dataset)
   keys.forEach(key => {
-    let id = base_id + '-' + key.toString()
+    let id = base_id + key.toString()
     let element = document.getElementById(id)
     let mainFunc = null
     let func = null
