@@ -144,6 +144,7 @@ function factoryTableOutline (category, subCategories) {
         category.toLowerCase() +
         '-' +
         subCategories[i].toLowerCase() +
+        '-' +
         (j + 4).toString()
       cell.innerHTML =
         "<div class='cell-content'> <div class='cell-header'></div> <div class='cell-body hidden'></div></div>"
