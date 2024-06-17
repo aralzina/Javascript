@@ -242,7 +242,9 @@ var PARSE_FUNCTIONS = {
           'Module Equipment Technician'
         )
 
-        return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
+        // removing shift
+        //return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
+        return loop(data,['FULL_NAME','MANAGER_NAME','area'])
       }
 
       // filter QDO dataset with employee dataset then
@@ -280,7 +282,7 @@ var PARSE_FUNCTIONS = {
       DATASETS.QDO = qdods
 
       // tell the console
-      log('DATASETS.QDO has been acquired.')
+      log('DATASETS.QDO completed.')
       let QDOds = groupQDO(DATASETS.QDO)
       fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[0], QDOds)
     }

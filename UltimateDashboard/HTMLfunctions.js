@@ -25,10 +25,8 @@ function factoryTableOutline (category, subCategories) {
     rows.push(create('tr'))
   }
   // make category 'header'
-  let rowHeader = create('th')
+  let rowHeader = create('th', {}, { rowspan: subCategories.length.toString() })
   rowHeader.textContent = category
-  // span rows = to subcategory number
-  rowHeader.setAttribute('rowspan', subCategories.length.toString())
 
   // assign it to the first row
   rows[0].appendChild(rowHeader)
@@ -93,9 +91,11 @@ function factoryTableOutline (category, subCategories) {
     }
     if (subCategories[i] === CATEGORIES.Velocity[0]) {
       hdr.innerHTML = ''
-      let btn = create('button')
-      btn.setAttribute('style', 'width:100%;height:100%;')
-      btn.title = 'Click for graph'
+      let btn = create(
+        'button',
+        { title: 'Click for graph' },
+        { style: 'width:100%;height:100%;' }
+      )
       hdr.appendChild(btn)
       let subCatSplit = subCategories[i].split(' ')
       let newTitle = subCatSplit[1] + '<br>' + subCatSplit[0]
@@ -600,9 +600,8 @@ function customOutline (args) {
     appendChildren(body, tr)
 
     td = [
-      create('th', { textContent: row['TITLE'] }),
+      //create('th', { textContent: row['TITLE'] }),
       create('td', { innerHTML: row['CONTENT'] })
-      //create('td', { textContent: 'TestCell' })
     ]
     appendChildren(tr, td)
   })
@@ -615,54 +614,54 @@ function customOutline (args) {
  */
 const default_gauge_opts = args => {
   /* advanced options
-        
-            // Colors by percentage
-            percentColors = [
-                [0.0, '#a9d70b'],
-                [0.5, '#f9c802'],
-                [1.0, '#ff0000']
-            ]
-        
-            // value labels
-            staticLabels: {
-                font: "10px sans-serif",  // Specifies font
-                labels: [100, 130, 150, 220.1, 260, 300],  // Print labels at these values
-                color: "#000000",  // Optional: Label text color
-                fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-            },
-                         
-            // static zones
-            staticZones: [
-                {strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4},
-                {strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2},
-                {strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1},
-                {strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8},
-                {strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6}
-            ], 
             
-            // Varying heights to above example
-            {strokeStyle: "rgb(80,80,80)", min: 2470, max: 2530, height: 1.3}
-                  
-            // tick marks
-            renderTicks: {
-                divisions: 5,
-                divWidth: 1.1,
-                divLength: 0.7,
-                divColor: #333333,
-                subDivisions: 3,
-                subLength: 0.5,
-                subWidth: 0.6,
-                subColor: #666666
-            }
-        
-            // gauge pointer tip icon
-            pointer: {
-                // Extra optional pointer options:
-                iconPath: 'myicon.png',  // Icon image source
-                iconScale: 1,    // Size scaling factor
-                iconAngle: 90.0  // Rotation offset angle, degrees
-            },
-            */
+                // Colors by percentage
+                percentColors = [
+                    [0.0, '#a9d70b'],
+                    [0.5, '#f9c802'],
+                    [1.0, '#ff0000']
+                ]
+            
+                // value labels
+                staticLabels: {
+                    font: "10px sans-serif",  // Specifies font
+                    labels: [100, 130, 150, 220.1, 260, 300],  // Print labels at these values
+                    color: "#000000",  // Optional: Label text color
+                    fractionDigits: 0  // Optional: Numerical precision. 0=round off.
+                },
+                             
+                // static zones
+                staticZones: [
+                    {strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4},
+                    {strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2},
+                    {strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1},
+                    {strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8},
+                    {strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6}
+                ], 
+                
+                // Varying heights to above example
+                {strokeStyle: "rgb(80,80,80)", min: 2470, max: 2530, height: 1.3}
+                      
+                // tick marks
+                renderTicks: {
+                    divisions: 5,
+                    divWidth: 1.1,
+                    divLength: 0.7,
+                    divColor: #333333,
+                    subDivisions: 3,
+                    subLength: 0.5,
+                    subWidth: 0.6,
+                    subColor: #666666
+                }
+            
+                // gauge pointer tip icon
+                pointer: {
+                    // Extra optional pointer options:
+                    iconPath: 'myicon.png',  // Icon image source
+                    iconScale: 1,    // Size scaling factor
+                    iconAngle: 90.0  // Rotation offset angle, degrees
+                },
+                */
 
   var opts = {
     angle: 0.0, // The span of the gauge arc
@@ -1012,13 +1011,13 @@ function InventoryGauge (data) {
     limitMax: true,
     limitMin: true,
     /*
-            staticLabels: {
-                font: '10px sans-serif', // Specifies font
-                labels: [drumBeat], // Print labels at these values
-                color: '#000000', // Optional: Label text color
-                fractionDigits: 0 // Optional: Numerical precision. 0=round off.
-            },
-            */
+                staticLabels: {
+                    font: '10px sans-serif', // Specifies font
+                    labels: [drumBeat], // Print labels at these values
+                    color: '#000000', // Optional: Label text color
+                    fractionDigits: 0 // Optional: Numerical precision. 0=round off.
+                },
+                */
     renderTicks: {
       divisions: 10,
       divWidth: 1,
@@ -1438,7 +1437,7 @@ function Tracers (data) {
   }
 
   if (otherTracers.length > 0) {
-    hdr = create('h3', { textContent: `${pid} ${ceid} Other Tracers` })
+    hdr = create('h3', { textContent: `${pid} ${ceid} Misc. Tracers` })
     otherTable = makeTable(otherTracers, COLUMN_NAMES, COLUMN_VALUES)
     appendChildren(childDiv, [hdr, otherTable])
   }
@@ -1725,7 +1724,6 @@ function COS_Table (args) {
     tr,
     th,
     td,
-    columnValues,
     STGData,
     noSTGData,
     data,
@@ -1733,6 +1731,7 @@ function COS_Table (args) {
     backgroundColor,
     button,
     rowCounter = 1
+
   const GAUGE_FUNCTIONS = ['AvailabilityGauge', 'InventoryGauge']
   const COLUMN_NAMES = [
     'Process',
