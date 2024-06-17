@@ -243,8 +243,8 @@ var PARSE_FUNCTIONS = {
         )
 
         // removing shift
-        //return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
-        return loop(data,['FULL_NAME','MANAGER_NAME','area'])
+        return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
+        //return loop(data,['FULL_NAME','MANAGER_NAME','area'])
       }
 
       // filter QDO dataset with employee dataset then
