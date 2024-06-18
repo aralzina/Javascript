@@ -45,17 +45,18 @@ function factoryTableOutline (category, subCategories) {
     if (subCategories[i] === CATEGORIES.People[0]) {
       // original
       hdr.innerHTML = ''
-      let btn = create('button')
-      btn.setAttribute('style', 'width:100%;height:100%;')
-      btn.title = 'Click for graph'
+      let btn = create(
+        'button',
+        { title: 'Click for graph' },
+        { style: 'width:100%;height:100%;' }
+      )
       hdr.appendChild(btn)
       let newTitle = subCategories[i]
-      btn.title = 'QDO (Monthly PAS[Progression Against Schedule])'
+      //btn.title = 'QDO (Monthly PAS[Progression Against Schedule])'
       btn.innerHTML = newTitle
       btn.onclick = function (event) {
         try {
           let args = chart_data_args(DATASETS.QDO, {}, 'area', undefined, {})
-
           // Build the graph
           makeGraph(CHART_DATA.QDO(args))
         } catch (e) {

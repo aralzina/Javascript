@@ -34,6 +34,20 @@ const changelog = [
         ]
       }
     ]
+  },
+
+  {
+    date: '6/17/2024',
+    changes: [
+      {
+        section: 'Theme',
+        comments: [
+          'Reimagined the entire theme',
+          'Moved the menu above the filters',
+          'Pulled the COS dashboard table out of the table that it was nested inside'
+        ]
+      }
+    ]
   }
 
   /* Placeholder for next change
