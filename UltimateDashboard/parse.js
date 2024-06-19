@@ -234,16 +234,16 @@ var PARSE_FUNCTIONS = {
       // subfunction for readability
       function groupQDO (data) {
         // Testing - filter out shift 1 and shift 8
-        data = dataNotEquals(data, 'SHIFT', 1)
-        data = dataNotEquals(data, 'SHIFT', 8)
+        // data = dataNotEquals(data, 'SHIFT', 1)
+        //data = dataNotEquals(data, 'SHIFT', 8)
         data = dataNotEquals(
           data,
           'BUSINESS_TITLE',
           'Module Equipment Technician'
         )
 
-        // removing shift
         return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
+        // removing shift
         //return loop(data,['FULL_NAME','MANAGER_NAME','area'])
       }
 
@@ -253,7 +253,6 @@ var PARSE_FUNCTIONS = {
       let two_datasets = doubleFilter(data, ds, 'wwid', 'WWID')
       let qdods = two_datasets[0]
       let empds = two_datasets[1]
-
       // join sets of data
       qdods = joinData(qdods, empds, 'wwid', 'WWID')
 
@@ -265,9 +264,6 @@ var PARSE_FUNCTIONS = {
       // sort by date asc
       sortBy(qdods, 'created')
 
-      // Filter out technician submitted QDOs
-      qdods = dataNotLike(qdods, 'BUSINESS_TITLE', 'TECHNICIAN')
-
       // create a column that sums up the date for column headers later on
       // 01/01/2024 would show as 1/24
       qdods.forEach(row => {
@@ -277,6 +273,14 @@ var PARSE_FUNCTIONS = {
           (row['created'].getYear() - 100).toString()
         row['min_date'] = new Date(qdods[0]['created'])
       })
+
+      //let pqgcds = JSON.parse(JSON.stringify(qdods))
+
+      // Filter out technician submitted QDOs
+      qdods = dataNotLike(qdods, 'BUSINESS_TITLE', 'TECHNICIAN')
+
+      // Filter out manager submitted PQGC
+      //pqgcds = dataLike(pqgcds,'BUSINESS_TITLE','TECHNICIAN')
 
       // add to datastructure
       DATASETS.QDO = qdods

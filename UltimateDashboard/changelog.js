@@ -17,6 +17,46 @@
 */
 
 const changelog = [
+  /* Placeholder for next change
+    {
+        date: '',
+        changes: [
+            {
+                section: '',
+                comments: [
+                    '',
+                ]
+            }
+        ]
+    },
+    */
+
+  {
+    date: '6/18/2024',
+    changes: [
+      {
+        section: 'Main Page',
+        comments: [
+          'Added the "Custom Links" tab - this will only save to your current browswer. Config saving will be implemented in the future.'
+        ]
+      },
+      {
+        section: 'Theme',
+        comments: [
+          'Reimagined the entire theme',
+          'Moved the menu above the filters',
+          'Pulled the COS dashboard table out of the table that it was nested inside'
+        ]
+      },
+      {
+        section: 'Menu',
+        comments: [
+          'Added a settings option',
+          'Added custom link settings to the settings menu'
+        ]
+      }
+    ]
+  },
   {
     date: '6/13/2024',
     changes: [
@@ -34,35 +74,7 @@ const changelog = [
         ]
       }
     ]
-  },
-
-  {
-    date: '6/17/2024',
-    changes: [
-      {
-        section: 'Theme',
-        comments: [
-          'Reimagined the entire theme',
-          'Moved the menu above the filters',
-          'Pulled the COS dashboard table out of the table that it was nested inside'
-        ]
-      }
-    ]
   }
-
-  /* Placeholder for next change
-    {
-        date: '',
-        changes: [
-            {
-                section: '',
-                comments: [
-                    '',
-                ]
-            }
-        ]
-    }
-    */
 ]
 
 function showChangelog () {

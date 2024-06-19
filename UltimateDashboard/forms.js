@@ -310,9 +310,8 @@ function html_tracker_window () {
     let mc = document.getElementsByClassName('modal-content')[0]
     mc.style.transition = '0.3s'
     mc.style.width = 'max-content'
-    document.getElementById('defaultOpen').click()
-    document.getElementById('idsid').value = getIdsid()
-   
+    id('defaultOpen').click()
+    //id('idsid').value = getIdsid()
   }, 2)
 
   makeModal(parent)

@@ -703,315 +703,343 @@ function gaugeIt (elementId, optArgs, gaugeArgs) {
 // COS DASHBOARD SECTION //
 ///////////////////////////
 
-function AvailabilityGauge (data) {
-  let pid,
-    ceid,
-    up,
-    down,
-    total,
-    pct,
-    goal,
-    idName,
-    gaugeId,
-    hdrId,
-    numTest,
-    boolTest,
-    areqReq,
-    style
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
-  idName = 'avail'
-  gaugeId = `${pid}-${ceid}-${idName}-gauge`
-  hdrId = `${pid}-${ceid}-${idName}-hdr`
+function COS_Table (args) {
+  // functions
 
-  goal = parseFloat(data['AREQ_GOAL'])
-  goal = Number.isNaN(goal) ? 0 : goal
-  up = parseInt(data.UP)
-  down = parseInt(data.DOWN)
-  total = up + down
+  function cleanupSTGSteps (data) {
+    // Fix staging naming convention
+    data.forEach(row => {
+      let ceid, slice, space
 
-  // configure style of header
-  style =
-    up / total >= goal
-      ? 'border-radius: 12px;'
-      : 'background-color: #ff000042; border-radius: 12px;'
-
-  areqReq =
-    goal === 0
-      ? 'No A<sub>Req</sub>'
-      : `Min A<sub>Req</sub> = ${Math.ceil(goal * total).toString()}/${total}`
-
-  let steps = (100 - goal * 100) / 4
-
-  let optArgs = {
-    percentColors: [
-      [0.0, '#ff0000'],
-      [goal - 0.01, '#ff0000'],
-      [goal, '#32CD32'],
-      [1.0, '#32CD32']
-    ],
-    staticZones: [
-      { strokeStyle: 'rgb(255,0,0)', min: 0, max: goal * 100, height: 1 },
-      {
-        strokeStyle: 'rgb(158, 243, 20)',
-        min: goal * 100,
-        max: goal * 100 + steps * 1,
-        height: 1
-      },
-      {
-        strokeStyle: 'rgb(126, 231, 33)',
-        min: goal * 100 + steps * 1,
-        max: goal * 100 + steps * 2,
-        height: 1
-      },
-      {
-        strokeStyle: 'rgb(92, 218, 42)',
-        min: goal * 100 + steps * 2,
-        max: goal * 100 + steps * 3,
-        height: 1
-      },
-      {
-        strokeStyle: 'rgb(50, 205, 50)',
-        min: goal * 100 + steps * 3,
-        max: goal * 100 + steps * 4,
-        height: 1
+      // check to make sure length of ceid is more than 3 characters
+      ceid = row['CEID']
+      if (ceid.length > 3) {
+        slice = ceid.slice(-3).toUpperCase()
+        if (slice === 'STG') {
+          spaceCheck = ceid[ceid.length - 4]
+          row['CEID'] =
+            spaceCheck === ' '
+              ? ceid
+              : `${ceid.substr(0, ceid.length - 3)} ${slice}`
+        }
       }
-    ],
-    limitMax: true,
-    limitMin: true,
-    staticLabels: {
-      font: '10px sans-serif', // Specifies font
-      labels: [goal * 100], // Print labels at these values
-      color: '#000000', // Optional: Label text color
-      fractionDigits: 0 // Optional: Numerical precision. 0=round off.
-    },
-    renderTicks: {
-      divisions: 10,
-      divWidth: 1,
-      divLength: 0.5,
-      divColor: '#333333',
-      subDivisions: 1,
-      subLength: 0.25,
-      subWidth: 0.5,
-      subColor: '#666666'
-    }
-  }
-  let gaugeArgs = {
-    maxValue: 100,
-    minValue: 0,
-    actualValue: (up / total) * 100
+    })
+    return data
   }
 
-  boolTest = false
-  numTest = [up, down, total]
-  numTest.forEach(num => {
-    if (Number.isNaN(num)) {
-      boolTest = true
+  function AvailabilityGauge (data) {
+    let pid,
+      ceid,
+      up,
+      down,
+      total,
+      pct,
+      goal,
+      idName,
+      gaugeId,
+      hdrId,
+      numTest,
+      boolTest,
+      areqReq,
+      style
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+    idName = 'avail'
+    gaugeId = `${pid}-${ceid}-${idName}-gauge`
+    hdrId = `${pid}-${ceid}-${idName}-hdr`
+
+    goal = parseFloat(data['AREQ_GOAL'])
+    goal = Number.isNaN(goal) ? 0 : goal
+    up = parseInt(data.UP)
+    down = parseInt(data.DOWN)
+    total = up + down
+
+    // configure style of header
+    style =
+      up / total >= goal
+        ? 'border-radius: 12px;'
+        : 'background-color: #ff000042; border-radius: 12px;'
+
+    areqReq =
+      goal === 0
+        ? 'No A<sub>Req</sub>'
+        : `Min A<sub>Req</sub> = ${Math.ceil(goal * total).toString()}/${total}`
+
+    let steps = (100 - goal * 100) / 4
+
+    let optArgs = {
+      percentColors: [
+        [0.0, '#ff0000'],
+        [goal - 0.01, '#ff0000'],
+        [goal, '#32CD32'],
+        [1.0, '#32CD32']
+      ],
+      staticZones: [
+        { strokeStyle: 'rgb(255,0,0)', min: 0, max: goal * 100, height: 1 },
+        {
+          strokeStyle: 'rgb(158, 243, 20)',
+          min: goal * 100,
+          max: goal * 100 + steps * 1,
+          height: 1
+        },
+        {
+          strokeStyle: 'rgb(126, 231, 33)',
+          min: goal * 100 + steps * 1,
+          max: goal * 100 + steps * 2,
+          height: 1
+        },
+        {
+          strokeStyle: 'rgb(92, 218, 42)',
+          min: goal * 100 + steps * 2,
+          max: goal * 100 + steps * 3,
+          height: 1
+        },
+        {
+          strokeStyle: 'rgb(50, 205, 50)',
+          min: goal * 100 + steps * 3,
+          max: goal * 100 + steps * 4,
+          height: 1
+        }
+      ],
+      limitMax: true,
+      limitMin: true,
+      staticLabels: {
+        font: '10px sans-serif', // Specifies font
+        labels: [goal * 100], // Print labels at these values
+        color: '#000000', // Optional: Label text color
+        fractionDigits: 0 // Optional: Numerical precision. 0=round off.
+      },
+      renderTicks: {
+        divisions: 10,
+        divWidth: 1,
+        divLength: 0.5,
+        divColor: '#333333',
+        subDivisions: 1,
+        subLength: 0.25,
+        subWidth: 0.5,
+        subColor: '#666666'
+      }
     }
-  })
-  if (boolTest) {
-    return
+    let gaugeArgs = {
+      maxValue: 100,
+      minValue: 0,
+      actualValue: (up / total) * 100
+    }
+
+    boolTest = false
+    numTest = [up, down, total]
+    numTest.forEach(num => {
+      if (Number.isNaN(num)) {
+        boolTest = true
+      }
+    })
+    if (boolTest) {
+      return
+    }
+
+    pct = ((up / total) * 100).toFixed(1).toString() + '%'
+    goal = (goal * 100).toFixed(1).toString() + '%'
+    id(
+      hdrId
+    ).innerHTML = `U/D: ${up}/${down}<br>${areqReq}<br>${pct} vs Goal: ${goal}`
+    id(gaugeId).setAttribute('title', pct)
+
+    id(hdrId).setAttribute('style', style)
+
+    gaugeIt(gaugeId, optArgs, gaugeArgs)
   }
 
-  pct = ((up / total) * 100).toFixed(1).toString() + '%'
-  goal = (goal * 100).toFixed(1).toString() + '%'
-  id(
-    hdrId
-  ).innerHTML = `U/D: ${up}/${down}<br>${areqReq}<br>${pct} vs Goal: ${goal}`
-  id(gaugeId).setAttribute('title', pct)
+  function ceidLineview (data) {
+    let parentDiv,
+      childDiv,
+      hdr,
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td,
+      invCounter = 0,
+      button,
+      title,
+      pid,
+      ceid,
+      rowCounter = 1,
+      backgroundColor,
+      closeButton
+    const COLUMN_NAMES = [
+      'Day',
+      'Oper',
+      'Oper Desc',
+      'Inv',
+      'Inv IP',
+      'CS Outs',
+      'DB',
+      'Inc 12hr',
+      'Inc 24hr',
+      'WTD Pace'
+    ]
+    const COLUMN_KEYS = [
+      'SEGMENT_DAY',
+      'OPERATION',
+      'OPER_SHORT_DESC',
+      'INV_PROD',
+      'INV_IP',
+      'CS_OUTS_PROD',
+      'DRUM_BEAT',
+      'INV_INC_12HR',
+      'INV_INC_24HR',
+      'CW_PACE'
+    ]
 
-  id(hdrId).setAttribute('style', style)
+    // setup naming vars
+    pid = data[0]['PROCESS_ID']
+    ceid = data[0]['CEID']
+    title = `${pid} ${ceid} Inventory`
 
-  gaugeIt(gaugeId, optArgs, gaugeArgs)
-}
+    parentDiv = create('div', { className: 'inv-hdr-div' })
 
-function ceidLineview (data) {
-  let parentDiv,
-    childDiv,
-    hdr,
-    table,
-    thead,
-    tbody,
-    tr,
-    th,
-    td,
-    invCounter = 0,
-    button,
-    title,
-    pid,
-    ceid,
-    rowCounter = 1,
-    backgroundColor,
-    closeButton
-  const COLUMN_NAMES = [
-    'Day',
-    'Oper',
-    'Oper Desc',
-    'Inv',
-    'Inv IP',
-    'CS Outs',
-    'DB',
-    'Inc 12hr',
-    'Inc 24hr',
-    'WTD Pace'
-  ]
-  const COLUMN_KEYS = [
-    'SEGMENT_DAY',
-    'OPERATION',
-    'OPER_SHORT_DESC',
-    'INV_PROD',
-    'INV_IP',
-    'CS_OUTS_PROD',
-    'DRUM_BEAT',
-    'INV_INC_12HR',
-    'INV_INC_24HR',
-    'CW_PACE'
-  ]
+    // make parentdivs children
+    childDiv = create('div', { className: 'popout hidden' })
+    button = create('button', {
+      onclick: function (e) {
+        childDiv.classList.toggle('hidden')
+        childDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+      }
+    })
 
-  // setup naming vars
-  pid = data[0]['PROCESS_ID']
-  ceid = data[0]['CEID']
-  title = `${pid} ${ceid} Inventory`
+    // append parent div's children
+    appendChildren(parentDiv, [button, childDiv])
 
-  parentDiv = create('div', { className: 'inv-hdr-div' })
+    // make childdivs children
+    hdr = create('h3', { textContent: title })
+    table = create('table', { className: 'ind-table' })
+    closeButton = create('button', {
+      textContent: 'Close',
+      onclick: function (e) {
+        childDiv.classList.toggle('hidden')
+      }
+    })
 
-  // make parentdivs children
-  childDiv = create('div', { className: 'popout hidden' })
-  button = create('button', {
-    onclick: function (e) {
-      childDiv.classList.toggle('hidden')
-      childDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
-    }
-  })
+    // append to childDiv
+    appendChildren(childDiv, [hdr, table, closeButton])
 
-  // append parent div's children
-  appendChildren(parentDiv, [button, childDiv])
+    // create table parts
+    thead = create('thead')
+    tbody = create('tbody')
 
-  // make childdivs children
-  hdr = create('h3', { textContent: title })
-  table = create('table', { className: 'ind-table' })
-  closeButton = create('button', {
-    textContent: 'Close',
-    onclick: function (e) {
-      childDiv.classList.toggle('hidden')
-    }
-  })
+    // add into table
+    appendChildren(table, [thead, tbody])
 
-  // append to childDiv
-  appendChildren(childDiv, [hdr, table, closeButton])
+    // create and append header row
+    tr = create('tr')
+    thead.appendChild(tr)
 
-  // create table parts
-  thead = create('thead')
-  tbody = create('tbody')
+    // add in column names
+    COLUMN_NAMES.forEach(col => {
+      th = create(
+        'th',
+        { textContent: col },
+        { style: 'background-color: darkblue; color:white;' }
+      )
+      tr.appendChild(th)
+    })
 
-  // add into table
-  appendChildren(table, [thead, tbody])
+    // loop data and add in rows
+    data.forEach(row => {
+      let wtdPaceCheck = row['CW_PACE']
+      let skipRow = false
+      if (!Number.isNaN(parseInt(wtdPaceCheck))) {
+        wtdPaceCheck = parseInt(wtdPaceCheck)
+        skipRow = wtdPaceCheck === 0 ? true : false
+      }
 
-  // create and append header row
-  tr = create('tr')
-  thead.appendChild(tr)
+      // if no data for this row, skip it
+      if (!skipRow) {
+        invCounter += parseInt(row['INV_PROD'])
+        backgroundColor = rowCounter % 2 === 0 ? '#b0c4de6e' : 'white'
+        rowCounter++
+        // create this rows tr for the data
+        // apply every other row coloring
+        tr = create(
+          'tr',
+          {},
+          { style: `background-color: ${backgroundColor};` }
+        )
+        tbody.appendChild(tr)
 
-  // add in column names
-  COLUMN_NAMES.forEach(col => {
-    th = create(
-      'th',
-      { textContent: col },
-      { style: 'background-color: darkblue; color:white;' }
-    )
-    tr.appendChild(th)
-  })
+        // loop through needed keys to get the data for each cell
+        COLUMN_KEYS.forEach(key => {
+          let cellData = row[key]
+          cellData = Number.isNaN(parseInt(cellData))
+            ? cellData
+            : parseInt(cellData) === 0
+            ? ''
+            : cellData
+          td = create('td', { textContent: cellData })
+          tr.appendChild(td)
+        })
+      }
+    })
+    button.textContent = invCounter.toString()
 
-  // loop data and add in rows
-  data.forEach(row => {
-    let wtdPaceCheck = row['CW_PACE']
-    let skipRow = false
-    if (!Number.isNaN(parseInt(wtdPaceCheck))) {
-      wtdPaceCheck = parseInt(wtdPaceCheck)
-      skipRow = wtdPaceCheck === 0 ? true : false
-    }
+    return parentDiv
+  }
 
-    // if no data for this row, skip it
-    if (!skipRow) {
-      invCounter += parseInt(row['INV_PROD'])
-      backgroundColor = rowCounter % 2 === 0 ? '#b0c4de6e' : 'white'
-      rowCounter++
-      // create this rows tr for the data
-      // apply every other row coloring
-      tr = create('tr', {}, { style: `background-color: ${backgroundColor};` })
-      tbody.appendChild(tr)
+  function InventoryGauge (data) {
+    let inventoryGoal,
+      currentInventory,
+      inventoryScore,
+      inventoryGrowth,
+      bosInventory,
+      inventoryIP,
+      barColor,
+      titleText,
+      pid,
+      ceid,
+      idName,
+      gaugeId,
+      hdrId,
+      GROWTH_MID,
+      GROWTH_MAX,
+      lvData = JSON.parse(JSON.stringify(DATASETS.COS_LINEVIEW))
 
-      // loop through needed keys to get the data for each cell
-      COLUMN_KEYS.forEach(key => {
-        let cellData = row[key]
-        cellData = Number.isNaN(parseInt(cellData))
-          ? cellData
-          : parseInt(cellData) === 0
-          ? ''
-          : cellData
-        td = create('td', { textContent: cellData })
-        tr.appendChild(td)
-      })
-    }
-  })
-  button.textContent = invCounter.toString()
+    GROWTH_MID = 1.15
+    GROWTH_MAX = 1.75
 
-  return parentDiv
-}
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+    idName = 'inv'
+    gaugeId = `${pid}-${ceid}-${idName}-gauge`
+    hdrId = `${pid}-${ceid}-${idName}-hdr`
 
-function InventoryGauge (data) {
-  let inventoryGoal,
-    currentInventory,
-    inventoryScore,
-    inventoryGrowth,
-    bosInventory,
-    inventoryIP,
-    barColor,
-    titleText,
-    pid,
-    ceid,
-    idName,
-    gaugeId,
-    hdrId,
-    GROWTH_MID,
-    GROWTH_MAX,
-    lvData = JSON.parse(JSON.stringify(DATASETS.COS_LINEVIEW))
+    inventoryIP = data['INV_IP']
+    currentInventory = data['INV_PROD']
+    inventoryGoal = data['INV_GOAL']
+    bosInventory = data['INV_CS_BOS']
 
-  GROWTH_MID = 1.15
-  GROWTH_MAX = 1.75
+    inventoryScore = currentInventory / inventoryGoal
+    inventoryGrowth = currentInventory / bosInventory
 
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
-  idName = 'inv'
-  gaugeId = `${pid}-${ceid}-${idName}-gauge`
-  hdrId = `${pid}-${ceid}-${idName}-hdr`
+    barColor =
+      inventoryScore <= 1
+        ? '#32cd32'
+        : inventoryGrowth >= GROWTH_MAX
+        ? '#ff0000'
+        : inventoryGrowth >= GROWTH_MID
+        ? '#FFA800'
+        : inventoryGoal < currentInventory && currentInventory < bosInventory
+        ? '#f5f5dc'
+        : '#FFA800'
 
-  inventoryIP = data['INV_IP']
-  currentInventory = data['INV_PROD']
-  inventoryGoal = data['INV_GOAL']
-  bosInventory = data['INV_CS_BOS']
-
-  inventoryScore = currentInventory / inventoryGoal
-  inventoryGrowth = currentInventory / bosInventory
-
-  barColor =
-    inventoryScore <= 1
-      ? '#32cd32'
-      : inventoryGrowth >= GROWTH_MAX
-      ? '#ff0000'
-      : inventoryGrowth >= GROWTH_MID
-      ? '#FFA800'
-      : inventoryGoal < currentInventory && currentInventory < bosInventory
-      ? '#f5f5dc'
-      : '#FFA800'
-
-  let optArgs = {
-    percentColors: [
-      [0.0, barColor],
-      [1.0, barColor]
-    ],
-    limitMax: true,
-    limitMin: true,
-    /*
+    let optArgs = {
+      percentColors: [
+        [0.0, barColor],
+        [1.0, barColor]
+      ],
+      limitMax: true,
+      limitMin: true,
+      /*
                 staticLabels: {
                     font: '10px sans-serif', // Specifies font
                     labels: [drumBeat], // Print labels at these values
@@ -1019,249 +1047,212 @@ function InventoryGauge (data) {
                     fractionDigits: 0 // Optional: Numerical precision. 0=round off.
                 },
                 */
-    renderTicks: {
-      divisions: 10,
-      divWidth: 1,
-      divLength: 0.75,
-      divColor: '#333333',
-      subDivisions: 1,
-      subLength: 0.25,
-      subWidth: 0.5,
-      subColor: '#666666'
-    }
-  }
-
-  let gaugeArgs = {
-    maxValue: inventoryGoal,
-    minValue: 0,
-    actualValue: currentInventory
-  }
-
-  inventoryGrowth = (inventoryGrowth * 100).toFixed(1).toString() + '%'
-  titleText = `In process: ${inventoryIP}\nInv: ${currentInventory}\nGoal: ${inventoryGoal}\nBOS Inv: ${bosInventory}\nCurrent Inv vs BOS Inv: ${inventoryGrowth}`
-
-  if (Number.isNaN(inventoryScore) || !Number.isFinite(inventoryScore)) {
-    return
-  }
-
-  inventoryScore = (inventoryScore * 100).toFixed(1).toString() + '%'
-
-  lvData = dataEquals(lvData, 'PROCESS_ID', pid)
-  lvData = dataEquals(lvData, 'CEID', ceid)
-
-  let span = create('span', { textContent: `Inv: ${inventoryScore} of goal` })
-  appendChildren(id(hdrId), [ceidLineview(lvData), span])
-  id(gaugeId).setAttribute('title', titleText)
-
-  gaugeIt(gaugeId, optArgs, gaugeArgs)
-}
-
-function STG (data) {
-  const COLUMN_NAMES = [
-    'CEID',
-    'Operation',
-    'Op Description',
-    'Inventory',
-    'CS Outs',
-    'DB',
-    'Inc 12hr',
-    'Inc 24hr',
-    'WTD Pace'
-  ]
-  const COLUMN_VALUES = [
-    'CEID',
-    'OPERATION',
-    'OPER_SHORT_DESC',
-    'INV_PROD',
-    'CS_OUTS',
-    'DRUM_BEAT',
-    'INV_INC_12HR',
-    'INV_INC_24HR',
-    'CW_PACE'
-  ]
-  let div,
-    table,
-    thead,
-    tbody,
-    tr,
-    th,
-    td,
-    idName,
-    pid,
-    ceid,
-    results = { TOTAL: 0, DIV: null },
-    rowCounter = 1,
-    backgroundColor
-
-  // set up naming vars
-  pid = data[0]['PROCESS_ID']
-  ceid = data[0]['CEID'].split(' ')[0]
-  type = 'stg'
-
-  // create staghing table parent
-  div = create('div', {
-    id: `${pid}-${ceid}-${type}-div`,
-    className: 'popout hidden'
-  })
-  results.DIV = div
-
-  table = create('table', { className: 'pop-ind-table' })
-  appendChildren(div, [table])
-
-  thead = create('thead')
-  tbody = create('tbody')
-
-  appendChildren(table, [thead, tbody])
-
-  tr = create('tr')
-  thead.appendChild(tr)
-
-  // set up column names
-  COLUMN_NAMES.forEach(col => {
-    th = create(
-      'th',
-      { textContent: col },
-      {
-        style:
-          'background-color: darkblue; color: white; border: 1px solid black; padding: 10px;'
+      renderTicks: {
+        divisions: 10,
+        divWidth: 1,
+        divLength: 0.75,
+        divColor: '#333333',
+        subDivisions: 1,
+        subLength: 0.25,
+        subWidth: 0.5,
+        subColor: '#666666'
       }
-    )
-    tr.appendChild(th)
-  })
+    }
 
-  data.forEach(row => {
-    backgroundColor = rowCounter % 2 === 0 ? '#b0c4de6e' : 'white'
-    rowCounter++
-    results.TOTAL += parseInt(row['INV_PROD'])
+    let gaugeArgs = {
+      maxValue: inventoryGoal,
+      minValue: 0,
+      actualValue: currentInventory
+    }
 
-    tr = create('tr', {}, { style: `background-color: ${backgroundColor};` })
-    tbody.appendChild(tr)
-    // push in values
-    COLUMN_VALUES.forEach(val => {
-      td = create(
-        'td',
-        { textContent: row[val] },
-        { style: 'border: 1px solid black;padding: 4px 10px;' }
-      )
-      tr.appendChild(td)
-    })
-  })
-  return results
-}
+    inventoryGrowth = (inventoryGrowth * 100).toFixed(1).toString() + '%'
+    titleText = `In process: ${inventoryIP}\nInv: ${currentInventory}\nGoal: ${inventoryGoal}\nBOS Inv: ${bosInventory}\nCurrent Inv vs BOS Inv: ${inventoryGrowth}`
 
-function Outs (data) {
-  let text = `CS: ${data['CS_OUTS']}<br>EOS: ${data['CS_PACE']}<br>PS: ${data['PS_OUTS']}<br>WTD: ${data['CW_OUTS']}`
-  return create('div', { innerHTML: text }, { style: 'text-align: left;' })
-}
+    if (Number.isNaN(inventoryScore) || !Number.isFinite(inventoryScore)) {
+      return
+    }
 
-function WSPWPace (data) {
-  let text = `CS: ${data['CS_WSPW_PACE']}<br>PS: ${data['PS_WSPW_PACE']}<br>WTD: ${data['CW_WSPW_PACE']}`
-  return create('div', { innerHTML: text }, { style: 'text-align: left;' })
-}
+    inventoryScore = (inventoryScore * 100).toFixed(1).toString() + '%'
 
-function CosCeid (data) {
-  // return an HTMLElement
-  let pDiv,
-    hdr,
-    cDiv,
-    table,
-    baggedTable,
-    tr,
-    th,
-    td,
-    ceidButton,
-    ceid,
-    pid,
-    closeButton,
-    toggle,
-    entity_status,
-    bagged_entity_status
-  const COLUMN_NAMES = ['Entity', 'Fab', 'State', 'Availability']
-  const COLUMN_VALUES = [
-    'ENTITY',
-    'CURRENT_SITE',
-    'STATE',
-    'ENTITY_AVAILABILITY'
-  ]
+    lvData = dataEquals(lvData, 'PROCESS_ID', pid)
+    lvData = dataEquals(lvData, 'CEID', ceid)
 
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
+    let span = create('span', { textContent: `Inv: ${inventoryScore} of goal` })
+    appendChildren(id(hdrId), [ceidLineview(lvData), span])
+    id(gaugeId).setAttribute('title', titleText)
 
-  // filter entity status dataset
-  entity_status = JSON.parse(JSON.stringify(DATASETS.COS_ENTITY_STATUS))
-  entity_status = dataEquals(entity_status, 'PROCESS_ID', pid)
-  entity_status = dataEquals(entity_status, 'CEID', ceid)
-
-  // breakout the bagged tools
-  bagged_entity_status = dataEquals(entity_status, 'STATE', 'Bagged')
-
-  // remove bagged tools from entity status
-  entity_status = dataNotEquals(entity_status, 'STATE', 'Bagged')
-
-  toggle = () => {
-    cDiv.classList.toggle('hidden')
-    cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+    gaugeIt(gaugeId, optArgs, gaugeArgs)
   }
 
-  // parent div
-  pDiv = create('div')
+  function STG (data) {
+    const COLUMN_NAMES = [
+      'CEID',
+      'Operation',
+      'Op Description',
+      'Inventory',
+      'CS Outs',
+      'DB',
+      'Inc 12hr',
+      'Inc 24hr',
+      'WTD Pace'
+    ]
+    const COLUMN_VALUES = [
+      'CEID',
+      'OPERATION',
+      'OPER_SHORT_DESC',
+      'INV_PROD',
+      'CS_OUTS',
+      'DRUM_BEAT',
+      'INV_INC_12HR',
+      'INV_INC_24HR',
+      'CW_PACE'
+    ]
+    let div,
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td,
+      idName,
+      pid,
+      ceid,
+      results = { TOTAL: 0, DIV: null },
+      rowCounter = 1,
+      backgroundColor
 
-  ceidButton = create('button')
-  cDiv = create('div', { className: 'popout hidden' })
+    // set up naming vars
+    pid = data[0]['PROCESS_ID']
+    ceid = data[0]['CEID'].split(' ')[0]
+    type = 'stg'
 
-  appendChildren(pDiv, [ceidButton, cDiv])
-
-  addProp(ceidButton, { textContent: ceid, onclick: toggle })
-
-  hdr = create('h3', { textContent: `${pid} ${ceid} Tool Status` })
-  hdr2 = create('h3')
-  table = basicTable()
-  table.table.className = 'ind-table'
-  baggedTable = basicTable()
-  baggedTable.table.className = 'ind-table'
-  closeButton = create('button', { textContent: 'Close', onclick: toggle })
-
-  // fill first table
-  tr = create('tr')
-  table.thead.appendChild(tr)
-  // header content
-  COLUMN_NAMES.forEach(col => {
-    th = create(
-      'th',
-      { textContent: col },
-      { style: 'background-color: darkblue; color: white;' }
-    )
-    tr.appendChild(th)
-  })
-
-  // body content
-  entity_status.forEach(row => {
-    let rowColor, textColor
-
-    rowColor =
-      row['ENTITY_AVAILABILITY'].toUpperCase() === 'DOWN'
-        ? 'rgba(255, 105, 105, 0.5)'
-        : 'white'
-    textColor = rowColor === 'white' ? 'black' : 'black'
-    tr = create(
-      'tr',
-      {},
-      { style: `background-color: ${rowColor}; color: ${textColor};` }
-    )
-    table.tbody.appendChild(tr)
-
-    COLUMN_VALUES.forEach(col => {
-      td = create('td', { textContent: row[col] })
-      tr.appendChild(td)
+    // create staghing table parent
+    div = create('div', {
+      id: `${pid}-${ceid}-${type}-div`,
+      className: 'popout hidden'
     })
-  })
+    results.DIV = div
 
-  // fill the second table
-  if (bagged_entity_status.length > 0) {
-    hdr2.textContent = `${pid} ${ceid} Bagged Tools`
-    // header content
+    table = create('table', { className: 'pop-ind-table' })
+    appendChildren(div, [table])
+
+    thead = create('thead')
+    tbody = create('tbody')
+
+    appendChildren(table, [thead, tbody])
+
     tr = create('tr')
-    baggedTable.thead.appendChild(tr)
+    thead.appendChild(tr)
+
+    // set up column names
+    COLUMN_NAMES.forEach(col => {
+      th = create(
+        'th',
+        { textContent: col },
+        {
+          style:
+            'background-color: darkblue; color: white; border: 1px solid black; padding: 10px;'
+        }
+      )
+      tr.appendChild(th)
+    })
+
+    data.forEach(row => {
+      backgroundColor = rowCounter % 2 === 0 ? '#b0c4de6e' : 'white'
+      rowCounter++
+      results.TOTAL += parseInt(row['INV_PROD'])
+
+      tr = create('tr', {}, { style: `background-color: ${backgroundColor};` })
+      tbody.appendChild(tr)
+      // push in values
+      COLUMN_VALUES.forEach(val => {
+        td = create(
+          'td',
+          { textContent: row[val] },
+          { style: 'border: 1px solid black;padding: 4px 10px;' }
+        )
+        tr.appendChild(td)
+      })
+    })
+    return results
+  }
+
+  function Outs (data) {
+    let text = `CS: ${data['CS_OUTS']}<br>EOS: ${data['CS_PACE']}<br>PS: ${data['PS_OUTS']}<br>WTD: ${data['CW_OUTS']}`
+    return create('div', { innerHTML: text }, { style: 'text-align: left;' })
+  }
+
+  function WSPWPace (data) {
+    let text = `CS: ${data['CS_WSPW_PACE']}<br>PS: ${data['PS_WSPW_PACE']}<br>WTD: ${data['CW_WSPW_PACE']}`
+    return create('div', { innerHTML: text }, { style: 'text-align: left;' })
+  }
+
+  function CosCeid (data) {
+    // return an HTMLElement
+    let pDiv,
+      hdr,
+      cDiv,
+      table,
+      baggedTable,
+      tr,
+      th,
+      td,
+      ceidButton,
+      ceid,
+      pid,
+      closeButton,
+      toggle,
+      entity_status,
+      bagged_entity_status
+    const COLUMN_NAMES = ['Entity', 'Fab', 'State', 'Availability']
+    const COLUMN_VALUES = [
+      'ENTITY',
+      'CURRENT_SITE',
+      'STATE',
+      'ENTITY_AVAILABILITY'
+    ]
+
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+
+    // filter entity status dataset
+    entity_status = JSON.parse(JSON.stringify(DATASETS.COS_ENTITY_STATUS))
+    entity_status = dataEquals(entity_status, 'PROCESS_ID', pid)
+    entity_status = dataEquals(entity_status, 'CEID', ceid)
+
+    // breakout the bagged tools
+    bagged_entity_status = dataEquals(entity_status, 'STATE', 'Bagged')
+
+    // remove bagged tools from entity status
+    entity_status = dataNotEquals(entity_status, 'STATE', 'Bagged')
+
+    toggle = () => {
+      cDiv.classList.toggle('hidden')
+      cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+    }
+
+    // parent div
+    pDiv = create('div')
+
+    ceidButton = create('button')
+    cDiv = create('div', { className: 'popout hidden' })
+
+    appendChildren(pDiv, [ceidButton, cDiv])
+
+    addProp(ceidButton, { textContent: ceid, onclick: toggle })
+
+    hdr = create('h3', { textContent: `${pid} ${ceid} Tool Status` })
+    hdr2 = create('h3')
+    table = basicTable()
+    table.table.className = 'ind-table'
+    baggedTable = basicTable()
+    baggedTable.table.className = 'ind-table'
+    closeButton = create('button', { textContent: 'Close', onclick: toggle })
+
+    // fill first table
+    tr = create('tr')
+    table.thead.appendChild(tr)
+    // header content
     COLUMN_NAMES.forEach(col => {
       th = create(
         'th',
@@ -1272,7 +1263,7 @@ function CosCeid (data) {
     })
 
     // body content
-    bagged_entity_status.forEach(row => {
+    entity_status.forEach(row => {
       let rowColor, textColor
 
       rowColor =
@@ -1285,437 +1276,485 @@ function CosCeid (data) {
         {},
         { style: `background-color: ${rowColor}; color: ${textColor};` }
       )
-      baggedTable.tbody.appendChild(tr)
+      table.tbody.appendChild(tr)
 
       COLUMN_VALUES.forEach(col => {
         td = create('td', { textContent: row[col] })
         tr.appendChild(td)
       })
     })
-  }
 
-  appendChildren(cDiv, [hdr, table.table, hdr2, baggedTable.table, closeButton])
-
-  return pDiv
-}
-
-function Tracers (data) {
-  let pid,
-    ceid,
-    entityList,
-    tracers,
-    openTable,
-    acceptedTable,
-    otherTable,
-    div,
-    button,
-    closeButton,
-    childDiv,
-    toggleFunc,
-    openTracers,
-    acceptedTracers,
-    otherTracers,
-    hdr
-  const COLUMN_NAMES = [
-    'Created On',
-    'Entity',
-    'Work Order',
-    'Rule',
-    'Defect Type',
-    'Status',
-    'Description',
-    'Root Cause'
-  ]
-  const COLUMN_VALUES = [
-    'CREATEDON',
-    'TOOLNAME',
-    'WORKORDERID',
-    'RULENAME',
-    'DEFECTTYPE',
-    'STATUSOPTIONNAME',
-    'DESCRIPTION',
-    'TRACERROOTCAUSE'
-  ]
-  function makeTable (data, cols, keys) {
-    let rowColor,
-      rowCounter = 1,
-      tr,
-      th,
-      td,
-      table = basicTable()
-
-    table.table.className = 'ind-table'
-    // headers
-    tr = create('tr')
-    table.thead.appendChild(tr)
-
-    cols.forEach(col => {
-      th = create(
-        'th',
-        { textContent: col },
-        { style: 'background-color: darkblue; color: white;' }
-      )
-      tr.appendChild(th)
-    })
-
-    // build table data
-    data.forEach(row => {
-      // set row color
-      rowColor = rowCounter % 2 === 0 ? '#b0c4de6e' : 'white'
-      rowCounter++
-
-      // create and append row
-      tr = create('tr', {}, { style: `background-color: ${rowColor};` })
-      table.tbody.appendChild(tr)
-
-      keys.forEach(key => {
-        let cellData = row[key]
-        cellData =
-          key === 'WORKORDERID'
-            ? `<a href='https://f32-apps-fuzion.f32prod.mfg.intel.com/EditWorkOrderPage.aspx?WorkOrderID=${cellData}' target='_blank'>${cellData}</a>`
-            : cellData
-        td = create('td', { innerHTML: cellData })
-        tr.appendChild(td)
+    // fill the second table
+    if (bagged_entity_status.length > 0) {
+      hdr2.textContent = `${pid} ${ceid} Bagged Tools`
+      // header content
+      tr = create('tr')
+      baggedTable.thead.appendChild(tr)
+      COLUMN_NAMES.forEach(col => {
+        th = create(
+          'th',
+          { textContent: col },
+          { style: 'background-color: darkblue; color: white;' }
+        )
+        tr.appendChild(th)
       })
-    })
 
-    return table.table
-  }
-  toggleFunc = function () {
-    childDiv.classList.toggle('hidden')
-    childDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
-  }
+      // body content
+      bagged_entity_status.forEach(row => {
+        let rowColor, textColor
 
-  div = create('div')
+        rowColor =
+          row['ENTITY_AVAILABILITY'].toUpperCase() === 'DOWN'
+            ? 'rgba(255, 105, 105, 0.5)'
+            : 'white'
+        textColor = rowColor === 'white' ? 'black' : 'black'
+        tr = create(
+          'tr',
+          {},
+          { style: `background-color: ${rowColor}; color: ${textColor};` }
+        )
+        baggedTable.tbody.appendChild(tr)
 
-  button = create('button', { textContent: '', onclick: toggleFunc })
-  childDiv = create(
-    'div',
-    { className: 'popout hidden' },
-    { style: 'right:0;' }
-  )
-
-  appendChildren(div, [button, childDiv])
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
-  entityList = JSON.parse(JSON.stringify(DATASETS.COS_ENTITY_STATUS))
-  entityList = dataEquals(entityList, 'PROCESS_ID', pid)
-  entityList = dataEquals(entityList, 'CEID', ceid)
-
-  // loop dataset and add a field with the parent entity for use in next step
-  entityList.forEach(row => {
-    row['PARENT'] = row['ENTITY'].substring(0, 6)
-  })
-
-  // get a list of entities
-  entityList = unique(entityList, 'PARENT')
-
-  // get all tracers related to the above entities
-  tracers = dataIn(DATASETS.TRACERS, 'PARENT', entityList)
-
-  openTracers = dataEquals(tracers, 'STATUSOPTIONNAME', 'Open')
-  acceptedTracers = dataEquals(tracers, 'STATUSOPTIONNAME', 'Accepted')
-  otherTracers = dataNotEquals(
-    dataNotEquals(tracers, 'STATUSOPTIONNAME', 'Accepted'),
-    'STATUSOPTIONNAME',
-    'Open'
-  )
-
-  if (openTracers.length > 0) {
-    hdr = create(
-      'h3',
-      { textContent: `${pid} ${ceid} Open Tracers!! Accept ASAP` },
-      { style: 'color: red;' }
-    )
-    openTable = makeTable(openTracers, COLUMN_NAMES, COLUMN_VALUES)
-    appendChildren(childDiv, [hdr, openTable])
-  }
-
-  if (acceptedTracers.length > 0) {
-    hdr = create('h3', { textContent: `${pid} ${ceid} Accepted Tracers` })
-    acceptedTable = makeTable(acceptedTracers, COLUMN_NAMES, COLUMN_VALUES)
-    appendChildren(childDiv, [hdr, acceptedTable])
-  }
-
-  if (otherTracers.length > 0) {
-    hdr = create('h3', { textContent: `${pid} ${ceid} Misc. Tracers` })
-    otherTable = makeTable(otherTracers, COLUMN_NAMES, COLUMN_VALUES)
-    appendChildren(childDiv, [hdr, otherTable])
-  }
-
-  closeButton = create('button', { textContent: 'Close', onclick: toggleFunc })
-  childDiv.appendChild(closeButton)
-
-  button.textContent = `${tracers.length.toString()}`
-  return tracers.length > 0 ? div : create('div')
-}
-
-function ILM (data) {
-  let clickFunc, pid, ceid, pDiv, cDiv, hdr, button, closeButton, ilmData
-  const COLUMN_NAMES = [
-    'Date Created',
-    'Type',
-    'Status',
-    'Link',
-    'Title',
-    '# Lots Affected',
-    '# Wafers Scrapped'
-  ]
-  const COLUMN_VALUES = [
-    'CREATED_DATE',
-    'TYPE',
-    'STATUS',
-    'FAB_EVENT_HTML',
-    'TITLE',
-    'SUM_LOTS_AFFECTED',
-    'SUM_SCRAP_QTY'
-  ]
-
-  function makeTable (data, cols, keys) {
-    let table,
-      tr,
-      th,
-      td,
-      rowCount = 1,
-      rowColor
-    table = basicTable()
-    table.table.className = 'ind-table'
-
-    tr = create('tr')
-    table.thead.appendChild(tr)
-
-    th = create(
-      'th',
-      { textContent: `Data Last Refreshed: ${data[0]['FILE_REFRESH_DATE']}` },
-      { colspan: cols.length.toString() }
-    )
-    tr.appendChild(th)
-
-    tr = create('tr')
-    table.thead.appendChild(tr)
-
-    // headers
-    cols.forEach(col => {
-      th = create(
-        'th',
-        { textContent: col },
-        { style: 'background-color: darkblue;color:white;' }
-      )
-      tr.appendChild(th)
-    })
-
-    // data rows
-    data.forEach(row => {
-      rowColor = rowCount % 2 === 0 ? '#b0c4de6e' : 'white'
-      rowCount++
-
-      tr = create('tr', {}, { style: `background-color: ${rowColor};` })
-      table.tbody.appendChild(tr)
-
-      // cells
-      keys.forEach(key => {
-        let cellData = row[key]
-        // change these null values to 0s
-        if (key === 'SUM_LOTS_AFFECTED' || key === 'SUM_SCRAP_QTY') {
-          cellData = cellData.length === 0 ? '0' : cellData
-        }
-        td = create('td', { innerHTML: cellData })
-        if (key === 'CREATED_DATE') {
-          td.setAttribute('style', 'white-space: nowrap;')
-        }
-        tr.appendChild(td)
+        COLUMN_VALUES.forEach(col => {
+          td = create('td', { textContent: row[col] })
+          tr.appendChild(td)
+        })
       })
-    })
+    }
 
-    return table.table
-  }
-
-  clickFunc = function () {
-    cDiv.classList.toggle('hidden')
-    cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
-  }
-
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
-  hdr = create('h3', {
-    textContent: `${pid} ${ceid} QEF/DRB from last 48 hours`
-  })
-
-  pDiv = create('div')
-
-  button = create('button', { onclick: clickFunc })
-  cDiv = create('div', { className: 'popout hidden' }, { style: 'right:0;' })
-
-  appendChildren(pDiv, [button, cDiv])
-
-  closeButton = create('button', { textContent: 'Close', onclick: clickFunc })
-
-  // filter data for popout table
-  ilmData = dataEquals(DATASETS.ILM, 'PROCESS_ID', pid)
-  ilmData = dataEquals(ilmData, 'TOOLSET', ceid)
-  button.textContent = ilmData.length.toString()
-
-  if (ilmData.length > 0) {
     appendChildren(cDiv, [
       hdr,
-      makeTable(ilmData, COLUMN_NAMES, COLUMN_VALUES),
+      table.table,
+      hdr2,
+      baggedTable.table,
       closeButton
     ])
+
+    return pDiv
   }
 
-  return ilmData.length > 0 ? pDiv : create('div')
-}
+  function Tracers (data) {
+    let pid,
+      ceid,
+      entityList,
+      tracers,
+      openTable,
+      acceptedTable,
+      otherTable,
+      div,
+      button,
+      closeButton,
+      childDiv,
+      toggleFunc,
+      openTracers,
+      acceptedTracers,
+      otherTracers,
+      hdr
+    const COLUMN_NAMES = [
+      'Created On',
+      'Entity',
+      'Work Order',
+      'Rule',
+      'Defect Type',
+      'Status',
+      'Description',
+      'Root Cause'
+    ]
+    const COLUMN_VALUES = [
+      'CREATEDON',
+      'TOOLNAME',
+      'WORKORDERID',
+      'RULENAME',
+      'DEFECTTYPE',
+      'STATUSOPTIONNAME',
+      'DESCRIPTION',
+      'TRACERROOTCAUSE'
+    ]
+    function makeTable (data, cols, keys) {
+      let rowColor,
+        rowCounter = 1,
+        tr,
+        th,
+        td,
+        table = basicTable()
 
-function EFIT (data) {
-  let pid,
-    ceid,
-    pDiv,
-    cDiv,
-    button,
-    closeButton,
-    hdr,
-    clickFunc,
-    table,
-    eFits,
-    entities,
-    impacted = false
-  const COLUMN_NAMES = [
-    'Work Order',
-    'Category',
-    'Location',
-    'Description',
-    'Impact',
-    'Times',
-    'Tools Impacted'
-  ]
-  const COLUMN_VALUES = [
-    'WORKORDERID',
-    'APPROVALTYPECATEGORY',
-    'LOCATION',
-    'DESCRIPTION',
-    'IMPACTCOMMENT',
-    'TIMES',
-    'TOOLSIMPACTED'
-  ]
-  clickFunc = function () {
-    cDiv.classList.toggle('hidden')
-    cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+      table.table.className = 'ind-table'
+      // headers
+      tr = create('tr')
+      table.thead.appendChild(tr)
+
+      cols.forEach(col => {
+        th = create(
+          'th',
+          { textContent: col },
+          { style: 'background-color: darkblue; color: white;' }
+        )
+        tr.appendChild(th)
+      })
+
+      // build table data
+      data.forEach(row => {
+        // set row color
+        rowColor = rowCounter % 2 === 0 ? '#b0c4de6e' : 'white'
+        rowCounter++
+
+        // create and append row
+        tr = create('tr', {}, { style: `background-color: ${rowColor};` })
+        table.tbody.appendChild(tr)
+
+        keys.forEach(key => {
+          let cellData = row[key]
+          cellData =
+            key === 'WORKORDERID'
+              ? `<a href='https://f32-apps-fuzion.f32prod.mfg.intel.com/EditWorkOrderPage.aspx?WorkOrderID=${cellData}' target='_blank'>${cellData}</a>`
+              : cellData
+          td = create('td', { innerHTML: cellData })
+          tr.appendChild(td)
+        })
+      })
+
+      return table.table
+    }
+    toggleFunc = function () {
+      childDiv.classList.toggle('hidden')
+      childDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+    }
+
+    div = create('div')
+
+    button = create('button', { textContent: '', onclick: toggleFunc })
+    childDiv = create(
+      'div',
+      { className: 'popout hidden' },
+      { style: 'right:0;' }
+    )
+
+    appendChildren(div, [button, childDiv])
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+    entityList = JSON.parse(JSON.stringify(DATASETS.COS_ENTITY_STATUS))
+    entityList = dataEquals(entityList, 'PROCESS_ID', pid)
+    entityList = dataEquals(entityList, 'CEID', ceid)
+
+    // loop dataset and add a field with the parent entity for use in next step
+    entityList.forEach(row => {
+      row['PARENT'] = row['ENTITY'].substring(0, 6)
+    })
+
+    // get a list of entities
+    entityList = unique(entityList, 'PARENT')
+
+    // get all tracers related to the above entities
+    tracers = dataIn(DATASETS.TRACERS, 'PARENT', entityList)
+
+    openTracers = dataEquals(tracers, 'STATUSOPTIONNAME', 'Open')
+    acceptedTracers = dataEquals(tracers, 'STATUSOPTIONNAME', 'Accepted')
+    otherTracers = dataNotEquals(
+      dataNotEquals(tracers, 'STATUSOPTIONNAME', 'Accepted'),
+      'STATUSOPTIONNAME',
+      'Open'
+    )
+
+    if (openTracers.length > 0) {
+      hdr = create(
+        'h3',
+        { textContent: `${pid} ${ceid} Open Tracers!! Accept ASAP` },
+        { style: 'color: red;' }
+      )
+      openTable = makeTable(openTracers, COLUMN_NAMES, COLUMN_VALUES)
+      appendChildren(childDiv, [hdr, openTable])
+    }
+
+    if (acceptedTracers.length > 0) {
+      hdr = create('h3', { textContent: `${pid} ${ceid} Accepted Tracers` })
+      acceptedTable = makeTable(acceptedTracers, COLUMN_NAMES, COLUMN_VALUES)
+      appendChildren(childDiv, [hdr, acceptedTable])
+    }
+
+    if (otherTracers.length > 0) {
+      hdr = create('h3', { textContent: `${pid} ${ceid} Misc. Tracers` })
+      otherTable = makeTable(otherTracers, COLUMN_NAMES, COLUMN_VALUES)
+      appendChildren(childDiv, [hdr, otherTable])
+    }
+
+    closeButton = create('button', {
+      textContent: 'Close',
+      onclick: toggleFunc
+    })
+    childDiv.appendChild(closeButton)
+
+    button.textContent = `${tracers.length.toString()}`
+    return tracers.length > 0 ? div : create('div')
   }
 
-  function makeTable (data, cols, keys) {
-    let table = basicTable(),
-      tr,
-      th,
-      td,
-      rowCount = 1,
-      rowColor
+  function ILM (data) {
+    let clickFunc, pid, ceid, pDiv, cDiv, hdr, button, closeButton, ilmData
+    const COLUMN_NAMES = [
+      'Date Created',
+      'Type',
+      'Status',
+      'Link',
+      'Title',
+      '# Lots Affected',
+      '# Wafers Scrapped'
+    ]
+    const COLUMN_VALUES = [
+      'CREATED_DATE',
+      'TYPE',
+      'STATUS',
+      'FAB_EVENT_HTML',
+      'TITLE',
+      'SUM_LOTS_AFFECTED',
+      'SUM_SCRAP_QTY'
+    ]
 
-    data = Array.isArray(data) ? data : [data]
-    table.table.className = 'ind-table'
+    function makeTable (data, cols, keys) {
+      let table,
+        tr,
+        th,
+        td,
+        rowCount = 1,
+        rowColor
+      table = basicTable()
+      table.table.className = 'ind-table'
 
-    tr = create('tr')
-    table.thead.appendChild(tr)
+      tr = create('tr')
+      table.thead.appendChild(tr)
 
-    cols.forEach(col => {
       th = create(
         'th',
-        { textContent: col },
-        { style: 'background-color: darkblue; color: white;' }
+        { textContent: `Data Last Refreshed: ${data[0]['FILE_REFRESH_DATE']}` },
+        { colspan: cols.length.toString() }
       )
       tr.appendChild(th)
-    })
 
-    data.forEach(row => {
-      rowColor = rowCount % 2 === 0 ? '#b0c4de6e' : 'white'
-      rowCount++
-      tr = create('tr', {}, { style: `background-color: ${rowColor};` })
-      table.tbody.appendChild(tr)
-      keys.forEach(key => {
-        let cellData
-        td = create('td')
-        switch (key) {
-          case 'TIMES':
-            td.setAttribute('style', 'white-space: nowrap;')
-            cellData = `Start: ${row['START']}<br>End: ${row['END']}`
-            break
+      tr = create('tr')
+      table.thead.appendChild(tr)
 
-          case 'WORKORDERID':
-            cellData = `<a href='https://f32-apps-fuzion.f32prod.mfg.intel.com/EditWorkOrderPage.aspx?WorkOrderID=${row[key]}' target='_blank'>${row[key]}</a>`
-            break
-
-          case 'TOOLSIMPACTED':
-            cellData = ''
-            row[key].split(',').forEach(e => {
-              cellData = cellData + e + '<br>'
-            })
-            break
-          default:
-            cellData = row[key]
-            break
-        }
-        td.innerHTML = cellData
-        tr.appendChild(td)
+      // headers
+      cols.forEach(col => {
+        th = create(
+          'th',
+          { textContent: col },
+          { style: 'background-color: darkblue;color:white;' }
+        )
+        tr.appendChild(th)
       })
+
+      // data rows
+      data.forEach(row => {
+        rowColor = rowCount % 2 === 0 ? '#b0c4de6e' : 'white'
+        rowCount++
+
+        tr = create('tr', {}, { style: `background-color: ${rowColor};` })
+        table.tbody.appendChild(tr)
+
+        // cells
+        keys.forEach(key => {
+          let cellData = row[key]
+          // change these null values to 0s
+          if (key === 'SUM_LOTS_AFFECTED' || key === 'SUM_SCRAP_QTY') {
+            cellData = cellData.length === 0 ? '0' : cellData
+          }
+          td = create('td', { innerHTML: cellData })
+          if (key === 'CREATED_DATE') {
+            td.setAttribute('style', 'white-space: nowrap;')
+          }
+          tr.appendChild(td)
+        })
+      })
+
+      return table.table
+    }
+
+    clickFunc = function () {
+      cDiv.classList.toggle('hidden')
+      cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+    }
+
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+    hdr = create('h3', {
+      textContent: `${pid} ${ceid} QEF/DRB from last 48 hours`
     })
 
-    return table.table
+    pDiv = create('div')
+
+    button = create('button', { onclick: clickFunc })
+    cDiv = create('div', { className: 'popout hidden' }, { style: 'right:0;' })
+
+    appendChildren(pDiv, [button, cDiv])
+
+    closeButton = create('button', { textContent: 'Close', onclick: clickFunc })
+
+    // filter data for popout table
+    ilmData = dataEquals(DATASETS.ILM, 'PROCESS_ID', pid)
+    ilmData = dataEquals(ilmData, 'TOOLSET', ceid)
+    button.textContent = ilmData.length.toString()
+
+    if (ilmData.length > 0) {
+      appendChildren(cDiv, [
+        hdr,
+        makeTable(ilmData, COLUMN_NAMES, COLUMN_VALUES),
+        closeButton
+      ])
+    }
+
+    return ilmData.length > 0 ? pDiv : create('div')
   }
 
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
+  function EFIT (data) {
+    let pid,
+      ceid,
+      pDiv,
+      cDiv,
+      button,
+      closeButton,
+      hdr,
+      clickFunc,
+      table,
+      eFits,
+      entities,
+      impacted = false
+    const COLUMN_NAMES = [
+      'Work Order',
+      'Category',
+      'Location',
+      'Description',
+      'Impact',
+      'Times',
+      'Tools Impacted'
+    ]
+    const COLUMN_VALUES = [
+      'WORKORDERID',
+      'APPROVALTYPECATEGORY',
+      'LOCATION',
+      'DESCRIPTION',
+      'IMPACTCOMMENT',
+      'TIMES',
+      'TOOLSIMPACTED'
+    ]
+    clickFunc = function () {
+      cDiv.classList.toggle('hidden')
+      cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
+    }
 
-  pDiv = create('div')
+    function makeTable (data, cols, keys) {
+      let table = basicTable(),
+        tr,
+        th,
+        td,
+        rowCount = 1,
+        rowColor
 
-  button = create('button', { textContent: '', onclick: clickFunc })
-  cDiv = create('div', { className: 'popout hidden' }, { style: 'right:0;' })
+      data = Array.isArray(data) ? data : [data]
+      table.table.className = 'ind-table'
 
-  appendChildren(pDiv, [button, cDiv])
+      tr = create('tr')
+      table.thead.appendChild(tr)
 
-  entities = unique(
-    dataEquals(DATASETS.COS_ENTITY_STATUS, 'CEID', ceid),
-    'ENTITY'
-  )
-  efitTableData = []
-  eFits = DATASETS.EFIT
-  eFits.forEach(efit => {
-    impacted = false
-    entities.forEach(entity => {
-      if (efit['TOOLSIMPACTED'].split(',').includes(entity.substring(0, 6))) {
-        impacted = true
+      cols.forEach(col => {
+        th = create(
+          'th',
+          { textContent: col },
+          { style: 'background-color: darkblue; color: white;' }
+        )
+        tr.appendChild(th)
+      })
+
+      data.forEach(row => {
+        rowColor = rowCount % 2 === 0 ? '#b0c4de6e' : 'white'
+        rowCount++
+        tr = create('tr', {}, { style: `background-color: ${rowColor};` })
+        table.tbody.appendChild(tr)
+        keys.forEach(key => {
+          let cellData
+          td = create('td')
+          switch (key) {
+            case 'TIMES':
+              td.setAttribute('style', 'white-space: nowrap;')
+              cellData = `Start: ${row['START']}<br>End: ${row['END']}`
+              break
+
+            case 'WORKORDERID':
+              cellData = `<a href='https://f32-apps-fuzion.f32prod.mfg.intel.com/EditWorkOrderPage.aspx?WorkOrderID=${row[key]}' target='_blank'>${row[key]}</a>`
+              break
+
+            case 'TOOLSIMPACTED':
+              cellData = ''
+              row[key].split(',').forEach(e => {
+                cellData = cellData + e + '<br>'
+              })
+              break
+            default:
+              cellData = row[key]
+              break
+          }
+          td.innerHTML = cellData
+          tr.appendChild(td)
+        })
+      })
+
+      return table.table
+    }
+
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+
+    pDiv = create('div')
+
+    button = create('button', { textContent: '', onclick: clickFunc })
+    cDiv = create('div', { className: 'popout hidden' }, { style: 'right:0;' })
+
+    appendChildren(pDiv, [button, cDiv])
+
+    entities = unique(
+      dataEquals(DATASETS.COS_ENTITY_STATUS, 'CEID', ceid),
+      'ENTITY'
+    )
+    efitTableData = []
+    eFits = DATASETS.EFIT
+    eFits.forEach(efit => {
+      impacted = false
+      entities.forEach(entity => {
+        if (efit['TOOLSIMPACTED'].split(',').includes(entity.substring(0, 6))) {
+          impacted = true
+        }
+      })
+      if (impacted === true) {
+        efitTableData.push(efit)
       }
     })
+    impacted = efitTableData.length > 0 ? true : false
     if (impacted === true) {
-      efitTableData.push(efit)
+      button.textContent = 'EFits'
+      hdr = create('h3', { textContext: `${pid} ${ceid} EFits` })
+      table = makeTable(efitTableData, COLUMN_NAMES, COLUMN_VALUES)
+      closeButton = create('button', {
+        textContent: 'Close',
+        onclick: clickFunc
+      })
+      appendChildren(cDiv, [hdr, table, closeButton])
     }
-  })
-  impacted = efitTableData.length > 0 ? true : false
-  if (impacted === true) {
-    button.textContent = 'EFits'
-    hdr = create('h3', { textContext: `${pid} ${ceid} EFits` })
-    table = makeTable(efitTableData, COLUMN_NAMES, COLUMN_VALUES)
-    closeButton = create('button', { textContent: 'Close', onclick: clickFunc })
-    appendChildren(cDiv, [hdr, table, closeButton])
+
+    return impacted === true ? pDiv : create('div')
   }
 
-  return impacted === true ? pDiv : create('div')
-}
+  // Not using this yet
+  function COSComments (data) {
+    let commentData, pid, ceid
+    pid = data['PROCESS_ID']
+    ceid = data['CEID']
+    commentData = JSON.parse(JSON.stringify(SHARED_DATASETS.COS_COMMENTS))
+    commentData = dataEquals(commentData, 'PROCESS', pid)
+    commentData = dataEquals(commentData, 'CEID', ceid)
+    return create(
+      'p',
+      { textContent: `${commentData[0]['COMMENTS']}` },
+      { style: 'text-align: left;' }
+    )
+  }
 
-// Not using this yet
-function COSComments (data) {
-  let commentData, pid, ceid
-  pid = data['PROCESS_ID']
-  ceid = data['CEID']
-  commentData = JSON.parse(JSON.stringify(SHARED_DATASETS.COS_COMMENTS))
-  commentData = dataEquals(commentData, 'PROCESS', pid)
-  commentData = dataEquals(commentData, 'CEID', ceid)
-  return create(
-    'p',
-    { textContent: `${commentData[0]['COMMENTS']}` },
-    { style: 'text-align: left;' }
-  )
-}
-
-function COS_Table (args) {
   // vars
   let ceids,
     processIds,
@@ -1955,25 +1994,4 @@ function COS_Table (args) {
   })
 
   return true
-}
-
-function cleanupSTGSteps (data) {
-  // Fix staging naming convention
-  data.forEach(row => {
-    let ceid, slice, space
-
-    // check to make sure length of ceid is more than 3 characters
-    ceid = row['CEID']
-    if (ceid.length > 3) {
-      slice = ceid.slice(-3).toUpperCase()
-      if (slice === 'STG') {
-        spaceCheck = ceid[ceid.length - 4]
-        row['CEID'] =
-          spaceCheck === ' '
-            ? ceid
-            : `${ceid.substr(0, ceid.length - 3)} ${slice}`
-      }
-    }
-  })
-  return data
 }
