@@ -163,57 +163,61 @@ function fillCells (category, subcategory, dataset) {
   let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase() + '-'
   let keys = Object.keys(dataset)
   keys.forEach(key => {
-    let id = base_id + key.toString()
-    let element = document.getElementById(id)
-    let mainFunc = null
-    let func = null
-    let footer = null
-    // make footer data and set function to use
-    if (category === CATEGORY_KEYS.PEOPLE) {
-      if (subcategory === CATEGORIES.People[0]) {
-        mainFunc = countRecursion
-        func = TABLE_FUNCTIONS.QDO
-        let notes = DATA_NOTES.QDO
-        footer = create('tfoot')
-        notes.forEach(note => {
-          footer.innerHTML =
-            footer.innerHTML + "<tr><td colspan='2'>" + note + '</td></tr>'
-        })
+    try {
+      let id = base_id + key.toString()
+      let element = document.getElementById(id)
+      let mainFunc = null
+      let func = null
+      let footer = null
+      // make footer data and set function to use
+      if (category === CATEGORY_KEYS.PEOPLE) {
+        if (subcategory === CATEGORIES.People[0]) {
+          mainFunc = countRecursion
+          func = TABLE_FUNCTIONS.QDO
+          let notes = DATA_NOTES.QDO
+          footer = create('tfoot')
+          notes.forEach(note => {
+            footer.innerHTML =
+              footer.innerHTML + "<tr><td colspan='2'>" + note + '</td></tr>'
+          })
+        }
+        if (subcategory === CATEGORIES.People[1]) {
+          mainFunc = countRecursion
+          func = TABLE_FUNCTIONS.GOOD_CATCH
+          let notes = DATA_NOTES.GC
+          footer = create('tfoot')
+          notes.forEach(note => {
+            footer.innerHTML =
+              footer.innerHTML + "<tr><td colspan='2'>" + note + '</td></tr>'
+          })
+        }
       }
-      if (subcategory === CATEGORIES.People[1]) {
-        mainFunc = countRecursion
-        func = TABLE_FUNCTIONS.GOOD_CATCH
-        let notes = DATA_NOTES.GC
-        footer = create('tfoot')
-        notes.forEach(note => {
-          footer.innerHTML =
-            footer.innerHTML + "<tr><td colspan='2'>" + note + '</td></tr>'
-        })
+      if (category === CATEGORY_KEYS.VELOCITY) {
+        if (subcategory.includes('Availability')) {
+          mainFunc = otherRecursion
+          func = TABLE_FUNCTIONS.UE
+          let notes = DATA_NOTES.UE
+          footer = create('tfoot')
+          notes.forEach(note => {
+            footer.innerHTML =
+              footer.innerHTML + "<tr><td colspan='2'>" + note + '</td></tr>'
+          })
+        }
       }
-    }
-    if (category === CATEGORY_KEYS.VELOCITY) {
-      if (subcategory.includes('Availability')) {
-        mainFunc = otherRecursion
-        func = TABLE_FUNCTIONS.UE
-        let notes = DATA_NOTES.UE
-        footer = create('tfoot')
-        notes.forEach(note => {
-          footer.innerHTML =
-            footer.innerHTML + "<tr><td colspan='2'>" + note + '</td></tr>'
-        })
+      let data = mainFunc(dataset[key], func)
+      element.innerHTML = data[2].innerHTML
+      element.style.backgroundColor = data[2].style.backgroundColor
+      if (footer !== null) {
+        element.childNodes[0].childNodes[1].childNodes[0].appendChild(footer)
       }
-    }
-    let data = mainFunc(dataset[key], func)
-    element.innerHTML = data[2].innerHTML
-    element.style.backgroundColor = data[2].style.backgroundColor
-    if (footer !== null) {
-      element.childNodes[0].childNodes[1].childNodes[0].appendChild(footer)
-    }
 
-    let childData = element.childNodes[0].childNodes[1].innerHTML
-    element.childNodes[0].childNodes[1].innerHTML = ''
+      let childData = element.childNodes[0].childNodes[1].innerHTML
+      element.childNodes[0].childNodes[1].innerHTML = ''
 
-    window.localStorage.setItem(id, childData)
+      window.localStorage.setItem(id, childData)
+    } catch (e) {
+      log(`Error - Cat:${category}\nSubCat: ${subcategory}\nError:${e}`)
+    }
   })
 
   configureClickables()
