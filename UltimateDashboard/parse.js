@@ -234,8 +234,8 @@ var PARSE_FUNCTIONS = {
       // subfunction for readability
       function groupQDO (data) {
         // Testing - filter out shift 1 and shift 8
-        // data = dataNotEquals(data, 'SHIFT', 1)
-        //data = dataNotEquals(data, 'SHIFT', 8)
+        data = dataNotEquals(data, 'SHIFT', 1)
+        data = dataNotEquals(data, 'SHIFT', 8)
         data = dataNotEquals(
           data,
           'BUSINESS_TITLE',
