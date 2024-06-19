@@ -37,7 +37,7 @@ const changelog = [
       {
         section: 'Main Page',
         comments: [
-          'Added the "Custom Links" tab - this will only save to your current browswer. Config saving will be implemented in the future.'
+          'Added the "Custom Links" tab - this will only save to your current browser. Config saving will be implemented in the future.'
         ]
       },
       {
