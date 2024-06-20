@@ -32,6 +32,25 @@ const changelog = [
     */
 
   {
+    date: '6/20/2024',
+    changes: [
+      {
+        section: 'Custom Links',
+        comments: [
+          'Added default links',
+          'Added help text at the bottom of the custom links section',
+          'Added dynamic formatting to optimize how many categories appear in each row'
+        ]
+      },
+      {
+        section: 'Back-End',
+        comments: [
+          'Added export/import settings options for when the dashboard is setup to save configs'
+        ]
+      }
+    ]
+  },
+  {
     date: '6/18/2024',
     changes: [
       {
