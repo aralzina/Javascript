@@ -26,6 +26,8 @@ function addFilter (name, key) {
   // create title
   let span = create('span', { textContent: name, className: 'form-span' })
 
+  let div = create('div', {}, { style: 'text-align:left; width:160px;' })
+
   // create select object
   let select = create(
     'select',
@@ -36,12 +38,13 @@ function addFilter (name, key) {
     {
       multiple: 'multiple',
       'data-placeholder': 'Select an option...',
-      style: 'width: 160px'
+      style: 'min-width: 100px'
     }
   )
 
+  div.append(select)
   // append both to form
-  appendChildren(form, [span, select])
+  appendChildren(form, [span, div])
 }
 
 /**
@@ -50,11 +53,16 @@ function addFilter (name, key) {
  */
 function filterConfig () {
   let formParent = $('#report-filter-form')[0].parentNode
-
+  let buttonDiv = create(
+    'div',
+    {},
+    { style: 'padding: 20px; text-align:left;' }
+  )
   let button = create('button', {
     textContent: 'Apply Filters',
     onclick: COS
   })
+  buttonDiv.append(button)
 
   // get previously used filters
   let chosen = {}
@@ -90,7 +98,7 @@ function filterConfig () {
     f1.trigger('change')
   }
 
-  formParent.appendChild(button)
+  formParent.appendChild(buttonDiv)
 }
 
 /**
@@ -185,14 +193,14 @@ function updateFilter (event, id) {
   }
 
   /* create a stopping point based on how many fields have data in them
-  let max = 0
-  FILTER_ORDER.forEach((v, i, a) => {
-    max += chosen[v].length > 0 ? 1 : 0
-  })
-
-  // had to do this because it would bug out when it reached 3 in the next if block
-  max -= max === FILTER_ORDER.length ? 1 : 0
-  */
+      let max = 0
+      FILTER_ORDER.forEach((v, i, a) => {
+        max += chosen[v].length > 0 ? 1 : 0
+      })
+    
+      // had to do this because it would bug out when it reached 3 in the next if block
+      max -= max === FILTER_ORDER.length ? 1 : 0
+      */
 
   // reinitialize the data with items reselected, if possible for the next filter
   for (let i = id + 1; i < FILTER_ORDER.length; i++) {
