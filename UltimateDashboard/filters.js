@@ -56,7 +56,7 @@ function filterConfig () {
   let buttonDiv = create(
     'div',
     {},
-    { style: 'padding: 20px; text-align:left;' }
+    { style: 'padding: 20px; text-align:center;' }
   )
   let button = create('button', {
     textContent: 'Apply Filters',
