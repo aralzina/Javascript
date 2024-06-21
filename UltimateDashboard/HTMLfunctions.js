@@ -1564,10 +1564,16 @@ function COS_Table (args) {
           if (key === 'CREATED_DATE') {
             td.setAttribute('style', 'white-space: nowrap;')
           }
+          if (key === 'FAB_EVENT_HTML') {
+            try {
+              td.childNodes[0].setAttribute('target', '_blank')
+            } catch (e) {
+              log(`ILM link attribute error: ${e}`)
+            }
+          }
           tr.appendChild(td)
         })
       })
-
       return table.table
     }
 
