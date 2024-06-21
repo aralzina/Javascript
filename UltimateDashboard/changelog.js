@@ -24,6 +24,17 @@ const changelog = [
         comments: [
           'Offset the factory indicator queries to run after the COS Dashboard query. This allows for a faster load. When the factory indicators is being built, the report will not respond.'
         ]
+      },
+      {
+        section: 'COS Dashboard',
+        comments: ['Fixed ILM links not opening in a new window.']
+      },
+      {
+        section: 'Help',
+        comments: [
+          'Added section about filters only applying to DOTS/COS Dashboard',
+          'Added info on fixing the filters not allowing you to add more filters if they were already set'
+        ]
       }
     ]
   },
@@ -139,6 +150,7 @@ const HELP = [
   {
     section: 'Factory Indicators',
     comments: [
+      "The category name of each indicator also serves as a button to show graph data for that indicator. You'll see the button change color when you hover over it.",
       "Factory indicators currently contain nested tables of information. Click a cell value and another table will pop out.You can continue to drill down this way until clicking a cell no longer brings a new table forward. This section queries it's data after the COS Dashboard data and will cause a temporary unresponsive state for the whole report.",
       'This section is the biggest reason for the long load time. When I started this project, I wanted all information possible to be available to anyone that needed it.I have come up with a better strategy for a future update.The report will only show data relative to the person viewing the report and the filters applied.'
     ]
@@ -147,6 +159,13 @@ const HELP = [
     section: 'Links',
     comments: [
       'Links can be configured in the settings menu. If none are configured, the defaults will be loaded. You can add to the defaults, change them, or remove them altogether. If you delete all defaults, make sure to add at least one link before closing the settings menu, otherwise the defaults will show up again.'
+    ]
+  },
+  {
+    section: 'Filters',
+    comments: [
+      'Filtesr currently only apply to the COS Dashboard and the DOTS link',
+      "After refreshing the page, the ceids won't show other ceids that should show with the current filters. In order to fix this, add a process and then remove the process. All ceids should show if they apply to the process/functional area"
     ]
   }
 ]
