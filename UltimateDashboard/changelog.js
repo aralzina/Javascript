@@ -163,7 +163,11 @@ function showHelp () {
     li = create('li')
 
     // create span
-    span = create('span', { textContent: data.section })
+    span = create(
+      'span',
+      { textContent: data.section },
+      { style: 'font-weight: bolder; text-decoration: underline;' }
+    )
 
     // attach span to li
     li.append(span)
