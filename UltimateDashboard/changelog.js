@@ -132,3 +132,79 @@ function showChangelog () {
   })
   makeModal(div)
 }
+
+const HELP = [
+  {
+    section: 'COS Dashboard',
+    comments: [
+      'The COS dashboard will not show any data until filters are selected and applied.'
+    ]
+  },
+  {
+    section: 'Factory Indicators',
+    comments: [
+      'Factory indicators currently contain nested tables of information. Click a cell value and another table will pop out.You can continue to drill down this way until clicking a cell no longer brings a new table forward.',
+      'This section is the biggest reason for the long load time. When I started this project, I wanted all information possible to be available to anyone that needed it.I have come up with a better strategy for a future update.The report will only show data relative to the person viewing the report and the filters applied.'
+    ]
+  },
+  {
+    section: 'Links',
+    comments: [
+      'Links can be configured in the settings menu. If none are configured, the defaults will be loaded. You can add to the defaults, change them, or remove them altogether. If you delete all defaults, make sure to add at least one link before closing the settings menu, otherwise the defaults will show up again.'
+    ]
+  }
+]
+
+function showHelp () {
+  function makeLi (data) {
+    let li, span, p
+
+    // create li
+    li = create('li')
+
+    // create span
+    span = create('span', { textContent: data.section })
+
+    // attach span to li
+    li.append(span)
+
+    // loop paragraphs
+    data.comments.forEach(comment => {
+      // create paragraph
+      p = create('p', { textContent: comment })
+
+      // append to li
+      li.append(p)
+    })
+
+    return li
+  }
+
+  let div, hdr, section, ul
+
+  // make parent div
+  div = create('div')
+
+  // make div children
+  hdr = create(
+    'h1',
+    { textContent: 'Help' },
+    { style: 'text-align:center;border-bottom: solid black;' }
+  )
+  section = create('section')
+
+  // append to div
+  appendChildren(div, [hdr, section])
+
+  // make ul
+  ul = create('ul')
+
+  // append to section
+  section.append(ul)
+
+  HELP.forEach(item => {
+    ul.append(makeLi(item))
+  })
+
+  makeModal(div)
+}
