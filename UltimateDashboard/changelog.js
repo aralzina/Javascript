@@ -1,21 +1,3 @@
-// Template - copy everything from line 4 - 14 and paste it in //
-/*
-
-    {
-        date: '',
-        changes: [
-            {
-                section: '',
-                comments: [
-                    '',
-                ]
-            }
-        ]
-    }
-    
-
-*/
-
 const changelog = [
   /* Placeholder for next change
     {
@@ -30,7 +12,21 @@ const changelog = [
         ]
     },
     */
-
+  {
+    date: '6/21/2024',
+    changes: [
+      {
+        section: 'Menu',
+        comments: ['Added in a help section.']
+      },
+      {
+        section: 'Back-End',
+        comments: [
+          'Offset the factory indicator queries to run after the COS Dashboard query. This allows for a faster load. When the factory indicators is being built, the report will not respond.'
+        ]
+      }
+    ]
+  },
   {
     date: '6/20/2024',
     changes: [
@@ -143,7 +139,7 @@ const HELP = [
   {
     section: 'Factory Indicators',
     comments: [
-      'Factory indicators currently contain nested tables of information. Click a cell value and another table will pop out.You can continue to drill down this way until clicking a cell no longer brings a new table forward.',
+      "Factory indicators currently contain nested tables of information. Click a cell value and another table will pop out.You can continue to drill down this way until clicking a cell no longer brings a new table forward. This section queries it's data after the COS Dashboard data and will cause a temporary unresponsive state for the whole report.",
       'This section is the biggest reason for the long load time. When I started this project, I wanted all information possible to be available to anyone that needed it.I have come up with a better strategy for a future update.The report will only show data relative to the person viewing the report and the filters applied.'
     ]
   },
