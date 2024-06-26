@@ -237,3 +237,141 @@ function csvJSON (csv) {
   //return result as JSON
   return JSON.parse(JSON.stringify(result))
 }
+
+/**
+ *
+ * @param {*} args - {name:'',data:[]}
+ * @returns - dataset
+ */
+function Dataset (args) {
+  var dataset = {}
+
+  dataset.type = 'Dataset'
+  dataset.data = args.data
+  dataset.name = typeof args.name !== 'undefined' ? args.name : ''
+  dataset.date = new Date()
+
+  dataset.getAge = function name () {
+    // return age in seconds
+    return (Date.now() - dataset.data) / 60000
+  }
+  dataset.getCopy = function () {
+    // return deep copy of the data only
+    return JSON.parse(JSON.stringify(dataset.data))
+  }
+  dataset.unique = function (key) {
+    let results, val, data
+    // if data has nothing in it... return
+    if (dataset.data.length === 0) {
+      return []
+    }
+
+    // make a deep copy of the data so that the initial data isn't sorted
+    data = JSON.parse(JSON.stringify(dataset.data))
+
+    //sort data by key provided
+    data.sort(function (a, b) {
+      return a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0
+    })
+
+    // push the first key in and save it in variable for loop comparison
+    results = []
+    val = data[0][key]
+    results.push(val)
+
+    for (let i = 1; i < data.length; i++) {
+      let newVal = data[i][key]
+      if (val !== newVal) {
+        val = newVal
+        results.push(val)
+      }
+    }
+    return results
+  }
+  dataset.equals = function (key, value) {
+    let results = []
+    dataset.data.forEach(row => {
+      if (row[key].toString() === value.toString()) {
+        results.push(row)
+      }
+    })
+    return results
+  }
+  dataset.notEquals = function (key, value) {
+    let results = []
+    dataset.data.forEach(row => {
+      if (row[key].toString() !== value.toString()) {
+        results.push(row)
+      }
+    })
+    return results
+  }
+  dataset.like = function (key, value) {
+    let results = []
+    dataset.data.forEach(row => {
+      if (
+        row[key]
+          .toString()
+          .toUpperCase()
+          .includes(value.toString().toUpperCase())
+      ) {
+        results.push(row)
+      }
+    })
+    return results
+  }
+  dataset.notLike = function (key, value) {
+    let results = []
+    data.forEach(row => {
+      if (
+        !row[key]
+          .toString()
+          .toUpperCase()
+          .includes(value.toString().toUpperCase())
+      ) {
+        results.push(row)
+      }
+    })
+    return results
+  }
+  dataset.in = function (key, values) {
+    // fix simple error of values not being an array
+    values = !Array.isArray(values) ? [values] : values
+    let results = []
+    dataset.data.forEach(row => {
+      let check = row[key]
+      values.forEach(val => {
+        if (val === check) {
+          results.push(row)
+        }
+      })
+    })
+    return results
+  }
+  dataset.columns = function () {
+    return Object.keys(dataset.data)
+  }
+  dataset.union = function (d) {
+    if (Array.isArray(d)) {
+      // convert to same type of data structure
+      data = Dataset()
+      data.data = d
+    }
+    data.data.forEach(row => {
+      dataset.data.push(row)
+    })
+  }
+  dataset.toString = function () {
+    return JSON.stringify(dataset.data)
+  }
+  dataset.reset = function () {
+    dataset.data = JSON.parse(JSON.stringify(dataset.originalData))
+  }
+
+  dataset.sortBy = function (column) {}
+
+  // create way of unfiltering data
+  dataset.originalData = dataset.getCopy()
+
+  return dataset
+}

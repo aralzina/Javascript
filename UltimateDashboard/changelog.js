@@ -1,5 +1,5 @@
 const changelog = [
-  /* Placeholder for next change
+  /* template - copy from open curly brace to the comma after the closing curly
     {
         date: '',
         changes: [
@@ -12,6 +12,16 @@ const changelog = [
         ]
     },
     */
+
+  {
+    date: '6/24/2024',
+    changes: [
+      {
+        section: 'Settings',
+        comments: ['Rebuilt the custom link settings page']
+      }
+    ]
+  },
   {
     date: '6/21/2024',
     changes: [
