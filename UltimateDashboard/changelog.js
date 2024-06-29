@@ -12,7 +12,15 @@ const changelog = [
         ]
     },
     */
-
+  {
+    date: '6/26/2024',
+    changes: [
+      {
+        section: 'Settings',
+        comments: ['Added a user info window']
+      }
+    ]
+  },
   {
     date: '6/24/2024',
     changes: [
@@ -174,9 +182,13 @@ const HELP = [
   {
     section: 'Filters',
     comments: [
-      'Filtesr currently only apply to the COS Dashboard and the DOTS link',
+      'Filters currently only apply to the COS Dashboard and the DOTS link',
       "After refreshing the page, the ceids won't show other ceids that should show with the current filters. In order to fix this, add a process and then remove the process. All ceids should show if they apply to the process/functional area"
     ]
+  },
+  {
+    section: '',
+    comments: ['']
   }
 ]
 
