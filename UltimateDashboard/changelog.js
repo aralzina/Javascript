@@ -13,11 +13,15 @@ const changelog = [
     },
     */
   {
-    date: '6/26/2024',
+    date: '6/28/2024',
     changes: [
       {
         section: 'Settings',
         comments: ['Added a user info window']
+      },
+      {
+        section: 'UI',
+        comments: ['Fixed an issue where the filter section would collapse if the window size was too small.']
       }
     ]
   },
@@ -187,8 +191,10 @@ const HELP = [
     ]
   },
   {
-    section: '',
-    comments: ['']
+    section: 'Menu',
+    comments: [
+      'User info has been added. I will make it so ',
+    ]
   }
 ]
 
