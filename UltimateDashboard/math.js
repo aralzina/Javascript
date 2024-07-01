@@ -69,7 +69,7 @@ var daysIntoQtr = function () {
   let d = new Date()
   let qtr = getQtr(d.getMonth())
   let startMonth = (qtr - 1) * 3
-  let startDate = new Date(d.getYear() + 1900, startMonth - 1)
+  let startDate = new Date(d.getYear() + 1900, startMonth)
   return daysDiff(startDate, new Date())
 }
 
