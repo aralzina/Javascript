@@ -12,6 +12,23 @@ const changelog = [
         ]
     },
     */
+
+  {
+    date: '7/3/2024',
+    changes: [
+      {
+        section: 'Indicators',
+        comments: [
+          'Removed entire factory data and rebuilt indicators to reflect only data that matters to the user.',
+          "A future update will allow the user to view the report as someone else so that one could view another manager's indicators easily."
+        ]
+      },
+      {
+        section: 'Link Settings',
+        comments: ['Fixed a bug that created borders on the link types.']
+      }
+    ]
+  },
   {
     date: '6/28/2024',
     changes: [
@@ -21,7 +38,9 @@ const changelog = [
       },
       {
         section: 'UI',
-        comments: ['Fixed an issue where the filter section would collapse if the window size was too small.']
+        comments: [
+          'Fixed an issue where the filter section would collapse if the window size was too small.'
+        ]
       }
     ]
   },
@@ -170,11 +189,13 @@ const HELP = [
     ]
   },
   {
-    section: 'Factory Indicators',
+    section: 'Indicators',
     comments: [
-      "The category name of each indicator also serves as a button to show graph data for that indicator. You'll see the button change color when you hover over it.",
-      "Factory indicators currently contain nested tables of information. Click a cell value and another table will pop out.You can continue to drill down this way until clicking a cell no longer brings a new table forward. This section queries it's data after the COS Dashboard data and will cause a temporary unresponsive state for the whole report.",
-      'This section is the biggest reason for the long load time. When I started this project, I wanted all information possible to be available to anyone that needed it.I have come up with a better strategy for a future update.The report will only show data relative to the person viewing the report and the filters applied.'
+      //"The category name of each indicator also serves as a button to show graph data for that indicator. You'll see the button change color when you hover over it.",
+      // "Factory indicators currently contain nested tables of information. Click a cell value and another table will pop out.You can continue to drill down this way until clicking a cell no longer brings a new table forward. This section queries it's data after the COS Dashboard data and will cause a temporary unresponsive state for the whole report.",
+      // 'This section is the biggest reason for the long load time. When I started this project, I wanted all information possible to be available to anyone that needed it.I have come up with a better strategy for a future update.The report will only show data relative to the person viewing the report and the filters applied.'
+      'Reworked this entire section to only include data relevant to the user. This will dramatically reduce load times and reduce clicking needed to drill-down to useful information.',
+      'Currently only works for technicians and their GLs. AM/DM support coming soon.'
     ]
   },
   {
@@ -192,9 +213,7 @@ const HELP = [
   },
   {
     section: 'Menu',
-    comments: [
-      'User info has been added. I will make it so ',
-    ]
+    comments: ['User info has been added. I will make it so ']
   }
 ]
 

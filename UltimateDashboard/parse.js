@@ -59,11 +59,10 @@ function query (p) {
         switch (q) {
           //cached datasets
           /*//query the settings data * NOT YET AVAILABLE*
-            case SHARED_DATASETS.QUERY.SETTINGS:
-              settings(data.value);
-              break;*/
+                case SHARED_DATASETS.QUERY.SETTINGS:
+                  settings(data.value);
+                  break;*/
           case SHARED_DATASETS.EMPLOYEE.QUERY_TYPE:
-            //do stuff
             PARSE_FUNCTIONS.EMPLOYEES(cleanData(data.value))
             LOAD_STATUS.EMPLOYEE = true
             break
@@ -234,13 +233,8 @@ var PARSE_FUNCTIONS = {
       // subfunction for readability
       function groupQDO (data) {
         // Testing - filter out shift 1 and shift 8
-        data = dataNotEquals(data, 'SHIFT', 1)
-        data = dataNotEquals(data, 'SHIFT', 8)
-        data = dataNotEquals(
-          data,
-          'BUSINESS_TITLE',
-          'Module Equipment Technician'
-        )
+        //data = dataNotEquals(data, 'SHIFT', 1)
+        //data = dataNotEquals(data, 'SHIFT', 8)
 
         return loop(data, ['FULL_NAME', 'MANAGER_NAME', 'area', 'SHIFT'])
         // removing shift
@@ -249,7 +243,7 @@ var PARSE_FUNCTIONS = {
 
       // filter QDO dataset with employee dataset then
       // filter employee dataset with qdo dataset
-      let ds = JSON.parse(JSON.stringify(DATASETS.EMPLOYEE))
+      let ds = copyDataset(DATASETS.EMPLOYEE)
       let two_datasets = doubleFilter(data, ds, 'wwid', 'WWID')
       let qdods = two_datasets[0]
       let empds = two_datasets[1]
@@ -274,11 +268,6 @@ var PARSE_FUNCTIONS = {
         row['min_date'] = new Date(qdods[0]['created'])
       })
 
-      //let pqgcds = JSON.parse(JSON.stringify(qdods))
-
-      // Filter out technician submitted QDOs
-      qdods = dataNotLike(qdods, 'BUSINESS_TITLE', 'TECHNICIAN')
-
       // Filter out manager submitted PQGC
       //pqgcds = dataLike(pqgcds,'BUSINESS_TITLE','TECHNICIAN')
 
@@ -287,8 +276,14 @@ var PARSE_FUNCTIONS = {
 
       // tell the console
       log('DATASETS.QDO completed.')
-      let QDOds = groupQDO(DATASETS.QDO)
-      fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[0], QDOds)
+      //let QDOds = groupQDO(DATASETS.QDO)
+      //fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[0], QDOds)
+
+      try {
+        USER.insertIndicator(USER.makeQDO())
+      } catch (e) {
+        log(e.toString())
+      }
     }
   },
   UE: function (data) {
@@ -321,6 +316,8 @@ var PARSE_FUNCTIONS = {
     DATASETS.EMPLOYEE = data
     console.log('DATASETS.EMPLOYEE acquired')
     EMPLOYEES_LOADED = true
+    USER = userIndicators()
+    USER.buildIndicatorTable()
   },
   GOOD_CATCH: function (data) {
     if (!EMPLOYEES_LOADED) {
@@ -354,7 +351,12 @@ var PARSE_FUNCTIONS = {
         'org_level_desc8',
         'SHIFT'
       ])
-      fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[1], GCds)
+      //fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[1], GCds)
+      try {
+        USER.insertIndicator(USER.makeGoodCatch())
+      } catch (e) {
+        log(e.toString())
+      }
     }
   },
   COS_CEID: function (data) {
