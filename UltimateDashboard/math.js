@@ -40,6 +40,11 @@ function daysDiff (d1, d2) {
 var daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 
 var getQtr = function (month) {
+  try {
+    // try to figure it out from the dataset if it's already loaded
+    let dsqtr = DATASETS.EMPLOYEE[0].QTR
+    return parseInt(dsqtr.substring(dsqtr.length - 1))
+  } catch (e) {}
   let test = (month + 1) / 12
   let qtr
   test <= 0.25
@@ -53,6 +58,12 @@ var getQtr = function (month) {
 }
 
 var daysInQtr = function (qtr) {
+  let startDate, endDate
+  try {
+    startDate = new Date(DATASETS.EMPLOYEE[0].QTR_START_DATE)
+    endDate = new Date(DATASETS.EMPLOYEE[0].QTR_END_DATE)
+    return daysDiff(startDate, endDate)
+  } catch (e) {}
   let months = [1, 2, 3]
   for (let i = 0; i < qtr - 1; i++) {
     months[i] = months[i] + (qtr - 1) * 3
@@ -66,10 +77,16 @@ var daysInQtr = function (qtr) {
 }
 
 var daysIntoQtr = function () {
+  let startDate
+  try {
+    startDate = new Date(DATASETS.EMPLOYEE[0].QTR_START_DATE)
+    endDate = new Date()
+    return daysDiff(startDate, endDate)
+  } catch (e) {}
   let d = new Date()
   let qtr = getQtr(d.getMonth())
   let startMonth = (qtr - 1) * 3
-  let startDate = new Date(d.getYear() + 1900, startMonth)
+  startDate = new Date(d.getYear() + 1900, startMonth)
   return daysDiff(startDate, new Date())
 }
 
