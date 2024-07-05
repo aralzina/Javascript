@@ -68,6 +68,7 @@ function query (p) {
             break
 
           case SHARED_DATASETS.QDO.QUERY_TYPE:
+            /*
             let qdoTarget = (
               (d.getDate() / daysInMonth(dt.year, dt.month)) *
               100
@@ -91,6 +92,7 @@ function query (p) {
             if (DATA_NOTES.QDO[DATA_NOTES.QDO.length - 1] !== qdoLegend) {
               DATA_NOTES.QDO.push(qdoLegend)
             }
+            */
             PARSE_FUNCTIONS.QDO(cleanData(data.value))
             LOAD_STATUS.QDO = true
             break
@@ -106,6 +108,7 @@ function query (p) {
             break
 
           case SHARED_DATASETS.GOOD_CATCH.QUERY_TYPE:
+            /*
             let gcTarget = (
               (daysIntoQtr() / daysInQtr(getQtr(d.getMonth()))) *
               100
@@ -132,7 +135,7 @@ function query (p) {
             ]
             if (DATA_NOTES.GC[DATA_NOTES.GC.length - 1] !== gcLegend) {
               DATA_NOTES.GC.push(gcLegend)
-            }
+            }*/
             PARSE_FUNCTIONS.GOOD_CATCH(cleanData(data.value))
             LOAD_STATUS.GC = true
             break
@@ -198,7 +201,9 @@ function query (p) {
             break
 
           case SHARED_DATASETS.PQGC.QUERY_TYPE:
-            PARSE_FUNCTIONS.PQGC(data.value)
+            LOAD_STATUS.PQGC = true
+            DATASETS.PQGC = data
+            PARSE_FUNCTIONS.PQGC()
             break
 
           default:
@@ -329,6 +334,7 @@ var PARSE_FUNCTIONS = {
         PARSE_FUNCTIONS.GOOD_CATCH(data)
       }, 1000)
     } else {
+      /*
       let employeeFilter = dataEquals(
         DATASETS.EMPLOYEE,
         'BUSINESS_TITLE',
@@ -347,14 +353,15 @@ var PARSE_FUNCTIONS = {
         }
       })
       data = dataIn(data, 'SHIFT', ['4', '5', '6', '7'])
+      */
       DATASETS.GOOD_CATCH = data
       log('DATASETS.GOOD_CATCH acquired')
-      let GCds = loop(data, [
+      /*let GCds = loop(data, [
         'employee_name',
         'mgr_name',
         'org_level_desc8',
         'SHIFT'
-      ])
+      ])*/
       //fillCells(CATEGORY_KEYS.PEOPLE, CATEGORIES.People[1], GCds)
       try {
         USER.insertIndicator(USER.makeGoodCatch())
@@ -408,7 +415,16 @@ var PARSE_FUNCTIONS = {
     DATASETS.ILM = data
   },
   PQGC: function (data) {
-    LOAD_STATUS.PQGC = true
-    DATASETS.PQGC = data
+    if (!EMPLOYEES_LOADED) {
+      setTimeout(function () {
+        PARSE_FUNCTIONS.PQGC(data)
+      }, 1000)
+    } else {
+      try {
+        USER.insertIndicator(USER.makePQGC())
+      } catch (e) {
+        log(e.toString())
+      }
+    }
   }
 }
