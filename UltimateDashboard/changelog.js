@@ -12,7 +12,15 @@ const changelog = [
         ]
     },
     */
-
+  {
+    date: '7/5/2024',
+    changes: [
+      {
+        section: 'Indicators',
+        comments: ['PQGC quarterly indicator added to indicators tab.']
+      }
+    ]
+  },
   {
     date: '7/3/2024',
     changes: [
