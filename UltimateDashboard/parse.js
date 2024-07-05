@@ -197,6 +197,10 @@ function query (p) {
             DATASETS.COS_LINEVIEW = data.value
             break
 
+          case SHARED_DATASETS.PQGC.QUERY_TYPE:
+            PARSE_FUNCTIONS.PQGC(data.value)
+            break
+
           default:
             console.log('Error switching on query name')
             break
@@ -402,5 +406,9 @@ var PARSE_FUNCTIONS = {
   ILM: function (data) {
     LOAD_STATUS.ILM = true
     DATASETS.ILM = data
+  },
+  PQGC: function (data) {
+    LOAD_STATUS.PQGC = true
+    DATASETS.PQGC = data
   }
 }
