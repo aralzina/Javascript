@@ -202,8 +202,12 @@ function query (p) {
 
           case SHARED_DATASETS.PQGC.QUERY_TYPE:
             LOAD_STATUS.PQGC = true
-            DATASETS.PQGC = data
-            PARSE_FUNCTIONS.PQGC()
+            PARSE_FUNCTIONS.PQGC(cleanData(data.value))
+            break
+
+          case SHARED_DATASETS.CEID_MA.QUERY_TYPE:
+            LOAD_STATUS.CEID_MA = true
+            DATASETS.CEID_MA = cleanData(data.value)
             break
 
           default:
@@ -421,6 +425,7 @@ var PARSE_FUNCTIONS = {
       }, 1000)
     } else {
       try {
+        DATASETS.PQGC = data
         USER.insertIndicator(USER.makePQGC())
       } catch (e) {
         log(e.toString())
