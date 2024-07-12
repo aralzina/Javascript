@@ -13,6 +13,17 @@ const changelog = [
     },
     */
   {
+    date: '7/12/2024',
+    changes: [
+      {
+        section: 'COS Dash',
+        comments: [
+          'Added in historical availability data for current work week, 7 ww average, and 13 ww average.'
+        ]
+      }
+    ]
+  },
+  {
     date: '7/5/2024',
     changes: [
       {
@@ -155,7 +166,9 @@ const changelog = [
 function showChangelog () {
   let div, hdr, mainSection, section, content, ul
   div = create('div')
-  mainSection = create('section')
+  mainSection = create('div', {
+    style: `max-height: ${window.innerHeight * 0.7}px; overflow-y: auto;`
+  })
 
   appendChildren(div, [
     create(

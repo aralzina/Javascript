@@ -619,54 +619,54 @@ function customOutline (args) {
  */
 const default_gauge_opts = args => {
   /* advanced options
-            
-                // Colors by percentage
-                percentColors = [
-                    [0.0, '#a9d70b'],
-                    [0.5, '#f9c802'],
-                    [1.0, '#ff0000']
-                ]
-            
-                // value labels
-                staticLabels: {
-                    font: "10px sans-serif",  // Specifies font
-                    labels: [100, 130, 150, 220.1, 260, 300],  // Print labels at these values
-                    color: "#000000",  // Optional: Label text color
-                    fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-                },
-                             
-                // static zones
-                staticZones: [
-                    {strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4},
-                    {strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2},
-                    {strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1},
-                    {strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8},
-                    {strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6}
-                ], 
                 
-                // Varying heights to above example
-                {strokeStyle: "rgb(80,80,80)", min: 2470, max: 2530, height: 1.3}
-                      
-                // tick marks
-                renderTicks: {
-                    divisions: 5,
-                    divWidth: 1.1,
-                    divLength: 0.7,
-                    divColor: #333333,
-                    subDivisions: 3,
-                    subLength: 0.5,
-                    subWidth: 0.6,
-                    subColor: #666666
-                }
-            
-                // gauge pointer tip icon
-                pointer: {
-                    // Extra optional pointer options:
-                    iconPath: 'myicon.png',  // Icon image source
-                    iconScale: 1,    // Size scaling factor
-                    iconAngle: 90.0  // Rotation offset angle, degrees
-                },
-                */
+                    // Colors by percentage
+                    percentColors = [
+                        [0.0, '#a9d70b'],
+                        [0.5, '#f9c802'],
+                        [1.0, '#ff0000']
+                    ]
+                
+                    // value labels
+                    staticLabels: {
+                        font: "10px sans-serif",  // Specifies font
+                        labels: [100, 130, 150, 220.1, 260, 300],  // Print labels at these values
+                        color: "#000000",  // Optional: Label text color
+                        fractionDigits: 0  // Optional: Numerical precision. 0=round off.
+                    },
+                                 
+                    // static zones
+                    staticZones: [
+                        {strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4},
+                        {strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2},
+                        {strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1},
+                        {strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8},
+                        {strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6}
+                    ], 
+                    
+                    // Varying heights to above example
+                    {strokeStyle: "rgb(80,80,80)", min: 2470, max: 2530, height: 1.3}
+                          
+                    // tick marks
+                    renderTicks: {
+                        divisions: 5,
+                        divWidth: 1.1,
+                        divLength: 0.7,
+                        divColor: #333333,
+                        subDivisions: 3,
+                        subLength: 0.5,
+                        subWidth: 0.6,
+                        subColor: #666666
+                    }
+                
+                    // gauge pointer tip icon
+                    pointer: {
+                        // Extra optional pointer options:
+                        iconPath: 'myicon.png',  // Icon image source
+                        iconScale: 1,    // Size scaling factor
+                        iconAngle: 90.0  // Rotation offset angle, degrees
+                    },
+                    */
 
   var opts = {
     angle: 0.0, // The span of the gauge arc
@@ -709,6 +709,99 @@ function gaugeIt (elementId, optArgs, gaugeArgs) {
 
 function COS_Table (args) {
   // functions
+
+  function historicalAvailAvg (pid, ceid) {
+    let data, div, h3, table, tr, td, change, symbol, color, closeButton
+
+    data = dataEquals(
+      dataEquals(DATASETS.CEID_MA, 'process', pid),
+      'ceid',
+      ceid
+    )[0]
+
+    change = parseFloat(data.cw_ma) - parseFloat(data.ID13w_ma)
+
+    symbol = change > 0 ? '&#8599;' : change < 0 ? '&#8600;' : '&#8594;'
+    color = change > 0 ? 'lime' : change < 0 ? 'red' : 'white'
+
+    change = (Math.abs(change) * 100).toFixed(2)
+
+    div = create('div', { className: 'popout hidden' })
+
+    h3 = create('h3', {
+      textContent: `${pid} ${ceid} Availability Average Trends (Current Week, 7 Week, 13 Week)`
+    })
+    table = basicTable()
+    closeButton = create('button', {
+      textContent: 'Close',
+      onclick: function (e) {
+        div.classList.toggle('hidden')
+      }
+    })
+
+    div.append(h3, table.table, closeButton)
+
+    tr = create('tr')
+    table.thead.append(tr)
+
+    tr.append(
+      create(
+        'th',
+        { textContent: 'Process' },
+        { style: 'background-color: darkblue; color:white;' }
+      ),
+      create(
+        'th',
+        { textContent: 'Ceid' },
+        { style: 'background-color: darkblue; color:white;' }
+      ),
+      create(
+        'th',
+        { textContent: 'CW vs 13W Trend' },
+        { style: 'background-color: darkblue; color:white;' }
+      ),
+      create(
+        'th',
+        { textContent: 'CW Avail Avg' },
+        { style: 'background-color: darkblue; color:white;' }
+      ),
+      create(
+        'th',
+        { textContent: '7W Avail Avg' },
+        { style: 'background-color: darkblue; color:white;' }
+      ),
+      create(
+        'th',
+        { textContent: '13w Avail Avg' },
+        { style: 'background-color: darkblue; color:white;' }
+      )
+    )
+
+    tr = create('tr')
+    table.tbody.append(
+      create('td', { textContent: data.process }),
+      create('td', { textContent: data.ceid }),
+      create(
+        'td',
+        {
+          innerHTML: `<span style='font-size: 2em;'>${symbol}</span><br><span>${change}%</span>`
+        },
+        { style: `background-color: ${color};` }
+      ),
+      create('td', {
+        textContent: `${(parseFloat(data.cw_ma) * 100).toFixed(2)}%`
+      }),
+      create('td', {
+        textContent: `${(parseFloat(data.ID7w_ma) * 100).toFixed(2)}%`
+      }),
+      create('td', {
+        textContent: `${(parseFloat(data.ID13w_ma) * 100).toFixed(2)}%`
+      })
+    )
+
+    //makeModal(table.table)
+    return div
+  }
 
   function cleanupSTGSteps (data) {
     // Fix staging naming convention
@@ -1044,13 +1137,13 @@ function COS_Table (args) {
       limitMax: true,
       limitMin: true,
       /*
-                staticLabels: {
-                    font: '10px sans-serif', // Specifies font
-                    labels: [drumBeat], // Print labels at these values
-                    color: '#000000', // Optional: Label text color
-                    fractionDigits: 0 // Optional: Numerical precision. 0=round off.
-                },
-                */
+                    staticLabels: {
+                        font: '10px sans-serif', // Specifies font
+                        labels: [drumBeat], // Print labels at these values
+                        color: '#000000', // Optional: Label text color
+                        fractionDigits: 0 // Optional: Numerical precision. 0=round off.
+                    },
+                    */
       renderTicks: {
         divisions: 10,
         divWidth: 1,
@@ -1964,6 +2057,27 @@ function COS_Table (args) {
               // append elements
               td.appendChild(div1)
               appendChildren(div1, [div2, canvas])
+
+              if (value.name === 'AvailabilityGauge') {
+                try {
+                  let buttonContainer = create('div')
+                  let availTrend = historicalAvailAvg(pid, ceid)
+                  historicalButton = create('button', {
+                    textContent: 'Availability Averages',
+                    onclick: function (e) {
+                      availTrend.classList.toggle('hidden')
+                      availTrend.scrollIntoView({
+                        behavior: 'auto',
+                        block: 'end'
+                      })
+                    }
+                  })
+                  buttonContainer.append(historicalButton, availTrend)
+                  div1.append(buttonContainer)
+                } catch (e) {
+                  // no data for this pid + ceid
+                }
+              }
 
               // fill canvas
               value(ceidData)
