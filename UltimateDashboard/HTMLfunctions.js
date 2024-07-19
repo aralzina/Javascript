@@ -757,12 +757,12 @@ function COS_Table (args) {
       ),
       create(
         'th',
-        { textContent: 'CW vs 13W Trend' },
+        { textContent: '7D vs 13W Trend' },
         { style: 'background-color: darkblue; color:white;' }
       ),
       create(
         'th',
-        { textContent: 'CW Avail Avg' },
+        { textContent: '7D Avail Avg' },
         { style: 'background-color: darkblue; color:white;' }
       ),
       create(
