@@ -245,7 +245,9 @@ const HELP = [
   },
   {
     section: 'Menu',
-    comments: ['User info has been added. I will make it so ']
+    comments: [
+      'Settings has tabs to import/export settings. Use the Custom Links tab to configure links.'
+    ]
   }
 ]
 
