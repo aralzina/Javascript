@@ -472,7 +472,6 @@ function buildOpenItemBox (openItemsData) {
   appendChildren(list, [list_header, ul])
 
   //some function to add items to list and wire them
-  //doThatThing()
   let listItems = data => {
     let results = {
       li: [],
@@ -504,8 +503,6 @@ function buildOpenItemBox (openItemsData) {
   try {
     elements.li[0].click()
   } catch (e) {}
-  //details children
-  // function will pass data in to make this on the fly
 }
 // end request functions
 

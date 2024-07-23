@@ -13,6 +13,17 @@ const changelog = [
     },
     */
   {
+    date: '7/23/2024',
+    changes: [
+      {
+        section: 'Settings',
+        comments: [
+          'Added in options to import and export settings as a json file. Use this to backup your settings until I configure each users settings to backup to the database. You can also share your settings with other people.'
+        ]
+      }
+    ]
+  },
+  {
     date: '7/12/2024',
     changes: [
       {

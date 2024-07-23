@@ -55,12 +55,13 @@ function filterConfig () {
   let formParent = $('#report-filter-form')[0].parentNode
   let buttonDiv = create(
     'div',
-    {},
+    { id: 'filter-button-parent' },
     { style: 'padding: 20px; text-align:center;' }
   )
   let button = create('button', {
     textContent: 'Apply Filters',
-    onclick: COS
+    onclick: COS,
+    id: 'filter-apply-button'
   })
   buttonDiv.append(button)
 
