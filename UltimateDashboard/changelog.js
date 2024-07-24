@@ -20,6 +20,12 @@ const changelog = [
         comments: [
           'Added in options to import and export settings as a json file. Use this to backup your settings until I configure each users settings to backup to the database. You can also share your settings with other people.'
         ]
+      },
+      {
+        section: 'Custom Links',
+        comments: [
+          'Any link that directs to a power BI report on the same server as this report will automatically open in the internal modal window.'
+        ]
       }
     ]
   },
