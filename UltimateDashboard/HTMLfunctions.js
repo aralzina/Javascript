@@ -359,120 +359,134 @@ function addLoader (element) {
   element.appendChild(create('div', { className: 'on-demand-loader' }))
 }
 
-// these functions refer to the open items request box
-function openDetails (rid) {
-  let details = document.getElementById('open-item-details')
-  details.innerHTML = ''
+function buildOpenItemBox (openItemsData) {
+  function openDetails (rid) {
+    let details = document.getElementById('open-item-details')
+    details.innerHTML = ''
 
-  // get all list items and toggle the active class if they triggered this
-  let refBtns = document.getElementsByClassName('open-items-list-item')
-  for (let i = 0; i < refBtns.length; i++) {
-    if (refBtns[i].classList.contains('active')) {
-      refBtns[i].classList.toggle('active')
+    // get all list items and toggle the active class if they triggered this
+    let refBtns = document.getElementsByClassName('open-items-list-item')
+    for (let i = 0; i < refBtns.length; i++) {
+      if (refBtns[i].classList.contains('active')) {
+        refBtns[i].classList.toggle('active')
+      }
+      if (refBtns[i].id === rid) {
+        refBtns[i].classList.toggle('active')
+      }
     }
-    if (refBtns[i].id === rid) {
-      refBtns[i].classList.toggle('active')
-    }
+
+    // make table
+    let table = create('table')
+    let data = dataEquals(DATASETS.REQUEST, 'REQUEST_ID', rid)
+    let tableData = ''
+    data.forEach(row => {
+      if (row['ACTION_TYPE'] === 'SUBMISSION') {
+        let stat
+        if (typeof data[1] !== 'undefined') {
+          data[1]['ASSIGNED_TO'].trim().length === 0
+            ? (stat = row['STATUS'] + ' - not reviewed')
+            : (stat = row['STATUS'] + ' - reviewed')
+        } else {
+          stat = row['STATUS'] + ' - not reviewed'
+        }
+        tableData +=
+          '<tr><th><span class="span-label">Request Type</span></th><td><span class="span-field">' +
+          row['TYPE'] +
+          '</span></td></tr>'
+        tableData +=
+          '<tr><th><span class="span-label">Request ID</span></th><td><span class="span-field">' +
+          row['REQUEST_ID'] +
+          '</span></td></tr>'
+        tableData +=
+          '<tr><th><span class="span-label">Requester</span></th><td><span class="span-field">' +
+          row['REQUESTER'] +
+          '</span></td></tr>'
+        tableData +=
+          '<tr><th><span class="span-label">Status</span></th><td><span class="span-field">' +
+          stat +
+          '</span></td></tr>'
+        tableData +=
+          '<tr><th><span class="span-label">Original Request</span></th><td><span class="span-field">' +
+          row['COMMENT'].trim() +
+          '</span></td></tr>'
+      } else {
+        let reviewedBy
+
+        row['ASSIGNED_TO'].trim().length > 0
+          ? (reviewedBy = row['ASSIGNED_TO'].trim())
+          : (reviewedBy = 'Not Reviewed')
+        if (reviewedBy !== 'Not Reviewed') {
+          tableData +=
+            '<tr><th><span class="span-label">Last Reviewed By</span></th><td><span class="span-field">' +
+            reviewedBy +
+            '</span></td></tr>'
+          tableData +=
+            '<tr><th><span class="span-label">Update</span></th><td><span class="span-field">' +
+            row['COMMENT'] +
+            '</span></td></tr>'
+          tableData +=
+            '<tr><th><span class="span-label">ECD</span></th><td><span class="span-field">' +
+            row['ECD'] +
+            '</span></td></tr>'
+        }
+      }
+    })
+    table.innerHTML = tableData
+
+    details.appendChild(table)
   }
 
-  // make table
-  let table = create('table')
-  let data = dataEquals(DATASETS.REQUEST, 'REQUEST_ID', rid)
-  let tableData = ''
-  data.forEach(row => {
-    if (row['ACTION_TYPE'] === 'SUBMISSION') {
-      let stat
-      if (typeof data[1] !== 'undefined') {
-        data[1]['ASSIGNED_TO'].trim().length === 0
-          ? (stat = row['STATUS'] + ' - not assigned')
-          : (stat = row['STATUS'] + ' - assigned')
-      } else {
-        stat = row['STATUS'] + ' - not assigned'
-      }
-      tableData +=
-        '<tr><th><span class="span-label">Request Type</span></th><td><span class="span-field">' +
-        row['TYPE'] +
-        '</span></td></tr>'
-      tableData +=
-        '<tr><th><span class="span-label">Request ID</span></th><td><span class="span-field">' +
-        row['REQUEST_ID'] +
-        '</span></td></tr>'
-      tableData +=
-        '<tr><th><span class="span-label">Requester</span></th><td><span class="span-field">' +
-        row['REQUESTER'] +
-        '</span></td></tr>'
-      tableData +=
-        '<tr><th><span class="span-label">Status</span></th><td><span class="span-field">' +
-        stat +
-        '</span></td></tr>'
-      tableData +=
-        '<tr><th><span class="span-label">Original Request</span></th><td><span class="span-field">' +
-        row['COMMENT'].trim() +
-        '</span></td></tr>'
-    } else {
-      let assignedTo
+  function adminView () {
+    // only to be used for anyone in the admin const
+  }
 
-      row['ASSIGNED_TO'].trim().length > 0
-        ? (assignedTo = row['ASSIGNED_TO'].trim())
-        : (assignedTo = 'Not Assigned')
-      if (assignedTo !== 'Not Assigned') {
-        tableData +=
-          '<tr><th><span class="span-label">Assigned To</span></th><td><span class="span-field">' +
-          assignedTo +
-          '</span></td></tr>'
-        tableData +=
-          '<tr><th><span class="span-label">Update</span></th><td><span class="span-field">' +
-          row['COMMENT'] +
-          '</span></td></tr>'
-        tableData +=
-          '<tr><th><span class="span-label">ECD</span></th><td><span class="span-field">' +
-          row['ECD'] +
-          '</span></td></tr>'
-      }
-    }
-  })
-  table.innerHTML = tableData
-
-  details.appendChild(table)
-}
-
-function buildOpenItemBox (openItemsData) {
-  const TEXT_VALUES = {
+  //vars
+  let TEXT_VALUES = {
     title: 'Open Item Tracker',
     list_header: 'Open Items'
   }
 
-  let container = document.getElementById('Open Items')
+  let container,
+    box,
+    title,
+    wrapper,
+    list,
+    details,
+    list_header,
+    ul,
+    listItems,
+    elements
+  container = document.getElementById('Open Items')
   container.innerHTML = ''
 
   // parent
-  let box = create('div', { id: 'open-items-box' })
+  box = create('div', { id: 'open-items-box' })
 
   container.appendChild(box)
 
   //children
-  let title = create('h2', { textContent: TEXT_VALUES.title })
-  let wrapper = create('div', { id: 'open-items-wrapper' })
+  title = create('h2', { textContent: TEXT_VALUES.title })
+  wrapper = create('div', { id: 'open-items-wrapper' })
 
   // append children to parent
   appendChildren(box, [title, wrapper])
 
   // wrapper children
-  let list = create('div', { id: 'open-items-list' })
-  let details = create('div', { id: 'open-item-details' })
+  list = create('div', { id: 'open-items-list' })
+  details = create('div', { id: 'open-item-details' })
 
   //append wrapper children to wrapper
   appendChildren(wrapper, [list, details])
 
   // list children
-  let list_header = create('span', { textContent: TEXT_VALUES.list_header })
-  let ul = create('ul')
+  list_header = create('span', { textContent: TEXT_VALUES.list_header })
+  ul = create('ul')
 
   //append list children
   appendChildren(list, [list_header, ul])
 
   //some function to add items to list and wire them
-  let listItems = data => {
+  listItems = data => {
     let results = {
       li: [],
       details: {}
@@ -496,7 +510,7 @@ function buildOpenItemBox (openItemsData) {
     return results
   }
 
-  let elements = listItems(openItemsData)
+  elements = listItems(openItemsData)
 
   appendChildren(ul, elements.li)
 
@@ -504,7 +518,6 @@ function buildOpenItemBox (openItemsData) {
     elements.li[0].click()
   } catch (e) {}
 }
-// end request functions
 
 /**
  * End main loading animation

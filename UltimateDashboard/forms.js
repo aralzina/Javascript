@@ -239,7 +239,7 @@ function createInput (type, name, value) {
 function html_tracker_window () {
   query(buildParameters(SHARED_DATASETS.REQUEST, '', false))
   // config
-  const BUTTON_CONFIG = [
+  let BUTTON_CONFIG = [
     {
       className: 'tablinks',
       textContent: 'Open Items',
@@ -264,7 +264,7 @@ function html_tracker_window () {
     }
   ]
 
-  const TAB_CONFIG = [
+  let TAB_CONFIG = [
     {
       id: 'Open Items',
       className: 'tabcontent',
@@ -282,6 +282,22 @@ function html_tracker_window () {
         '<div class="request-box"> <h2>New Request</h2> <form> <div class="user-box"> <select style="margin-bottom: 25px;" id="tracker-type" required> <option value="">--Please choose a request type--</option> <option value="REQUEST">Feature Request/Suggestion</option> <option value="BUG-REPORT">Bug Report</option> </select> </div> <div class="user-box"> <textarea id="request-form" rows="4" cols="40" style="resize: none;" required></textarea> <label for="request-form">Request/Bug description</label> </div> <a onClick="requestForm()"> <span></span> <span></span> <span></span> <span></span> Submit </a> </form> </div>'
     }
   ]
+
+  if (ADMINS.includes(getIdsid())) {
+    BUTTON_CONFIG.push({
+      className: 'tablinks',
+      textContent: 'Admin View',
+      onclick: event => {
+        changeTab(event, 'Admin View')
+      }
+    })
+
+    TAB_CONFIG.push({
+      id: 'Admin View',
+      className: 'tabcontent',
+      innerHTML: '<h3>Admin View</h3>'
+    })
+  }
 
   // parent div
   let parent = create('div', { className: 'tracker-window' })
