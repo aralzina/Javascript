@@ -729,7 +729,7 @@ function COS_Table (args) {
       ceid
     )[0]
 
-    change = parseFloat(data.cw_ma) - parseFloat(data.ID13w_ma)
+    change = parseFloat(data.ma_7d) - parseFloat(data.ID13w_ma)
 
     symbol = change > 0 ? '&#8599;' : change < 0 ? '&#8600;' : '&#8594;'
     color = change > 0 ? 'lime' : change < 0 ? 'red' : 'white'
@@ -799,7 +799,7 @@ function COS_Table (args) {
         { style: `background-color: ${color};` }
       ),
       create('td', {
-        textContent: `${(parseFloat(data.cw_ma) * 100).toFixed(2)}%`
+        textContent: `${(parseFloat(data.ma_7d) * 100).toFixed(2)}%`
       }),
       create('td', {
         textContent: `${(parseFloat(data.ID7w_ma) * 100).toFixed(2)}%`
