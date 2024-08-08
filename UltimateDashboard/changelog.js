@@ -13,6 +13,19 @@ const changelog = [
     },
     */
   {
+    date: '8/8/2024',
+    changes: [
+      {
+        section: 'Settings',
+        comments: [
+          'Added Collective Passdown to the links page. This will automatically build the link and include all entities in the Ceids that you selected in filters.',
+          'Added a page settings tab. This will be for general page settings.',
+          "An autorefresh option is now available in settings. If this page isn't active at the time the refresh is supposed to trigger, it will delay until you click back into this tab. This will prevent refreshes when the page isn't being viewed."
+        ]
+      }
+    ]
+  },
+  {
     date: '7/23/2024',
     changes: [
       {
