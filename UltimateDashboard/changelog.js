@@ -13,6 +13,18 @@ const changelog = [
     },
     */
   {
+    date: '8/13/2024',
+    changes: [
+      {
+        section: 'URL Parameters',
+        comments: [
+          'URL parameters can now be used to pass filters into the report. The format must at least include process and ceid and multiple values can be entered as long as they are separated by a comma',
+          'Here is an example of adding parameters to the end of this url: &process=1270,1274&ceid=ESTwa,NSTwn'
+        ]
+      }
+    ]
+  },
+  {
     date: '8/8/2024',
     changes: [
       {
@@ -236,7 +248,9 @@ const HELP = [
   {
     section: 'COS Dashboard',
     comments: [
-      'The COS dashboard will not show any data until filters are selected and applied.'
+      'The COS dashboard will not show any data until filters are selected and applied.',
+      'Alternatively, users can now pass in parameters by adding them to the end of the URL. Here is an example:  &process=1270,1274&area=WetEtch&ceid=ESTwa,NSTwn,GSTwa',
+      '&process=... and &ceid=... MUST both be used, area is optional. Users can add multiple values separated by commas. At this time, passing in URL parameters will overwrite the current config. If you want to keep your settings, make sure to go into Menu > Settings > Export'
     ]
   },
   {
