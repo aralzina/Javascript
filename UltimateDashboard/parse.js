@@ -211,7 +211,8 @@ function query (p) {
             break
 
           default:
-            console.log('Error switching on query name')
+            log('Error switching on query name')
+            log(f`Returning results of query:\n${data}`)
             break
         }
       } else {
