@@ -188,11 +188,6 @@ function query (p) {
             break
 
           case SHARED_DATASETS.COS_CEID.QUERY_TYPE:
-            LOAD_STATUS.COS_CEID = true
-            DATASETS.COS_CEID = data.value
-            break
-
-          case SHARED_DATASETS.COS_ENTITY_STATUS.QUERY_TYPE:
             // Need to add a filter builder in here
             data.value.forEach(row => {
               MAPPING.push({
@@ -202,6 +197,11 @@ function query (p) {
               })
             })
 
+            LOAD_STATUS.COS_CEID = true
+            DATASETS.COS_CEID = data.value
+            break
+
+          case SHARED_DATASETS.COS_ENTITY_STATUS.QUERY_TYPE:
             LOAD_STATUS.COS_ENTITY_STATUS = true
             DATASETS.COS_ENTITY_STATUS = data.value
 
