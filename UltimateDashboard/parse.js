@@ -1,3 +1,5 @@
+var MAPPING = []
+
 function buildParameters (_enum, _p, _r) {
   if (typeof _p === 'undefined') _p = ''
   if (typeof _r === 'undefined') _r = false
@@ -191,8 +193,18 @@ function query (p) {
             break
 
           case SHARED_DATASETS.COS_ENTITY_STATUS.QUERY_TYPE:
+            // Need to add a filter builder in here
+            data.value.forEach(row => {
+              MAPPING.push({
+                Process: row['PROCESS_ID'],
+                FunctionalArea: row['AREA'],
+                Ceid: row['CEID']
+              })
+            })
+
             LOAD_STATUS.COS_ENTITY_STATUS = true
             DATASETS.COS_ENTITY_STATUS = data.value
+
             break
 
           case SHARED_DATASETS.COS_LINEVIEW.QUERY_TYPE:
