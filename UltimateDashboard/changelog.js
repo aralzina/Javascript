@@ -13,6 +13,24 @@ const changelog = [
     },
     */
   {
+    date: '1/2/2025',
+    changes: [
+      {
+        section: 'Filters',
+        comments: ['Added 1227 to filters']
+      }
+    ]
+  },
+  {
+    date: '11/1/2024',
+    changes: [
+      {
+        section: 'Filters',
+        comments: ['Removed 1270 from filters', 'Added 5053 to filters']
+      }
+    ]
+  },
+  {
     date: '8/13/2024',
     changes: [
       {
