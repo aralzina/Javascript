@@ -13,6 +13,18 @@ const changelog = [
     },
     */
   {
+    date: '1/3/2025',
+    changes: [
+      {
+        section: 'Filters',
+        comments: [
+          'Adjusted code so that the filters are created dynamically based on the provided data.',
+          'If the COS Dash does not work, import your settings file or clear browser cache and reload.'
+        ]
+      }
+    ]
+  },
+  {
     date: '1/2/2025',
     changes: [
       {
