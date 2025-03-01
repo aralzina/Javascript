@@ -12,6 +12,17 @@ const changelog = [
         ]
     },
     */
+    {
+      date: '2/27/2025',
+      changes: [
+          {
+              section: 'Filters',
+              comments: [
+                  'Dynamic filters were not building prior to filtering. Rearranged code to fix this. Starting process of cleaning up tags from different COS spreadsheets.',
+              ]
+          }
+      ]
+  },
   {
     date: '1/3/2025',
     changes: [
