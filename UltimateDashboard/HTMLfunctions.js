@@ -5,13 +5,15 @@ function addStyle(css) {
 
   // make sure style doesn't already exist
   let styles = document.getElementsByTagName('style')
-  styles.forEach((s) => {
-    if (css === s.textContent) {
+  for(let i = 0; i < styles.length; i++){
+    let s = style[i]
+ if (css === s.textContent) {
       // it exists
       log('Attempted to add a stylesheet that already exists. Return without adding duplicate stylesheet.')
       return
     }
-  })
+
+  }
 
   // continue on to create the style
   var style = document.createElement('style');
