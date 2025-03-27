@@ -2,9 +2,9 @@
  * If all legend items are visible, hide all others except the clicked item
  * If the selected item isn't visible, hide all others and show only the clicked item
  * If all other items are hidden and the selected item already is, show all again
- * @param {*} e
- * @param {*} legendItem
- * @param {*} legend
+ * @param {t} e
+ * @param {t} legendItem
+ * @param {t} legend
  */
 const legendHideAllHandler = (e, legendItem, legend) => {
   const index = legendItem.datasetIndex

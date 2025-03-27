@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 /**
  * Easier way to append multiple childen using an ordered list
  * @param {HTMLElement} parent element to append children to
@@ -122,7 +124,7 @@ function sort (data, asc) {
   asc = typeof asc !== 'undefined' ? asc : true
 
   // sort
-  data.sort(a, b => {
+  data.sort((a, b) => {
     return asc ? (a < b ? -1 : a > b ? 1 : 0) : a < b ? 1 : a > b ? -1 : 0
   })
 
@@ -131,10 +133,10 @@ function sort (data, asc) {
 
 /**
  * Predefined sort function instead of having to
- * @param {Dict|Map} data a dictionary to sort
+ * @param {Array} data a dictionary to sort
  * @param {String} col the column to sort by
  * @param {boolean|undefined} asc (optional) - defaults to true
- * @returns {Dict|Map} returns sorted dictionary/HTML collection even though the dict is already sorted
+ * @returns {Array} returns sorted dictionary/HTML collection even though the dict is already sorted
  */
 function sortBy (data, col, asc) {
   // make sure asc is a boolean even if not provided
@@ -158,7 +160,7 @@ function sortBy (data, col, asc) {
 }
 
 /**
- * Quick way to add multpile attributes to an HTML element
+ * Quick way to add multiple attributes to an HTML element
  * ex. element.addAttribute('key','val')
  * @param {HTMLElement} element the element to add the attribures
  * @param {*} args a dict|map of attrs to be added
@@ -179,13 +181,13 @@ function addProp (element, args) {
  * Quick way to add multiple properties to an HTML element
  * ex. element[key] = val
  * @param {HTMLElement} element
- * @param {*} attr
+ * @param {Map} attr
  * @returns {HTMLElement}
  */
-function addAttr (element, args) {
-  Object.keys(args).forEach(key => {
+function addAttr (element, attr) {
+  Object.keys(attr).forEach(key => {
     try {
-      element.setAttribute(key, args[key])
+      element.setAttribute(key, attr[key])
     } catch (e) {
       log('Error adding attr ' + key.toString() + ' to element')
     }
@@ -194,7 +196,7 @@ function addAttr (element, args) {
 }
 
 function basicTable () {
-  results = {
+  let results = {
     table: create('table'),
     thead: create('thead'),
     tbody: create('tbody')

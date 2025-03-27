@@ -1,5 +1,33 @@
+// GLOBAL VARS
+const MODAL_CSS = '.modal {display: block; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.4);}\n.modal-content{background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%;}\n.modal-close{ color: #aaa; float: right; font-size: 28px; font-weight: bold;}\n.modal-close:hover, .modal-close:focus {color: black; text-decoration: none; cursor: pointer;}'
+
+function addStyle(css) {
+
+  // make sure style doesn't already exist
+  let styles = document.getElementsByTagName('style')
+  styles.forEach((s) => {
+    if (css === s.textContent) {
+      // it exists
+      log('Attempted to add a stylesheet that already exists. Return without adding duplicate stylesheet.')
+      return
+    }
+  })
+
+  // continue on to create the style
+  var style = document.createElement('style');
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(style);
+}
+
+
 // Main HTML functions
-function moduleTableOutline () {
+function moduleTableOutline() {
   // Table of Tables?
   // Plan
   // SPC OOCs
@@ -15,7 +43,7 @@ function moduleTableOutline () {
   // PCSA
 }
 
-function factoryTableOutline (category, subCategories) {
+function factoryTableOutline(category, subCategories) {
   // make 4 columns ( 4 shifts)
   let colNum = 4
 
@@ -158,7 +186,7 @@ function factoryTableOutline (category, subCategories) {
   })
 }
 
-function fillCells (category, subcategory, dataset) {
+function fillCells(category, subcategory, dataset) {
   // removing end hyphen
   let base_id = category.toLowerCase() + '-' + subcategory.toLowerCase() + '-'
   let keys = Object.keys(dataset)
@@ -223,7 +251,7 @@ function fillCells (category, subcategory, dataset) {
   configureClickables()
   scrubEmptyTextNodes(document.getElementsByTagName('body')[0])
 }
-function configureClickables (modifier) {
+function configureClickables(modifier) {
   if (typeof modifier === 'undefined') {
     modifier = ''
   }
@@ -300,7 +328,10 @@ function configureClickables (modifier) {
 }
 
 // modal section
-function makeModal (content) {
+function makeModal(content) {
+  // Add stylesheet
+  addStyle(MODAL_CSS)
+
   // Modal
   let modal = create('div')
   modal.className = 'modal'
@@ -335,7 +366,7 @@ function makeModal (content) {
   // attach it to the page
   document.getElementsByTagName('body')[0].appendChild(modal)
 }
-function makeGraph (chartData) {
+function makeGraph(chartData) {
   // test
   chartData.options['responsive'] = true
   chartData.options['maintainAspectRatio'] = false
@@ -355,12 +386,12 @@ function makeGraph (chartData) {
   makeModal(content)
 }
 
-function addLoader (element) {
+function addLoader(element) {
   element.appendChild(create('div', { className: 'on-demand-loader' }))
 }
 
-function buildOpenItemBox (openItemsData) {
-  function openDetails (rid) {
+function buildOpenItemBox(openItemsData) {
+  function openDetails(rid) {
     let details = document.getElementById('open-item-details')
     details.innerHTML = ''
 
@@ -436,7 +467,7 @@ function buildOpenItemBox (openItemsData) {
     details.appendChild(table)
   }
 
-  function adminView () {
+  function adminView() {
     // only to be used for anyone in the admin const
   }
 
@@ -516,13 +547,13 @@ function buildOpenItemBox (openItemsData) {
 
   try {
     elements.li[0].click()
-  } catch (e) {}
+  } catch (e) { }
 }
 
 /**
  * End main loading animation
  */
-function loadingEnd () {
+function loadingEnd() {
   if (!doneLoading) {
     setTimeout(function () {
       document
@@ -539,7 +570,7 @@ function loadingEnd () {
  * @param {HTMLElement} parent element to append children to
  * @param {Array<HTMLElement> | HTMLElement} children Array of children to append
  */
-function appendChildren (parent, children) {
+function appendChildren(parent, children) {
   if (!Array.isArray(children)) {
     children = [children]
   }
@@ -554,7 +585,7 @@ function appendChildren (parent, children) {
   })
 }
 
-function cleanChildNodes (element) {
+function cleanChildNodes(element) {
   let children = element.childNodes
   let removeList = []
   for (let i = 0; i < children.length; i++) {
@@ -570,7 +601,7 @@ function cleanChildNodes (element) {
   })
 }
 
-function scrubEmptyTextNodes (element) {
+function scrubEmptyTextNodes(element) {
   // remove all junk from current element's childrens
   cleanChildNodes(element)
 
@@ -593,7 +624,7 @@ var CUSTOM_OPTIONS = {
 }
 // Custom Table
 
-function customOutline (args) {
+function customOutline(args) {
   let table, head, body, tr, th, span, td
 
   table = id('custom-table')
@@ -703,7 +734,7 @@ const default_gauge_opts = args => {
   return opts
 }
 
-function gaugeIt (elementId, optArgs, gaugeArgs) {
+function gaugeIt(elementId, optArgs, gaugeArgs) {
   let opts = default_gauge_opts(optArgs)
   var target = document.getElementById(elementId) // your canvas element
   var gauge = new Gauge(target).setOptions(opts) // create sexy gauge!
@@ -717,10 +748,10 @@ function gaugeIt (elementId, optArgs, gaugeArgs) {
 // COS DASHBOARD SECTION //
 ///////////////////////////
 
-function COS_Table (args) {
+function COS_Table(args) {
   // functions
 
-  function historicalAvailAvg (pid, ceid) {
+  function historicalAvailAvg(pid, ceid) {
     let data, div, h3, table, tr, td, change, symbol, color, closeButton
 
     data = dataEquals(
@@ -813,7 +844,7 @@ function COS_Table (args) {
     return div
   }
 
-  function cleanupSTGSteps (data) {
+  function cleanupSTGSteps(data) {
     // Fix staging naming convention
     data.forEach(row => {
       let ceid, slice, space
@@ -834,7 +865,7 @@ function COS_Table (args) {
     return data
   }
 
-  function AvailabilityGauge (data) {
+  function AvailabilityGauge(data) {
     let pid,
       ceid,
       up,
@@ -956,7 +987,7 @@ function COS_Table (args) {
     gaugeIt(gaugeId, optArgs, gaugeArgs)
   }
 
-  function ceidLineview (data) {
+  function ceidLineview(data) {
     let parentDiv,
       childDiv,
       hdr,
@@ -1081,8 +1112,8 @@ function COS_Table (args) {
           cellData = Number.isNaN(parseInt(cellData))
             ? cellData
             : parseInt(cellData) === 0
-            ? ''
-            : cellData
+              ? ''
+              : cellData
           td = create('td', { textContent: cellData })
           tr.appendChild(td)
         })
@@ -1093,7 +1124,7 @@ function COS_Table (args) {
     return parentDiv
   }
 
-  function InventoryGauge (data) {
+  function InventoryGauge(data) {
     let inventoryGoal,
       currentInventory,
       inventoryScore,
@@ -1132,12 +1163,12 @@ function COS_Table (args) {
       inventoryScore <= 1
         ? '#32cd32'
         : inventoryGrowth >= GROWTH_MAX
-        ? '#ff0000'
-        : inventoryGrowth >= GROWTH_MID
-        ? '#FFA800'
-        : inventoryGoal < currentInventory && currentInventory < bosInventory
-        ? '#f5f5dc'
-        : '#FFA800'
+          ? '#ff0000'
+          : inventoryGrowth >= GROWTH_MID
+            ? '#FFA800'
+            : inventoryGoal < currentInventory && currentInventory < bosInventory
+              ? '#f5f5dc'
+              : '#FFA800'
 
     let optArgs = {
       percentColors: [
@@ -1191,7 +1222,7 @@ function COS_Table (args) {
     gaugeIt(gaugeId, optArgs, gaugeArgs)
   }
 
-  function STG (data) {
+  function STG(data) {
     const COLUMN_NAMES = [
       'CEID',
       'Operation',
@@ -1284,17 +1315,17 @@ function COS_Table (args) {
     return results
   }
 
-  function Outs (data) {
+  function Outs(data) {
     let text = `CS: ${data['CS_OUTS']}<br>EOS: ${data['CS_PACE']}<br>PS: ${data['PS_OUTS']}<br>WTD: ${data['CW_OUTS']}`
     return create('div', { innerHTML: text }, { style: 'text-align: left;' })
   }
 
-  function WSPWPace (data) {
+  function WSPWPace(data) {
     let text = `CS: ${data['CS_WSPW_PACE']}<br>PS: ${data['PS_WSPW_PACE']}<br>WTD: ${data['CW_WSPW_PACE']}`
     return create('div', { innerHTML: text }, { style: 'text-align: left;' })
   }
 
-  function CosCeid (data) {
+  function CosCeid(data) {
     // return an HTMLElement
     let pDiv,
       hdr,
@@ -1440,7 +1471,7 @@ function COS_Table (args) {
     return pDiv
   }
 
-  function Tracers (data) {
+  function Tracers(data) {
     let pid,
       ceid,
       entityList,
@@ -1477,7 +1508,7 @@ function COS_Table (args) {
       'DESCRIPTION',
       'TRACERROOTCAUSE'
     ]
-    function makeTable (data, cols, keys) {
+    function makeTable(data, cols, keys) {
       let rowColor,
         rowCounter = 1,
         tr,
@@ -1594,7 +1625,7 @@ function COS_Table (args) {
     return tracers.length > 0 ? div : create('div')
   }
 
-  function ILM (data) {
+  function ILM(data) {
     let clickFunc, pid, ceid, pDiv, cDiv, hdr, button, closeButton, ilmData
     const COLUMN_NAMES = [
       'Date Created',
@@ -1615,7 +1646,7 @@ function COS_Table (args) {
       'SUM_SCRAP_QTY'
     ]
 
-    function makeTable (data, cols, keys) {
+    function makeTable(data, cols, keys) {
       let table,
         tr,
         th,
@@ -1716,7 +1747,7 @@ function COS_Table (args) {
     return ilmData.length > 0 ? pDiv : create('div')
   }
 
-  function EFIT (data) {
+  function EFIT(data) {
     let pid,
       ceid,
       pDiv,
@@ -1752,7 +1783,7 @@ function COS_Table (args) {
       cDiv.scrollIntoView({ behavior: 'auto', block: 'end' })
     }
 
-    function makeTable (data, cols, keys) {
+    function makeTable(data, cols, keys) {
       let table = basicTable(),
         tr,
         th,
@@ -1854,7 +1885,7 @@ function COS_Table (args) {
   }
 
   // Not using this yet
-  function COSComments (data) {
+  function COSComments(data) {
     let commentData, pid, ceid
     pid = data['PROCESS_ID']
     ceid = data['CEID']
@@ -2052,8 +2083,8 @@ function COS_Table (args) {
                 value.name === 'AvailabilityGauge'
                   ? 'avail'
                   : value.name === 'InventoryGauge'
-                  ? 'inv'
-                  : 'error'
+                    ? 'inv'
+                    : 'error'
               idName = `${pid}-${ceid}-${type}`
 
               // create elements

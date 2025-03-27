@@ -78,7 +78,7 @@ function dataIn (data, key, values) {
  * equal the supplied value
  * @param {Array<Map>|*} data
  * @param {string} key name of key with data to be excluded
- * @param {*} val specific value of data to be excluded
+ * @param {t} val specific value of data to be excluded
  * @returns
  */
 function dataNotEquals (data, key, val) {
@@ -92,11 +92,11 @@ function dataNotEquals (data, key, val) {
 }
 
 /**
- * Returns only data that doens't match the value proved
+ * Returns only data that doesn't match the value proved
  * @param {*} data
  * @param {*} key key name to filter on
  * @param {*} value value to exclude
- * @returns {Dict|Map}
+ * @returns {Map}
  */
 function dataNotLike (data, key, value) {
   let results = []
@@ -162,8 +162,7 @@ function doubleFilter (dataset1, dataset2, column1, column2) {
 }
 
 function CustomException (message) {
-  const error = new Error(message)
-  return error
+  return new Error(message)
 }
 CustomException.prototype = Object.create(Error.prototype)
 
@@ -220,7 +219,7 @@ function union (data1, data2, sortColumn, asc) {
  * @param {*} data
  * @param {*} key key name to filter on
  * @param {*} value value to include
- * @returns {Dict|Map}
+ * @returns {Map}
  */
 function dataLike (data, key, value) {
   let results = []

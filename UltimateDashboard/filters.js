@@ -256,7 +256,7 @@ function filterConfig () {
   // add filters but only populate the first one
   addFilter('Process', FILTER_ORDER[0])
 
-  // setup the first filter with data and a change event
+  // set up the first filter with data and a change event
   // change handler for subsequent filters will be set in the
   // update filter section
   let f1 = $('#' + FILTER_ORDER[0] + '-select')
@@ -302,8 +302,8 @@ function getFilterSelections () {
 
 /**
  * Formats data to the select2 requirement
- * @param {*} data data to format
- * @param {*} key specific column/key to get from data
+ * @param {t} data data to format
+ * @param {t} key specific column/key to get from data
  * @returns {Array} an array of data formatted for select2
  */
 function selectDataFormat (data, key, chosen) {

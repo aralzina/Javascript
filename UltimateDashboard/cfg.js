@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 /**
  * xml request to pull in data from shared dataset. Response is in JSON form.
  * @param {string} URL a string with the URL to get data from
