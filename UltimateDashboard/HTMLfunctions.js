@@ -27,6 +27,21 @@ function addStyle(css) {
   document.getElementsByTagName('head')[0].appendChild(style);
 }
 
+function removeStyle(css){
+  
+  // make sure style doesn't already exist
+  let styles = document.getElementsByTagName('style')
+  for(let i = 0; i < styles.length; i++){
+    let s = styles[i]
+ if (css === s.textContent) {
+      // it exists
+      log('Removing stylesheet.')
+      s.parentNode.removeChild(s)
+      return
+    }
+  }
+}
+
 
 // Main HTML functions
 function moduleTableOutline() {
@@ -356,12 +371,14 @@ function makeModal(content) {
   // When the user clicks on <span> (x), close the modal
   span.onclick = function () {
     modal.parentNode.removeChild(modal)
+    removeStyle(MODAL_CSS)
   }
 
   // When the user clicks anywhere outside of the modal, close it
   modal.onclick = function (event) {
     if (event.target === modal) {
       modal.parentNode.removeChild(modal)
+      removeStyle(MODAL_CSS)
     }
   }
 
