@@ -9,7 +9,6 @@ function addStyle(css) {
     let s = styles[i]
  if (css === s.textContent) {
       // it exists
-      log('Attempted to add a stylesheet that already exists. Return without adding duplicate stylesheet.')
       return
     }
 
@@ -35,7 +34,6 @@ function removeStyle(css){
     let s = styles[i]
  if (css === s.textContent) {
       // it exists
-      log('Removing stylesheet.')
       s.parentNode.removeChild(s)
       return
     }
