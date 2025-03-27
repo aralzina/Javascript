@@ -6,7 +6,7 @@ function addStyle(css) {
   // make sure style doesn't already exist
   let styles = document.getElementsByTagName('style')
   for(let i = 0; i < styles.length; i++){
-    let s = style[i]
+    let s = styles[i]
  if (css === s.textContent) {
       // it exists
       log('Attempted to add a stylesheet that already exists. Return without adding duplicate stylesheet.')
