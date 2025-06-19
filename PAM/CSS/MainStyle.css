@@ -1,0 +1,122 @@
+
+    .page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f4f8fb;
+}
+
+.pam-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    background: #0068b5; /* Intel blue */
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    border-bottom: 4px solid #00baff; /* Intel accent */
+}
+
+.intel-logo {
+    height: 48px;
+    margin-right: 1.5rem;
+}
+
+.main-layout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.side-nav {
+    background: #e6f1fa;
+    color: #0068b5;
+    min-width: 160px;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border-right: 2px solid #00baff;
+    font-weight: 500;
+    font-size: 1.1rem;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+.side-nav a {
+    color: #0068b5;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.side-nav a:hover {
+    background: #cce6fa;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    background: #fff;
+    min-width: 0;
+}
+
+.footer {
+    background: #0068b5;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1rem;
+    border-top: 4px solid #00baff;
+}
+
+.footer a {
+    color: #00baff;
+    text-decoration: underline;
+}
+
+.pam-letter {
+    position: relative;
+    color: lightgray;
+    cursor: pointer;
+    overflow: visible;
+    transition: color 0.4s;
+    border-bottom: 2px solid transparent;
+    transition: 
+        color 0.4s,
+        border-bottom-color 0.4s 1.2s; /* delay matches max-width transition */
+}
+
+.pam-header.expanded .pam-letter {
+    color: white;
+    border-bottom-color: white;
+    transition-delay: 0.1s;
+}
+
+.pam-full {
+    display: inline-block;
+    opacity: 0;
+    max-width: 0;
+    margin-left: 0.2em;
+    color: lightgray;
+    font-size: 1.2rem;
+    font-weight: 400;
+    vertical-align: middle;
+    transition: 
+        opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+        max-width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+    pointer-events: none;
+    /* No border-bottom here */
+}
+
+/* Remove border-bottom from pam-header.expanded .pam-full */
+.pam-header.expanded .pam-full {
+    opacity: 1;
+    max-width: 12em;
+    transition-delay: 0.1s;
+    /* No border-bottom-color here */
+}
