@@ -120,3 +120,89 @@
     transition-delay: 0.1s;
     /* No border-bottom-color here */
 }
+
+
+            table {
+                width: 80%;
+                margin: 2rem auto;
+                border-collapse: collapse;
+                background: #fff;
+            }
+
+            th,
+            td {
+                border: 1px solid #00baff;
+                padding: 0.75rem 1rem;
+                text-align: left;
+            }
+
+            th {
+                background: #e6f1fa;
+                color: #0068b5;
+            }
+
+            tr:nth-child(even) {
+                background: #f4f8fb;
+            }
+
+            .expandable {
+                cursor: pointer;
+                color: #0068b5;
+                text-decoration: underline;
+            }
+
+            .subtable-row {
+                background: #f9fcff;
+            }
+
+            .subtable-cell {
+                padding: 0;
+                border: none;
+                height: 0;
+                overflow: hidden;
+                transition: height 0.4s cubic-bezier(.4, 0, .2, 1), padding 0.4s cubic-bezier(.4, 0, .2, 1);
+            }
+
+            .subtable-cell-inner {
+                opacity: 0;
+                transition: opacity 0.3s;
+                height: 0;
+            }
+
+            .subtable-row.open .subtable-cell {
+                height: 180px;
+                /* Adjust based on subtable content height */
+                padding: 1rem 0;
+            }
+
+            .subtable-row.open .subtable-cell-inner {
+                opacity: 1;
+                height: auto;
+                transition-delay: 0.15s;
+            }
+
+            .subtable {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 0;
+                background: #f9fcff;
+            }
+
+            .subtable th,
+            .subtable td {
+                border: 1px solid #cce6fa;
+                padding: 0.5rem 1rem;
+            }
+
+            .subtable th {
+                background: #e6f1fa;
+                color: #0068b5;
+            }
+
+            .fail {
+                background-color: red;
+            }
+
+            .pass {
+                background-color: limegreen;
+            }
