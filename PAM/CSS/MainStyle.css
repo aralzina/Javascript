@@ -1,5 +1,4 @@
-
-    .page-container {
+.page-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -11,13 +10,15 @@
     align-items: center;
     gap: 2rem;
     padding: 1.5rem 2rem;
-    background: #0068b5; /* Intel blue */
+    background: #0068b5;
+    /* Intel blue */
     color: #fff;
     font-family: 'Segoe UI', Arial, sans-serif;
     font-size: 3rem;
     font-weight: bold;
     letter-spacing: 0.2em;
-    border-bottom: 4px solid #00baff; /* Intel accent */
+    border-bottom: 4px solid #00baff;
+    /* Intel accent */
 }
 
 .intel-logo {
@@ -53,6 +54,7 @@
     border-radius: 4px;
     transition: background 0.2s;
 }
+
 .side-nav a:hover {
     background: #cce6fa;
 }
@@ -85,9 +87,10 @@
     overflow: visible;
     transition: color 0.4s;
     border-bottom: 2px solid transparent;
-    transition: 
+    transition:
         color 0.4s,
-        border-bottom-color 0.4s 1.2s; /* delay matches max-width transition */
+        border-bottom-color 0.4s 1.2s;
+    /* delay matches max-width transition */
 }
 
 .pam-header.expanded .pam-letter {
@@ -105,7 +108,7 @@
     font-size: 1.2rem;
     font-weight: 400;
     vertical-align: middle;
-    transition: 
+    transition:
         opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
         max-width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     white-space: nowrap;
@@ -122,87 +125,98 @@
 }
 
 
-            table {
-                width: 80%;
-                margin: 2rem auto;
-                border-collapse: collapse;
-                background: #fff;
-            }
 
-            th,
-            td {
-                border: 1px solid #00baff;
-                padding: 0.75rem 1rem;
-                text-align: left;
-            }
+table {
+    width: 80%;
+    margin: 2rem auto;
+    border-collapse: collapse;
+    background: #fff;
+}
 
-            th {
-                background: #e6f1fa;
-                color: #0068b5;
-            }
+th,
+td {
+    border: 1px solid #00baff;
+    padding: 0.75rem 1rem;
+    text-align: left;
+}
 
-            tr:nth-child(even) {
-                background: #f4f8fb;
-            }
+th {
+    background: #e6f1fa;
+    color: #0068b5;
+}
 
-            .expandable {
-                cursor: pointer;
-                color: #0068b5;
-                text-decoration: underline;
-            }
+tr:nth-child(even) {
+    background: #f4f8fb;
+}
 
-            .subtable-row {
-                background: #f9fcff;
-            }
+.expandable {
+    cursor: pointer;
+    color: #0068b5;
+    text-decoration: underline;
+}
 
-            .subtable-cell {
-                padding: 0;
-                border: none;
-                height: 0;
-                overflow: hidden;
-                transition: height 0.4s cubic-bezier(.4, 0, .2, 1), padding 0.4s cubic-bezier(.4, 0, .2, 1);
-            }
+.subtable-row {
+    background: #f9fcff;
+}
 
-            .subtable-cell-inner {
-                opacity: 0;
-                transition: opacity 0.3s;
-                height: 0;
-            }
+.subtable-cell {
+    padding: 0;
+    border: none;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.4s cubic-bezier(.4, 0, .2, 1), padding 0.4s cubic-bezier(.4, 0, .2, 1);
+}
 
-            .subtable-row.open .subtable-cell {
-                height: 180px;
-                /* Adjust based on subtable content height */
-                padding: 1rem 0;
-            }
+.subtable-cell-inner {
+    opacity: 0;
+    transition: opacity 0.3s;
+    height: 0;
+}
 
-            .subtable-row.open .subtable-cell-inner {
-                opacity: 1;
-                height: auto;
-                transition-delay: 0.15s;
-            }
+.subtable-row.open .subtable-cell {
+    height: 180px;
+    /* Adjust based on subtable content height */
+    padding: 1rem 0;
+}
 
-            .subtable {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 0;
-                background: #f9fcff;
-            }
+.subtable-row.open .subtable-cell-inner {
+    opacity: 1;
+    height: auto;
+    transition-delay: 0.15s;
+}
 
-            .subtable th,
-            .subtable td {
-                border: 1px solid #cce6fa;
-                padding: 0.5rem 1rem;
-            }
+.subtable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background: #f9fcff;
+}
 
-            .subtable th {
-                background: #e6f1fa;
-                color: #0068b5;
-            }
+.subtable th,
+.subtable td {
+    border: 1px solid #cce6fa;
+    padding: 0.5rem 1rem;
+}
 
-            .fail {
-                background-color: red;
-            }
+.subtable th {
+    background: #e6f1fa;
+    color: #0068b5;
+}
 
-            .pass {
-                background-color: limegreen;
-            }
+.fail {
+    background-color: red;
+}
+
+.pass {
+    background-color: limegreen;
+}
+
+
+/* Ensure Select2 dropdowns appear above the modal */
+.select2-container {
+    z-index: 2100 !important;
+}
+
+.select2-dropdown {
+    z-index: 2101 !important;
+}
