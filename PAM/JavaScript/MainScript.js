@@ -677,8 +677,8 @@ function monitorStatus() {
 
 function loadPage() {
     const messages = {
-        1: "No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
-        2: "Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email in the footer of this page."  // error message that pops up prompt
+        "1": "No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
+        "2": "Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email in the footer of this page."  // error message that pops up prompt
     }
     // Init Steps
     // 1.) Inititalize the select2 based on static data for now and the equipment modal
@@ -694,10 +694,8 @@ function loadPage() {
     initEqModal()
 
     // Step 2
-    checkAndQuery(messages) ? 'true' : 'false'
+    checkAndQuery(messages) ? monitorStatus() : console.log('Failed check and query')
 
-    // Step 3 
-    monitorStatus()
 }
 
 function parseData(){
