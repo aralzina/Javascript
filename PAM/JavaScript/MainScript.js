@@ -7,6 +7,10 @@ const PAM_HEADER_EXPAND_DELAY_MS = 2000;
 const RETRY_DELAY = 4000;
 const MAX_RETRIES = 6
 var retry_counter = 0;
+const ERROR_MESSAGES = {
+    "1": "Error #1 - No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
+    "2": "Error #2 - Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email at the bottom of this page."  // error message that pops up prompt
+}
 
 
 // CEID JSON list
@@ -515,10 +519,6 @@ function initEqModal() {
 }
 
 function checkAndQuery() {
-    const messages =  {
-        "1": "No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
-        "2": "Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email in the footer of this page."  // error message that pops up prompt
-    }
 
     // check cookies to initiate queries
     try {
@@ -526,13 +526,13 @@ function checkAndQuery() {
         return ceidList.length === 0 ? f() : t()
 
     } catch (e) {
-        alert(messages["2"])
+        alert(ERROR_MESSAGES["2"])
     }
 
     function t() {
         // add parameter value to DATASETS
-        Object.keys(DATASETS).forEach(key=>{
-            if(DATASETS[key].COOKIE_NAME.length > 0){
+        Object.keys(DATASETS).forEach(key => {
+            if (DATASETS[key].COOKIE_NAME.length > 0) {
                 DATASETS[key].PARAMETER_VALUE = getCookie(DATASETS[key].COOKIE_NAME)
             }
         })
@@ -542,15 +542,15 @@ function checkAndQuery() {
     }
 
     function f() {
-        console.log(messages["1"])
+        console.log(ERROR_MESSAGES["1"])
         return false
     }
 }
 
-function resetFlags(){
+function resetFlags() {
 
     // Reset error and loaded flags
-    Object.keys(DATASETS).forEach(key=>{
+    Object.keys(DATASETS).forEach(key => {
         DATASETS[key].LOADED = false
         DATASETS[key].ERROR = false
     })
@@ -564,20 +564,12 @@ function resetFlags(){
 /**
  * Loads a dataset from a JSON file and filters it by a parameter.
  *
- * @param {string} datasetName - The shared dataset name.
- * @param {string} paramName - The property name to filter by (e.g., 'group').
- * @param {string|number} paramValue - The value to match for the property (e.g., 'Test Group').
- * @param {function} callback - Function to call with the filtered data array.
- *
- * Example usage:
- * loadAndFilterDataset('equipment-groups.json', 'group', 'Test Group', function(results) {
- *     console.log(results);
- * });
+ * @param {Map} map - The dataset mapping data.
  */
 function loadData(map) {
     var xhr = new XMLHttpRequest();
     var url = `${DATASET_PATH}${map.DATASET_NAME}')/data?`
-    paramName ? url = `${url}&${map.PARAMETER_NAME}=${map.PARAMETER_VALUE}` : console.log('parameter not present')
+    map.PARAMETER_NAME ? url = `${url}&${map.PARAMETER_NAME}=${map.PARAMETER_VALUE}` : console.log('parameter not present')
 
 
     xhr.open('GET', url, true);
@@ -606,7 +598,7 @@ function queryData() {
     resetFlags()
 
     // query the data asynchronously
-    Object.keys(DATASETS).forEach(key=>{
+    Object.keys(DATASETS).forEach(key => {
         loadData(DATASETS[key])
     })
 }
@@ -622,7 +614,7 @@ function monitorStatus() {
     })
 
     // intervene to prevent getting stuck on this loop
-    if(retry_counter >= MAX_RETRIES){
+    if (retry_counter >= MAX_RETRIES) {
         maxRetries()
         return
     }
@@ -673,8 +665,8 @@ function monitorStatus() {
     }
 
     // if there are too many retries
-    function maxRetries(){
-        alert(`Waited ${(MAX_RETRIES * RETRY_DELAY)/1000} seconds for all queries to finish, but they never did. Check that you are on the Intel network and refresh the page.`)
+    function maxRetries() {
+        alert(`Waited ${(MAX_RETRIES * RETRY_DELAY) / 1000} seconds for all queries to finish, but they never did. Check that you are on the Intel network and refresh the page.`)
     }
 }
 
@@ -698,6 +690,6 @@ function loadPage() {
 
 }
 
-function parseData(){
+function parseData() {
     prompt('Data is loaded. The page will be built when the code reaches this point. Functions beyond this point are not built and/or wired yet.')
 }
