@@ -572,7 +572,7 @@ function resetFlags() {
 function loadData(map) {
     var xhr = new XMLHttpRequest();
     var url = `${DATASET_PATH}${map.DATASET_NAME}')/data?`
-    map.PARAMETER_NAME ? url = `${url}&${map.PARAMETER_NAME}=${map.PARAMETER_VALUE}` : console.log('parameter not present')
+    map.PARAMETER_NAME ? url = `${url}${map.PARAMETER_NAME}=${map.PARAMETER_VALUE}` : console.log('parameter not present')
 
 
     xhr.open('GET', url, true);
