@@ -533,7 +533,7 @@ function checkAndQuery() {
         // add parameter value to DATASETS
         Object.keys(DATASETS).forEach(key => {
             if (DATASETS[key].COOKIE_NAME.length > 0) {
-                let cookies = JSON.parse(getCookie(DATASETS[key].COOKIE_NAME))
+                let cookies = JSON.parse(getCookie(DATASETS[key].COOKIE_NAME)).join()
                 if (cookies.length > 0) {
                     DATASETS[key].PARAMETER_VALUE = cookies
                 }
