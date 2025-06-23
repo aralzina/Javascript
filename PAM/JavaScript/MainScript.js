@@ -7,10 +7,7 @@ const PAM_HEADER_EXPAND_DELAY_MS = 2000;
 const RETRY_DELAY = 4000;
 const MAX_RETRIES = 6
 var retry_counter = 0;
-const CAQ_MESSAGES =  {
-        "1": "No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
-        "2": "Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email in the footer of this page."  // error message that pops up prompt
-    }
+
 
 // CEID JSON list
 const CEID_LIST = ['A6Ect', 'AERca', 'AMEcn', 'AMEct', 'AMEcz', 'AMEgn', 'ANTde', 'ANTpa', 'ANTpb', 'ANTpd', 'APTcu', 'APTde', 'ASHcu', 'AURwe', 'BCLcu', 'BCLnc', 'BECcu', 'BETcu', 'BETcw', 'BETnc', 'BURcu', 'C2Tcd', 'C2Tcn', 'C2Tcs', 'C2Tcu', 'CARcb', 'CARch', 'CARco', 'CARcs', 'CARcu', 'CATce', 'CATch', 'CATcn', 'CATcs', 'CATcu', 'CATcx', 'D3Aaf', 'D3Acs', 'D3Act', 'D3Anr', 'D3Asc', 'D3Asi', 'D3Asl', 'DEAct', 'DEAeu', 'DEAfa', 'DEAff', 'DEAfs', 'DEAnf', 'DEAnr', 'DEAns', 'DRTcb', 'DRTcu', 'DRTnb', 'DRTnc', 'E8Adi', 'E8Aox', 'E8Aph', 'ESTsz', 'ESTwa', 'ESTwc', 'EVAgi', 'FAWcs', 'FAWks', 'FBSws', 'G4Acs', 'G50tl', 'G6Pcn', 'G6Pct', 'G6Pcv', 'G6Tpc', 'G6Tpl', 'G6Tpy', 'G70cu', 'G70tb', 'G70tl', 'G70tm', 'G70vg', 'G70vm', 'G70vn', 'G70vs', 'G70vt', 'G7Xcb', 'G7Xce', 'G7Xcu', 'G7Xcw', 'G7Xnm', 'G8Aca', 'G8Ara', 'G8Ark', 'G8Ocb', 'G8Ocj', 'G8Ocn', 'G8Ocs', 'G8Oct', 'G8Ocv', 'G8Ocw', 'G8Tac', 'G8Tah', 'G8Tas', 'G8Tat', 'G8Tcc', 'G8Tcg', 'G8Tck', 'G8Tct', 'G8Tcv', 'G8Ttc', 'G8Tte', 'G8Ttg', 'G8Ttj', 'G8Ttk', 'G8Ttn', 'G8Tto', 'G8Ttp', 'G8Ttr', 'G8Tts', 'G8Ttt', 'G8Ttu', 'G8Tva', 'G8Tvc', 'G8Tvg', 'G8Tvm', 'G8Tvs', 'G8Xdp', 'G8Xmr', 'G8Xpc', 'G8Xqn', 'G8Xsm', 'G8Xte', 'G8Zva', 'G8Zvs', 'GIBcu', 'GNTbg', 'GNTde', 'GNTed', 'GPCcu', 'GPCpc', 'GSTwa', 'GSXcb', 'GSXch', 'GSXcu', 'GSXnm', 'GTAbe', 'GTAca', 'GTAce', 'GTAcq', 'GTAcs', 'GTAcv', 'GTAet', 'GTAob', 'GTArk', 'GTOcb', 'GTOcj', 'GTOcn', 'GTOcq', 'GTOcs', 'GTOct', 'GTOcu', 'GTOcv', 'GTOcw', 'GTOcz', 'GTOon', 'GTOsh', 'GTOtb', 'GTOtk', 'GTOtl', 'GTOtm', 'GTOva', 'GTOvb', 'GTOvh', 'GTOvj', 'GTOvn', 'GTOvo', 'GTTcc', 'GTTcg', 'GTTck', 'GTTcn', 'GTTct', 'GTTcv', 'GTTta', 'GTTtc', 'GTTtf', 'GTTtg', 'GTTth', 'GTTti', 'GTTtp', 'GTTtr', 'GTTts', 'GTTtt', 'GTTtx', 'GTTva', 'GTTvc', 'GTTvg', 'GTTvh', 'GTTvm', 'GTTvs', 'GTTvx', 'GTXde', 'GTZvs', 'HINcl', 'HINcu', 'HINde', 'HINdl', 'HMEch', 'HMEcm', 'HMEct', 'HMEcu', 'HOPwe', 'HOTpi', 'I2Efn', 'I2Emt', 'I2Ene', 'I2Epy', 'ICEbt', 'ICEeu', 'ICEfn', 'ICEmt', 'ICEne', 'ICEpy', 'ICExx', 'J4Rcp', 'J4Rcu', 'J4Rwe', 'J4Rwx', 'JGRcp', 'JGRcu', 'JGRwt', 'JGRwx', 'KSTrn', 'KSTsd', 'KSTsp', 'KSTwa', 'KSTwd', 'L3Ocb', 'L3Ocf', 'L3Ocj', 'L3Ocs', 'L3Oct', 'L3Ocv', 'L3Odt', 'L3Onf', 'LATne', 'LEOcb', 'LEOcf', 'LEOcj', 'LEOcs', 'LEOct', 'LEOcv', 'LEOnb', 'LEOwf', 'M6Ece', 'M6Ect', 'M6Edn', 'M6Eme', 'M6Eml', 'M6Emt', 'M6Epc', 'M6Esi', 'M6Esp', 'M6Esq', 'MIKab', 'MMEcl', 'MMExl', 'MPTde', 'NABcu', 'NABpc', 'NSEde', 'NSTpc', 'NSTpn', 'NSTsc', 'NSTwa', 'NSTwn', 'NSTwp', 'ONTde', 'ONThm', 'ONTqs', 'ONTqt', 'ONTqz', 'ONTxx', 'OVPcu', 'OVPpc', 'OX5cl', 'OX5cn', 'OXScb', 'OXScl', 'OXScn', 'OXSco', 'OXScs', 'OXScv', 'OXTcr', 'OXTdm', 'OXThm', 'OXTon', 'OXTrk', 'P2Tbe', 'P2Tfa', 'P2Tfb', 'P2Tfi', 'P2Thm', 'P2Tpt', 'P2Ttc', 'P2Ttn', 'P2Tty', 'P2Txa', 'P2Txe', 'P2Txf', 'P2Txh', 'P4Xmg', 'P4Xpl', 'P4Xsp', 'PATbe', 'PATcm', 'PATmr', 'PATne', 'PATnx', 'PATpe', 'PATrt', 'PATxo', 'PATxt', 'PGXxo', 'PGXxt', 'PRGsu', 'PRTcb', 'PRTcu', 'PRTnb', 'PRTnc', 'PRTnd', 'R3Xbr', 'R3Xbt', 'R3Xbv', 'R3Xch', 'R3Xci', 'R3Xck', 'R3Xcm', 'R3Xcn', 'R3Xcr', 'R3Xct', 'R3Xcw', 'R3Xde', 'R3Xdn', 'R3Xes', 'R3Xhr', 'R3Xme', 'R3Xmi', 'R3Xmo', 'R3Xpt', 'R3Xpv', 'R3Xrk', 'R3Xrx', 'R3Xsp', 'R3Xss', 'R3Xtq', 'R3Xtr', 'R3Xwe', 'RCLcr', 'RCLcu', 'RCLde', 'RCLrg', 'REXal', 'REXam', 'REXan', 'REXbl', 'REXbt', 'REXcc', 'REXcd', 'REXcl', 'REXco', 'REXcu', 'REXcx', 'REXdl', 'REXfl', 'REXgl', 'REXhl', 'REXkl', 'REXll', 'REXme', 'REXml', 'REXol', 'REXpl', 'REXql', 'REXrl', 'REXsp', 'REXul', 'REXvl', 'REXxl', 'REXxx', 'S5Sxa', 'S5Sxc', 'SLSde', 'SSTeg', 'SSTsa', 'SSTsg', 'SSTwa', 'SSTwh', 'T4Oca', 'T4Ocs', 'T4Rcb', 'T4Rce', 'T4Rcj', 'T4Rco', 'T4Rcp', 'T4Rcr', 'T4Rct', 'T4Rcx', 'T4Rjn', 'T4Rne', 'T4Rnj', 'T4Rnp', 'T4Rny', 'T4Rsh', 'T5Spr', 'T5Ssg', 'TAOca', 'TAOce', 'TAOco', 'TAOcr', 'TAOcs', 'TAOcv', 'TGR1x', 'TGR2x', 'TGRbd', 'TGRbr', 'TGRbv', 'TGRca', 'TGRcb', 'TGRce', 'TGRch', 'TGRci', 'TGRcj', 'TGRcp', 'TGRcu', 'TGRcw', 'TGRcx', 'TGRcy', 'TGRcz', 'TGRjd', 'TGRjn', 'TGRjr', 'TGRna', 'TGRne', 'TGRnh', 'TGRni', 'TGRnj', 'TGRnp', 'TGRnt', 'TGRny', 'TGRps', 'TGRue', 'TGRwd', 'TGRwe', 'TGRwf', 'TGRwj', 'TGRwl', 'TGRwm', 'TGRwp', 'TGRws', 'TGRwv', 'TGRwy', 'TGRwz', 'TLSde', 'UDMan', 'UFPcu', 'UFPpc', 'WBKcx', 'WDFwe', 'WMEwe', 'WRSrg', 'WSFwe', 'WSIwe']
@@ -110,7 +107,7 @@ function showEquipmentModal() {
 function hideEquipmentModal() {
     const selected = $('#ceid-multiselect').val() || [];
     setCookie(CEID_COOKIE, JSON.stringify(selected));
-    checkAndQuery(CAQ_MESSAGES)
+    checkAndQuery()
     document.getElementById('equipment-modal').style.display = 'none';
     $('#ceid-multiselect').select2('close');
 }
@@ -517,7 +514,11 @@ function initEqModal() {
     });
 }
 
-function checkAndQuery(message) {
+function checkAndQuery() {
+    const messages =  {
+        "1": "No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
+        "2": "Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email in the footer of this page."  // error message that pops up prompt
+    }
 
     // check cookies to initiate queries
     try {
@@ -525,7 +526,7 @@ function checkAndQuery(message) {
         return ceidList.length === 0 ? f() : t()
 
     } catch (e) {
-        alert(message["2"])
+        alert(messages["2"])
     }
 
     function t() {
@@ -541,7 +542,7 @@ function checkAndQuery(message) {
     }
 
     function f() {
-        console.log(message["1"])
+        console.log(messages["1"])
         return false
     }
 }
@@ -693,7 +694,7 @@ function loadPage() {
     initEqModal()
 
     // Step 2
-    checkAndQuery(CAQ_MESSAGES) ? monitorStatus() : console.log('Failed check and query')
+    checkAndQuery() ? monitorStatus() : console.log('Failed check and query')
 
 }
 
