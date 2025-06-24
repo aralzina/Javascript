@@ -4,8 +4,8 @@
 const PBI_SERVER = 'https://f32-pbi.f32prod.mfg.intel.com/'
 const DATASET_PATH = `${PBI_SERVER}reports/api/v2.0/datasets(path='/F32_FAB/SharedTechnologies/WetEtch/PAM/DATASETS/`;
 const PAM_HEADER_EXPAND_DELAY_MS = 2000;
-const RETRY_DELAY = 4000;
-const MAX_RETRIES = 6
+var RETRY_DELAY = 4000;
+var MAX_RETRIES = 60
 var retry_counter = 0;
 const ERROR_MESSAGES = {
     "1": "Error #1 - No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
