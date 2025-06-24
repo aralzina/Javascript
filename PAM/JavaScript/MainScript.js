@@ -123,7 +123,7 @@ function hideEquipmentModal() {
     setCookie(CEID_COOKIE, JSON.stringify(selected));
     document.getElementById('equipment-modal').style.display = 'none';
     $('#ceid-multiselect').select2('close');
-    setTimeout(checkAndQuery,1000)
+    checkAndQuery() ? monitorStatus() : alert('Failed to query data.')
 }
 
 
