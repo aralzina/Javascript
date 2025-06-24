@@ -10,7 +10,7 @@ var retry_counter = 0;
 const ERROR_MESSAGES = {
     "1": "Error #1 - No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
     "2": "Error #2 - Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email at the bottom of this page.",  // error message that pops up prompt
-    "3": "Error #3 - Error creating table for "
+    "3": "Error #3 - Error creating table for " // error message when table fails to create
 }
 
 
@@ -136,6 +136,35 @@ function hideEquipmentModal() {
     checkAndQuery() ? monitorStatus() : alert('Failed to query data.')
 }
 
+/**
+   * Return a list of data where the key provided matches at least one of the values
+      provided in the array *values
+      Input is the raw data from an XMLHttpRequest
+   * @param {*} data 
+   * @param {string} key key name to filter on
+   * @param {Array|*} values values to include
+   * @returns {*}
+   */
+function dataIn (data, key, values) {
+  // fix simple error of values not being an array
+  values = !Array.isArray(values) ? [values] : values
+  //let BreakException = {}
+  let results = []
+  data.forEach(row => {
+    let check = row[key]
+    //try {
+    values.forEach(val => {
+      if (val === check) {
+        results.push(row)
+        //throw BreakException
+      }
+    })
+    //} catch (e) {
+    // if (e !== BreakException) throw e
+    //}
+  })
+  return results
+}
 
 /**
  * Takes in data and column name and returns how many unique values are in the column
@@ -825,7 +854,8 @@ function monitorStatus() {
 
     // if all data is loaded
     function resume() {
-        parseData()
+        //parseData()
+        analyzeCandidates()
     }
 
     // if there is a fail and all datasets are loaded
@@ -850,7 +880,7 @@ function monitorStatus() {
         })
 
         // hide loading overlay
-        hideLoading() 
+        hideLoading()
 
         // complete the message
         names = `${names}The above datasets have failed to load. Retry loading all datasets?`
@@ -890,6 +920,8 @@ function loadPage() {
 function parseData() {
 
     // TODO: Break out by Functional Area / CEID
+
+    // TODO: Algorithm to see what tools can be logged up
 
 
     // get main
@@ -983,5 +1015,26 @@ function parseData() {
 
 function filterData() {
 
+}
+
+function spcFilter(){
+    let data = DATASETS.SPC.DATA
+    let list = []
+
+    data.forEach(row => { 
+        if (!list.includes(row.ENTITY)) { 
+            list.push(row.ENTITY) 
+        } 
+    })
+    return list
+}
+
+function analyzeCandidates() {
+    let filter = spcFilter()
+
+    DATASETS.ENTITY_LIST['BACKUP_DATA'] = DATASETS.ENTITY_LIST.DATA
+    DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA,'ENTITY',filter)
+
+    parseData()
 }
 
