@@ -458,12 +458,14 @@ function pamTable(entity) {
         headerRow.appendChild(th);
         thead.appendChild(headerRow);
 
+        var tr = create('tr')
+        thead.appendChild(tr)
+
         columns.forEach(col => {
             th = document.createElement('th');
             th.textContent = col;
-            headerRow.appendChild(th);
+            tr.appendChild(th);
         });
-        thead.appendChild(headerRow);
         table.appendChild(thead);
 
         // Create table body
@@ -479,6 +481,7 @@ function pamTable(entity) {
                     td.textContent = ''; // Clear text content for the link
                     const a = document.createElement('a');
                     a.href = `https://f32-apps-fuzion.f32prod.mfg.intel.com/EditWorkOrderPage.aspx?WorkOrderID=${row[col]}`;
+                    a.target = "_blank"
                     a.textContent = row[col];
                     td.appendChild(a);
                 }
@@ -719,6 +722,7 @@ function checkAndQuery() {
 
     function f() {
         console.log(ERROR_MESSAGES["1"])
+        showEquipmentModal()
         return false
     }
 }
@@ -882,7 +886,7 @@ function parseData() {
                 main.appendChild(entityTable(e))
             }
         } catch (err) {
-            console.log(`${ERROR_MESSAGES[2]} ${e}\r\n${err}`)
+            console.log(`${ERROR_MESSAGES["3"]} ${e}\r\n${err}`)
         }
     })
 
