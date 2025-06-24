@@ -145,25 +145,25 @@ function hideEquipmentModal() {
    * @param {Array|*} values values to include
    * @returns {*}
    */
-function dataIn (data, key, values) {
-  // fix simple error of values not being an array
-  values = !Array.isArray(values) ? [values] : values
-  //let BreakException = {}
-  let results = []
-  data.forEach(row => {
-    let check = row[key]
-    //try {
-    values.forEach(val => {
-      if (val === check) {
-        results.push(row)
-        //throw BreakException
-      }
+function dataIn(data, key, values) {
+    // fix simple error of values not being an array
+    values = !Array.isArray(values) ? [values] : values
+    //let BreakException = {}
+    let results = []
+    data.forEach(row => {
+        let check = row[key]
+        //try {
+        values.forEach(val => {
+            if (val === check) {
+                results.push(row)
+                //throw BreakException
+            }
+        })
+        //} catch (e) {
+        // if (e !== BreakException) throw e
+        //}
     })
-    //} catch (e) {
-    // if (e !== BreakException) throw e
-    //}
-  })
-  return results
+    return results
 }
 
 /**
@@ -1017,23 +1017,47 @@ function filterData() {
 
 }
 
-function spcFilter(){
+function spcFilter() {
     let data = DATASETS.SPC.DATA
     let list = []
 
-    data.forEach(row => { 
-        if (!list.includes(row.ENTITY)) { 
-            list.push(row.ENTITY) 
-        } 
+    data.forEach(row => {
+        if (!list.includes(row.ENTITY)) {
+            list.push(row.ENTITY)
+        }
     })
     return list
 }
 
 function analyzeCandidates() {
     let filter = spcFilter()
+    let passingFilter = []
 
     DATASETS.ENTITY_LIST['BACKUP_DATA'] = DATASETS.ENTITY_LIST.DATA
-    DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA,'ENTITY',filter)
+    DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA, 'ENTITY', filter)
+
+    // lets find out results from the last run of each
+    filter.forEach(entity => {
+        var entitySPCData = dataEquals(DATASETS.SPC.DATA, "ENTITY", entity)
+        var results = []
+        var testNames = unique(entitySPCData, 'TEST_NAME')
+
+        // loop test names
+        testNames.forEach(test => {
+            var spcTestData = dataEquals(entitySPCData, "TEST_NAME", test)
+            var rank = spcTestData[0].RANK
+            var rankData = dataEquals(spcTestData, "RANK", rank)
+
+            rankData.forEach(row => {
+                results.push(row.INCONTROL_FLAG)
+            })
+        })
+
+        if (!results.includes('N')) {
+            passingFilter.push(entity)
+        }
+    })
+        DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA, 'ENTITY', passingFilter)
 
     parseData()
 }
