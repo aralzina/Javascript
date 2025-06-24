@@ -121,9 +121,9 @@ function showEquipmentModal() {
 function hideEquipmentModal() {
     const selected = $('#ceid-multiselect').val() || [];
     setCookie(CEID_COOKIE, JSON.stringify(selected));
-    checkAndQuery()
     document.getElementById('equipment-modal').style.display = 'none';
     $('#ceid-multiselect').select2('close');
+    setTimeout(checkAndQuery,1000)
 }
 
 
