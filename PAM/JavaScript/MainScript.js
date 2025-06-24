@@ -9,7 +9,8 @@ const MAX_RETRIES = 6
 var retry_counter = 0;
 const ERROR_MESSAGES = {
     "1": "Error #1 - No CEIDs selected. Opening CEID modal for selection.", // no CEID console message
-    "2": "Error #2 - Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email at the bottom of this page."  // error message that pops up prompt
+    "2": "Error #2 - Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email at the bottom of this page.",  // error message that pops up prompt
+    "3": "Error #3 - Error creating table for "
 }
 
 
@@ -758,7 +759,7 @@ function loadData(map) {
             try {
                 var data = JSON.parse(xhr.responseText);
                 // Filter the data by paramName and paramValue
-                map.DATA = data.value
+                map.DATA = cleanData(data.value)
                 map.LOADED = true
             } catch (e) {
                 console.error('Error parsing dataset:', e);
@@ -870,6 +871,82 @@ function loadPage() {
 }
 
 function parseData() {
-    prompt('Data is loaded. The page will be built when the code reaches this point. Functions beyond this point are not built and/or wired yet.')
+    alert('Data is loaded. The page will be built when the code reaches this point. Functions beyond this point are not built and/or wired yet.')
+}
+
+function realParseData() {
+
+    // get main
+    const main = document.getElementsByClassName('main-content')[0]
+    main.innerHTML = '<h1 style="text-align:center;">Down Entity Table</h1>'
+
+    // loop entities and build/attach tables
+    unique(DATASETS.ENTITY_LIST.DATA,'ENTITY').forEach(e=>{
+        try{
+            main.appendChild(entityTable(e))
+        }catch(err){
+            console.log(`${ERROR_MESSAGES[2]} ${e}\r\n${err}`)
+        }
+    })
+
+    // broken out for readability
+    function entityTable(entity) {
+        // make table
+        const table = create('table', { id: `${entity}-table` })
+
+        // make thead and append to table
+        const thead = create('thead')
+        table.appendChild(thead)
+
+        //make thead row and append to thead
+        const thtr = create('tr')
+        thead.appendChild(thtr)
+
+        // loop an array and add ths
+        ['Entity', 'State', 'Date Logged'].forEach(column => {
+            thtr.appendChild(create('th', {}, { textContent: column }))
+        })
+
+        // make body and append to table
+        const tbody = create('tbody')
+        table.appendChild(tbody)
+
+        // make body row and append to body
+        const tbtr = create('tr')
+        tbody.appendChild(tbtr)
+
+        // filter data - should only be one row of data
+        const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)
+
+        // loop an array and add tds
+        ['ENTITY', 'STATE', 'LAST_EVENT_DATE'].forEach(key => {
+            const attrs = {}
+            const params = { textContent: data[key] }
+
+            if (key === 'ENTITY') {
+                attrs['data-entity'] = entity
+                params[className] = 'expandable'
+            }
+
+            tbtr.appendChild(create('td', attrs, params))
+        })
+
+        // make the subtable row
+        const subtr = create('tr', { id: `subtable-${entity}` }, { className: 'subtable-row' })
+        tbody.appendChild(subtr)
+
+        // make the td that holds the div that holds the subtable
+        const subtd = create('td', { colspan: "3" }, { className: 'subtable-cell' })
+        subtr.appendChild(subtd)
+
+        // make the div that holds the subtable
+        const subdiv = create('div', {}, { className: 'subtable-cell-inner' })
+        subtd.appendChild(subdiv)
+
+        // append pam table
+        subdiv.appendChild(pamTable(entity))
+
+        return table
+    }
 }
 
