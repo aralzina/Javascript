@@ -290,7 +290,7 @@ function addProp(element, args) {
 function pamTable(entity) {
     // Create the main table element
     let parentTable, testNames, sections, SPCbody;
-   
+
 
     // create table
     parentTable = create('table', {}, { className: 'subtable' })
@@ -878,7 +878,9 @@ function parseData() {
     // loop entities and build/attach tables
     unique(DATASETS.ENTITY_LIST.DATA, 'ENTITY').forEach(e => {
         try {
-            main.appendChild(entityTable(e))
+            if (e.length > 6) {
+                main.appendChild(entityTable(e))
+            }
         } catch (err) {
             console.log(`${ERROR_MESSAGES[2]} ${e}\r\n${err}`)
         }
