@@ -25,7 +25,7 @@ const CEID_COOKIE = "SELECTED_CEIDS";
  */
 const DATASETS = {
     ENTITY_LIST: {
-        PARAMETER_NAME: "CEIDS",
+        PARAMETER_NAME: "ceids",
         PARAMETER_VALUE: '',
         DATASET_NAME: "ENTITYLIST",
         LOADED: false,
@@ -34,7 +34,7 @@ const DATASETS = {
         COOKIE_NAME: CEID_COOKIE
     },
     SPC: {
-        PARAMETER_NAME: "CEIDS",
+        PARAMETER_NAME: "ceids",
         PARAMETER_VALUE: '',
         DATASET_NAME: "SPC",
         LOADED: false,
