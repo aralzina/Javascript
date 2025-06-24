@@ -43,7 +43,7 @@ const DATASETS = {
         COOKIE_NAME: CEID_COOKIE
     },
     WORK_ORDERS: {
-        PARAMETER_NAME: "CEIDS",
+        PARAMETER_NAME: "ceids",
         PARAMETER_VALUE: '',
         DATASET_NAME: "WORKORDERS",
         LOADED: false,
