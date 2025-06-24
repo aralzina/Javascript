@@ -27,7 +27,16 @@ const DATASETS = {
     ENTITY_LIST: {
         PARAMETER_NAME: "ceids",
         PARAMETER_VALUE: '',
-        DATASET_NAME: "ENTITYLIST",
+        DATASET_NAME: "ENTITY_STATUS",
+        LOADED: false,
+        DATA: [],
+        ERROR: false,
+        COOKIE_NAME: CEID_COOKIE
+    },
+    ENTITY_HISTORY: {
+        PARAMETER_NAME: "ceids",
+        PARAMETER_VALUE: '',
+        DATASET_NAME: "ENTITY_HISTORY",
         LOADED: false,
         DATA: [],
         ERROR: false,
@@ -290,11 +299,11 @@ function pamTable(entity) {
     table = create('table', {}, { className: 'subtable' })
 
     // add SPC section
-    buildSPCSection()
+    let spcData = dataEquals(DATASETS.SPC, 'ENTITY', entity)
+    buildSPCSection(spcData)
 
     // add Workorder section
-    //workOrderData = dataEquals(DATASETS.WORKORDERS,'TOOLNAME',entity)
-    workOrderData = TEMPDATASETS.WORKORDERS
+    let workOrderData = dataEquals(DATASETS.WORK_ORDERS, 'TOOLNAME', entity)
     if (workOrderData.length > 0) {
         tr = create('tr')
         td = create('td')
@@ -303,11 +312,12 @@ function pamTable(entity) {
         td.appendChild(buildWorkOrderSection(workOrderData))
     }
 
-    // spc build broken out for readability
+    // add Entity History section
+
+
+    // individual sections broken out for readability
     // this is the section that builds the SPC table
-    function buildSPCSection() {
-        //get required spc data
-        SPCdata = dataEquals(TEMPDATASETS.SPC, 'ENTITY', entity)
+    function buildSPCSection(SPCdata) {
         testNames = unique(SPCdata, 'TEST_NAME')
 
 
@@ -483,6 +493,10 @@ function pamTable(entity) {
         return table;
     }
 
+    function buildEntityHistorySection() {
+        //TODO
+    }
+
 
     return table
 
@@ -515,6 +529,168 @@ function initEqModal() {
     document.getElementById('equipment-modal-ok').onclick = hideEquipmentModal;
     document.getElementById('equipment-modal').addEventListener('click', function (e) {
         if (e.target === this) hideEquipmentModal();
+    });
+}
+
+
+// Helper: Extract chart attributes from all zone cells in the row
+function getRowChartData(zoneCell) {
+    var tr = zoneCell.closest('tr');
+    if (!tr) return null;
+    var cells = Array.from(tr.querySelectorAll('td[chartvalue]'));
+    var chartvalues = [], ucls = [], lcls = [], cls = [], xLabels = [];
+    var cll = null, cul = null;
+    cells.forEach((cell, idx) => {
+        chartvalues.push(Number(cell.getAttribute('chartvalue')));
+        ucls.push(Number(cell.getAttribute('ucl')));
+        lcls.push(Number(cell.getAttribute('lcl')));
+        cls.push(Number(cell.getAttribute('cl')));
+        xLabels.push('Run ' + (idx + 1));
+        if (idx === 0) {
+            cll = Number(cell.getAttribute('cll'));
+            cul = Number(cell.getAttribute('cul'));
+        }
+    });
+    return { chartvalues, ucls, lcls, cls, xLabels, cll, cul };
+}
+
+// Show the popup graph
+function showZoneGraph(evt, zoneCell) {
+    var popup = document.getElementById('zone-graph-popup');
+    var canvas = document.getElementById('zone-graph-canvas');
+    var data = getRowChartData(zoneCell);
+    if (!data) return;
+
+    popup.style.left = (evt.pageX + 10) + 'px';
+    popup.style.top = (evt.pageY + 10) + 'px';
+    popup.style.display = 'block';
+
+    if (window.zoneChart) window.zoneChart.destroy();
+
+    // Register datalabels plugin
+    if (window.ChartDataLabels) {
+        Chart.register(window.ChartDataLabels);
+    }
+
+    window.zoneChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: data.xLabels,
+            datasets: [
+                {
+                    label: 'Chart Value',
+                    data: data.chartvalues,
+                    borderColor: '#0068b5',
+                    backgroundColor: 'rgba(0,104,181,0.1)',
+                    pointBackgroundColor: '#00baff',
+                    fill: false,
+                    tension: 0.2
+                },
+                {
+                    label: 'UCL',
+                    data: data.ucls,
+                    borderColor: 'red',
+                    borderWidth: 1,
+                    borderDash: [],
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    showLine: true
+                },
+                {
+                    label: 'CL',
+                    data: data.cls,
+                    borderColor: 'black',
+                    borderWidth: 1,
+                    borderDash: [6, 4],
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    showLine: true
+                },
+                {
+                    label: 'LCL',
+                    data: data.lcls,
+                    borderColor: 'red',
+                    borderWidth: 1,
+                    borderDash: [],
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    showLine: true
+                }
+            ]
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                legend: { display: true },
+                title: { display: false },
+                datalabels: {
+                    display: true,
+                    align: 'top',
+                    anchor: 'end',
+                    color: '#0068b5',
+                    font: { weight: 'bold' },
+                    formatter: function (value, context) {
+                        // Only show datalabels for the main chartvalue dataset
+                        if (context.datasetIndex === 0) {
+                            return value != null ? value : '';
+                        }
+                        return '';
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    // min: data.cll,
+                    // max: data.cul,
+                    title: { display: true, text: 'Value' }
+                }
+            }
+        },
+        plugins: [window.ChartDataLabels]
+    });
+}
+
+function hideZoneGraph() {
+    var popup = document.getElementById('zone-graph-popup');
+    popup.style.display = 'none';
+    if (window.zoneChart) {
+        window.zoneChart.destroy();
+        window.zoneChart = null;
+    }
+}
+
+function attachZoneHoverListeners() {
+    document.querySelectorAll('.subtable td[chartvalue]').forEach(function (cell) {
+        cell.style.cursor = 'pointer';
+        cell.addEventListener('mouseenter', function (evt) {
+            showZoneGraph(evt, cell);
+        });
+        cell.addEventListener('mouseleave', hideZoneGraph);
+    });
+}
+
+function initTables() {
+
+    // Toggle subtable visibility
+    document.querySelectorAll('.expandable').forEach(function (cell) {
+        cell.addEventListener('click', function () {
+            var subtableId = 'subtable-' + this.getAttribute('data-entity');
+            var subtableRow = document.getElementById(subtableId);
+            if (subtableRow.classList.contains('open')) {
+                subtableRow.classList.remove('open');
+            } else {
+                subtableRow.classList.add('open');
+            }
+        });
+    });
+    attachZoneHoverListeners()
+    document.querySelectorAll('.expandable').forEach(function (cell) {
+        cell.addEventListener('click', function () {
+            setTimeout(attachZoneHoverListeners, 200);
+        });
     });
 }
 
@@ -595,7 +771,6 @@ function loadData(map) {
     xhr.send();
 }
 
-
 function queryData() {
     // reset the loaded and error flags on all datasets
     resetFlags()
@@ -673,7 +848,6 @@ function monitorStatus() {
     }
 }
 
-
 function loadPage() {
     // Init Steps
     // 1.) Inititalize the select2 based on static data for now and the equipment modal
@@ -682,7 +856,7 @@ function loadPage() {
     //      b.) If no ceids are selected, open up the equipment groups modal
     //          Modal close already has code to trigger data updates. So once
     //          they're selected, no further action needed.
-    // 3.) Monitor 'LOADED' and 'ERROR' status of datasets and take action when all are completed.
+    //     Finally: Monitor 'LOADED' and 'ERROR' status of datasets and take action when all are completed.
 
     // Step 1
     initSelect2()
@@ -691,8 +865,11 @@ function loadPage() {
     // Step 2
     checkAndQuery() ? monitorStatus() : console.log('Failed check and query')
 
+    // Data parsing and table building happen after checks pass. See parseData() below
+
 }
 
 function parseData() {
     prompt('Data is loaded. The page will be built when the code reaches this point. Functions beyond this point are not built and/or wired yet.')
 }
+
