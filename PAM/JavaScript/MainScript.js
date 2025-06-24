@@ -32,7 +32,8 @@ const DATASETS = {
         LOADED: false,
         DATA: [],
         ERROR: false,
-        COOKIE_NAME: CEID_COOKIE
+        COOKIE_NAME: CEID_COOKIE,
+        FILTER: []
     },
     ENTITY_HISTORY: {
         PARAMETER_NAME: "ceids",
@@ -63,6 +64,14 @@ const DATASETS = {
     },
 };
 
+
+function showLoading() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+}
+function hideLoading() {
+    document.getElementById('loading-overlay').style.display = 'none';
+}
+
 /**
  * Adds the 'expanded' class to the PAM header after a delay to trigger the animation.
  * 
@@ -87,6 +96,7 @@ function setCookie(name, value, days = 365) {
     const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
     document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + expires + "; path=/";
 }
+
 function getCookie(name) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     return match ? decodeURIComponent(match[2]) : null;
@@ -773,6 +783,10 @@ function loadData(map) {
 }
 
 function queryData() {
+
+    // Show loading overlay
+    showLoading()
+
     // reset the loaded and error flags on all datasets
     resetFlags()
 
@@ -835,6 +849,9 @@ function monitorStatus() {
             }
         })
 
+        // hide loading overlay
+        hideLoading() 
+
         // complete the message
         names = `${names}The above datasets have failed to load. Retry loading all datasets?`
 
@@ -882,10 +899,12 @@ function parseData() {
     // loop entities and build/attach tables
     unique(DATASETS.ENTITY_LIST.DATA, 'ENTITY').forEach(e => {
         try {
-            if (e.length > 6) {
+            if (e.length >= 6) {
                 main.appendChild(entityTable(e))
             }
         } catch (err) {
+            //hide loading overlay
+            hideLoading()
             console.log(`${ERROR_MESSAGES["3"]} ${e}\r\n${err}`)
         }
     })
@@ -958,5 +977,11 @@ function parseData() {
 
         return table
     }
+    // hide loading overlay
+    hideLoading()
+}
+
+function filterData() {
+
 }
 
