@@ -413,7 +413,7 @@ function pamTable(entity) {
                     }
 
                     // debugging
-                    console.log(`cv: ${row.CHART_VALUE}, cll: ${row.CHART_LOWER_LIMIT}, cul: ${row.CHART_UPPER_LIMIT}, ucl: ${row.UP_CONTROL_LMT}, lcl: ${row.LO_CONTROL_LMT}, cl: ${row.CENTERLINE}`)
+                    //console.log(`cv: ${row.CHART_VALUE}, cll: ${row.CHART_LOWER_LIMIT}, cul: ${row.CHART_UPPER_LIMIT}, ucl: ${row.UP_CONTROL_LMT}, lcl: ${row.LO_CONTROL_LMT}, cl: ${row.CENTERLINE}`)
 
                     // color next td based on pass/fail
                     row.INCONTROL_FLAG === 'Y' ? status = 'pass' : status = 'fail'
