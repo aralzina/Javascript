@@ -325,9 +325,11 @@ function pamTable(entity) {
     // add SPC section
     let spcData = dataEquals(DATASETS.SPC.DATA, 'ENTITY', entity)
     let testCookies = JSON.parse(getCookie(TEST_NAME_COOKIE))
-    if (testCookies.length > 0) {
-        spcData = dataIn(spcData, 'FILTER', testCookies)
-    }
+    try {
+        if (testCookies.length > 0) {
+            spcData = dataIn(spcData, 'FILTER', testCookies)
+        }
+    }catch (e) { }
     buildSPCSection(spcData)
 
     // add Entity History section
@@ -1130,7 +1132,7 @@ function buildTestFilter(spcData) {
     container.innerHTML = '';
 
     // Get filter box
-    const filterBox = document.getElementBy('test-filter-box');
+    const filterBox = document.getElementById('test-filter-box');
     filterBox.className = 'spc-filter-box';
 
     // Header
