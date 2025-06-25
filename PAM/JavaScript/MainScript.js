@@ -328,6 +328,10 @@ function pamTable(entity) {
     try {
         if (testCookies.length > 0) {
             spcData = dataIn(spcData, 'FILTER', testCookies)
+            if(spcData.length === 0){
+                // clear filters if no spc data after filter applied
+                spcData = dataEquals(DATASETS.SPC.DATA,"ENTITY",entity)
+            }
         }
     }catch (e) { }
     buildSPCSection(spcData)
