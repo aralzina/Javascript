@@ -964,6 +964,7 @@ function loadPage() {
     // Step 1
     initNavComponents()
     initEqModal()
+    initTestSelectModal()
 
     // Step 2
     checkAndQuery() ? monitorStatus() : console.log('Failed check and query')
@@ -1122,18 +1123,18 @@ function analyzeCandidates() {
 }
 
 
-function buildTestFilter(spcData) {
+function buildTestFilter(filters) {
 
-    if (spcData.length === 0) {
+   
         spcData = unique(DATASETS.SPC.DATA, 'FILTER')
-    }
+    
 
-    const container = document.getElementById('spc-filter-container');
-    container.innerHTML = '';
+    
 
     // Get filter box
     const filterBox = document.getElementById('test-filter-box');
     filterBox.className = 'spc-filter-box';
+    filterBox.innerHTML = ''
 
     // Header
     const header = document.createElement('div');
@@ -1184,10 +1185,11 @@ function buildTestFilter(spcData) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = true;
+        !filters.includes(item) && filters > 0? checkbox.checked = false : checkbox.checked = true;
         checkbox.id = 'spc-filter-' + idx;
         checkbox.value = item;
         checkbox.className = 'spc-filter-checkbox';
+
 
         checkbox.addEventListener('change', function () {
             // If any are unchecked, uncheck select all
@@ -1221,7 +1223,6 @@ function buildTestFilter(spcData) {
     });
 
     filterBox.appendChild(listDiv);
-    container.appendChild(filterBox);
 }
 
 
