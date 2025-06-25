@@ -19,6 +19,7 @@ const CEID_LIST = ['A6Ect', 'AERca', 'AMEcn', 'AMEct', 'AMEcz', 'AMEgn', 'ANTde'
 
 // Use this cookie name for storing selected CEIDs
 const CEID_COOKIE = "SELECTED_CEIDS";
+const TEST_NAME_COOKIE = "SELECTED_TEST_NAMES";
 
 
 /**
@@ -78,6 +79,7 @@ function hideLoading() {
  * This function waits for the DOM to be fully loaded, then waits PAM_HEADER_EXPAND_DELAY_MS
  * before adding the 'expanded' class to the element with the 'pam-header' class. This triggers
  * the CSS animation that expands the header text.
+ * This function also begins loading the page.
  */
 window.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
@@ -112,29 +114,6 @@ function populateCEIDMultiselect(list) {
     $select.trigger('change');
 }
 
-// Show modal and update select2 with CEIDs from cookie
-function showEquipmentModal() {
-    document.getElementById('equipment-modal').style.display = 'flex';
-    setTimeout(() => {
-        // Get selected CEIDs from cookie
-        let selected = getCookie(CEID_COOKIE);
-        let selectedArr = [];
-        if (selected) {
-            try { selectedArr = JSON.parse(selected); } catch { }
-        }
-        $('#ceid-multiselect').val(selectedArr).trigger('change');
-        $('#ceid-multiselect').select2('open');
-    }, 100);
-}
-
-// Hide modal and update cookie with current select2 values
-function hideEquipmentModal() {
-    const selected = $('#ceid-multiselect').val() || [];
-    setCookie(CEID_COOKIE, JSON.stringify(selected));
-    document.getElementById('equipment-modal').style.display = 'none';
-    $('#ceid-multiselect').select2('close');
-    checkAndQuery() ? monitorStatus() : alert('Failed to query data.')
-}
 
 /**
    * Return a list of data where the key provided matches at least one of the values
@@ -330,13 +309,8 @@ function pamTable(entity) {
     // Create the main table element
     let parentTable, testNames, sections, SPCbody;
 
-
     // create table
     parentTable = create('table', {}, { className: 'subtable' })
-
-    // add SPC section
-    let spcData = dataEquals(DATASETS.SPC.DATA, 'ENTITY', entity)
-    buildSPCSection(spcData)
 
     // add Workorder section
     let workOrderData = dataEquals(DATASETS.WORK_ORDERS.DATA, 'TOOLNAME', entity)
@@ -347,6 +321,14 @@ function pamTable(entity) {
         tr.appendChild(td)
         td.appendChild(buildWorkOrderSection(workOrderData))
     }
+
+    // add SPC section
+    let spcData = dataEquals(DATASETS.SPC.DATA, 'ENTITY', entity)
+    let testCookies = JSON.parse(getCookie(TEST_NAME_COOKIE))
+    if (testCookies.length > 0) {
+        spcData = dataIn(spcData, 'FILTER', testCookies)
+    }
+    buildSPCSection(spcData)
 
     // add Entity History section
 
@@ -543,7 +525,7 @@ function pamTable(entity) {
 
 
 // Attach modal open to Equipment Groups nav link
-function initSelect2() {
+function initNavComponents() {
     // Initialize select2 with dropdownParent set to modal for correct stacking
     $('#ceid-multiselect').select2({
         placeholder: "Select CEIDs",
@@ -560,6 +542,15 @@ function initSelect2() {
             showEquipmentModal();
         });
     }
+
+    // Attach to Test Names link in side nav
+    const testLink = Array.from(document.querySelectorAll('.side-nav a')).find(a => a.textContent.trim() === 'SPC Test Selection');
+    if (testLink) {
+        testLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            showTestModal();
+        });
+    }
 }
 
 function initEqModal() {
@@ -569,6 +560,63 @@ function initEqModal() {
     document.getElementById('equipment-modal').addEventListener('click', function (e) {
         if (e.target === this) hideEquipmentModal();
     });
+}
+
+
+// Show modal and update select2 with CEIDs from cookie
+function showEquipmentModal() {
+    document.getElementById('equipment-modal').style.display = 'flex';
+    setTimeout(() => {
+        // Get selected CEIDs from cookie
+        let selected = getCookie(CEID_COOKIE);
+        let selectedArr = [];
+        if (selected) {
+            try { selectedArr = JSON.parse(selected); } catch { }
+        }
+        $('#ceid-multiselect').val(selectedArr).trigger('change');
+        $('#ceid-multiselect').select2('open');
+    }, 100);
+}
+
+// Hide modal and update cookie with current select2 values
+function hideEquipmentModal() {
+    const selected = $('#ceid-multiselect').val() || [];
+    setCookie(CEID_COOKIE, JSON.stringify(selected));
+    document.getElementById('equipment-modal').style.display = 'none';
+    $('#ceid-multiselect').select2('close');
+    checkAndQuery() ? monitorStatus() : alert('Failed to query data.')
+}
+
+function initTestSelectModal() {
+    // Modal open/close event handlers
+    document.getElementById('test-modal').addEventListener('click', function (e) {
+        if (e.target === this) hideTestModal();
+    });
+}
+
+// Show modal and update form with test names from cookie
+function showTestModal() {
+    document.getElementById('test-modal').style.display = 'flex';
+    // load test unique test names and maybe a few other columns for clarity
+    setTimeout(() => {
+        // Get selected TestNames from cookie
+
+        let selected = getCookie(TEST_NAME_COOKIE);
+        let selectedArr = [];
+        if (selected) {
+            try { selectedArr = JSON.parse(selected); } catch { }
+        }
+        buildTestFilter(selectedArr)
+
+
+
+    }, 100);
+}
+
+// Hide modal and update cookie with current select2 values
+function hideTestModal() {
+    document.getElementById('test-modal').style.display = 'none';
+    parseData()
 }
 
 
@@ -800,6 +848,11 @@ function loadData(map) {
                 // Filter the data by paramName and paramValue
                 map.DATA = cleanData(data.value)
                 map.LOADED = true
+                if (map.DATASET_NAME === 'SPC') {
+                    map.DATA.forEach(row => {
+                        row['FILTER'] = `${row.MONITOR_SET_NAME} - ${row.MODULE_MONITOR} - ${row.TEST_NAME}`
+                    })
+                }
             } catch (e) {
                 console.error('Error parsing dataset:', e);
                 map.LOADED = false
@@ -907,7 +960,7 @@ function loadPage() {
     //     Finally: Monitor 'LOADED' and 'ERROR' status of datasets and take action when all are completed.
 
     // Step 1
-    initSelect2()
+    initNavComponents()
     initEqModal()
 
     // Step 2
@@ -1029,6 +1082,10 @@ function spcFilter() {
     return list
 }
 
+function testFilter(filter) {
+    return dataEquals(DATASETS.SPC.DATA, "FILTER", filter)
+}
+
 function analyzeCandidates() {
     let filter = spcFilter()
     let passingFilter = []
@@ -1057,8 +1114,112 @@ function analyzeCandidates() {
             passingFilter.push(entity)
         }
     })
-        DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA, 'ENTITY', passingFilter)
+    DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA, 'ENTITY', passingFilter)
 
     parseData()
 }
+
+
+function buildTestFilter(spcData) {
+
+    if (spcData.length === 0) {
+        spcData = unique(DATASETS.SPC.DATA, 'FILTER')
+    }
+
+    const container = document.getElementById('spc-filter-container');
+    container.innerHTML = '';
+
+    // Get filter box
+    const filterBox = document.getElementBy('test-filter-box');
+    filterBox.className = 'spc-filter-box';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'spc-filter-header';
+    header.innerHTML = `<svg width="22" height="22" style="vertical-align:middle;margin-right:0.2em;" viewBox="0 0 24 24" fill="none"><path d="M3 5h18M6 10h12M10 15h4" stroke="#00baff" stroke-width="2" stroke-linecap="round"/></svg>Filter`;
+    filterBox.appendChild(header);
+
+    // "Select All" checkbox
+    const selectAllDiv = document.createElement('div');
+    selectAllDiv.className = 'spc-filter-select-all';
+    const selectAll = document.createElement('input');
+    selectAll.type = 'checkbox';
+    selectAll.checked = true;
+    selectAll.id = 'spc-filter-select-all';
+    selectAll.className = 'spc-filter-checkbox';
+    selectAllDiv.appendChild(selectAll);
+    const selectAllLabel = document.createElement('label');
+    selectAllLabel.textContent = 'Select All';
+    selectAllLabel.htmlFor = selectAll.id;
+    selectAllLabel.className = 'spc-filter-label';
+    selectAllDiv.appendChild(selectAllLabel);
+    filterBox.appendChild(selectAllDiv);
+
+    // Centered info string under Select All
+    const infoDiv = document.createElement('div');
+    infoDiv.textContent = "Monitor Set Name - Module Monitor - Test Name";
+    infoDiv.style.textAlign = "center";
+    infoDiv.style.fontSize = "1.08rem";
+    infoDiv.style.color = "#0068b5";
+    infoDiv.style.fontWeight = "500";
+    infoDiv.style.margin = "0 0 0.7rem 0";
+    filterBox.appendChild(infoDiv);
+
+    // List of checkboxes
+    const listDiv = document.createElement('div');
+    listDiv.className = 'spc-filter-list';
+
+    // Helper to log selected items
+    function logSelected() {
+        const selected = Array.from(listDiv.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(cb => cb.value);
+        setCookie(TEST_NAME_COOKIE, JSON.stringify(selected));
+    }
+
+    spcData.forEach((item, idx) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'spc-filter-item';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        checkbox.id = 'spc-filter-' + idx;
+        checkbox.value = item;
+        checkbox.className = 'spc-filter-checkbox';
+
+        checkbox.addEventListener('change', function () {
+            // If any are unchecked, uncheck select all
+            if (!checkbox.checked) {
+                selectAll.checked = false;
+            } else {
+                // If all are checked, check select all
+                const all = Array.from(listDiv.querySelectorAll('input[type="checkbox"]'));
+                if (all.every(cb => cb.checked)) {
+                    selectAll.checked = true;
+                }
+            }
+            logSelected();
+        });
+
+        const label = document.createElement('label');
+        label.textContent = item;
+        label.htmlFor = checkbox.id;
+        label.className = 'spc-filter-label';
+
+        itemDiv.appendChild(checkbox);
+        itemDiv.appendChild(label);
+        listDiv.appendChild(itemDiv);
+    });
+
+    // Select All logic
+    selectAll.addEventListener('change', function () {
+        const all = Array.from(listDiv.querySelectorAll('input[type="checkbox"]'));
+        all.forEach(cb => cb.checked = selectAll.checked);
+        logSelected();
+    });
+
+    filterBox.appendChild(listDiv);
+    container.appendChild(filterBox);
+}
+
 

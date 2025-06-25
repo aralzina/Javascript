@@ -221,132 +221,277 @@ tr:nth-child(even) {
 }
 
 /* Loading animation */
- #loading-overlay {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.85);
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        .robot-loader {
-            position: relative;
-            width: 180px;
-            height: 180px;
-            margin-bottom: 2.4rem;
-        }
-        /* Robot body */
-        .robot-body {
-            position: absolute;
-            left: 44px; top: 60px;
-            width: 92px; height: 76px;
-            background: #e6f1fa;
-            border: 6px solid #0068b5;
-            border-radius: 24px 24px 32px 32px;
-            z-index: 2;
-        }
-        /* Robot head */
-        .robot-head {
-            position: absolute;
-            left: 60px; top: 20px;
-            width: 60px; height: 44px;
-            background: #e6f1fa;
-            border: 6px solid #0068b5;
-            border-radius: 24px 24px 20px 20px;
-            z-index: 3;
-        }
-        /* Eyes */
-        .robot-eye {
-            position: absolute;
-            top: 36px;
-            width: 12px; height: 12px;
-            background: #0068b5;
-            border-radius: 50%;
-            z-index: 4;
-            animation: blink 2.2s infinite;
-        }
-        .robot-eye.left { left: 76px; }
-        .robot-eye.right { left: 104px; }
-        @keyframes blink {
-            0%, 90%, 100% { opacity: 1; }
-            92%, 98% { opacity: 0.2; }
-        }
-        /* Smile */
-        .robot-smile {
-            position: absolute;
-            left: 84px; top: 56px;
-            width: 28px; height: 14px;
-            border-bottom: 4px solid #00baff;
-            border-radius: 0 0 20px 20px;
-        }
-        /* Antenna */
-        .robot-antenna {
-            position: absolute;
-            left: 88px; top: 4px;
-            width: 8px; height: 24px;
-            background: #00baff;
-            border-radius: 4px;
-            z-index: 5;
-            animation: antenna-bounce 1.2s infinite alternate;
-        }
-        .robot-antenna-ball {
-            position: absolute;
-            left: 88px; top: -4px;
-            width: 16px; height: 16px;
-            background: #00baff;
-            border-radius: 50%;
-            z-index: 6;
-            animation: antenna-bounce 1.2s infinite alternate;
-        }
-        @keyframes antenna-bounce {
-            0% { transform: translateY(0);}
-            100% { transform: translateY(8px);}
-        }
-        /* Chest Intel logo */
-        .robot-logo {
-            position: absolute;
-            left: 94px; top: 96px;
-            width: 32px; height: 24px;
-            background: #fff;
-            border: 3px solid #00baff;
-            border-radius: 14px 14px 14px 14px/12px 12px 12px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Segoe UI, Arial, sans-serif;
-            font-size: 16px;
-            font-weight: bold;
-            color: #0068b5;
-            z-index: 7;
-            letter-spacing: -1px;
-        }
-        /* Animated spinning gear */
-        .robot-gear {
-            position: absolute;
-            left: 140px; top: 120px;
-            width: 36px; height: 36px;
-            z-index: 1;
-            animation: spin 1.2s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        /* Loading text */
-        .loading-text {
-            color: #0068b5;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 2.6rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-align: center;
-            margin-top: 1rem;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+#loading-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 
-        
+.robot-loader {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin-bottom: 2.4rem;
+}
+
+/* Robot body */
+.robot-body {
+    position: absolute;
+    left: 44px;
+    top: 60px;
+    width: 92px;
+    height: 76px;
+    background: #e6f1fa;
+    border: 6px solid #0068b5;
+    border-radius: 24px 24px 32px 32px;
+    z-index: 2;
+}
+
+/* Robot head */
+.robot-head {
+    position: absolute;
+    left: 60px;
+    top: 20px;
+    width: 60px;
+    height: 44px;
+    background: #e6f1fa;
+    border: 6px solid #0068b5;
+    border-radius: 24px 24px 20px 20px;
+    z-index: 3;
+}
+
+/* Eyes */
+.robot-eye {
+    position: absolute;
+    top: 36px;
+    width: 12px;
+    height: 12px;
+    background: #0068b5;
+    border-radius: 50%;
+    z-index: 4;
+    animation: blink 2.2s infinite;
+}
+
+.robot-eye.left {
+    left: 76px;
+}
+
+.robot-eye.right {
+    left: 104px;
+}
+
+@keyframes blink {
+
+    0%,
+    90%,
+    100% {
+        opacity: 1;
+    }
+
+    92%,
+    98% {
+        opacity: 0.2;
+    }
+}
+
+/* Smile */
+.robot-smile {
+    position: absolute;
+    left: 84px;
+    top: 56px;
+    width: 28px;
+    height: 14px;
+    border-bottom: 4px solid #00baff;
+    border-radius: 0 0 20px 20px;
+}
+
+/* Antenna */
+.robot-antenna {
+    position: absolute;
+    left: 88px;
+    top: 4px;
+    width: 8px;
+    height: 24px;
+    background: #00baff;
+    border-radius: 4px;
+    z-index: 5;
+    animation: antenna-bounce 1.2s infinite alternate;
+}
+
+.robot-antenna-ball {
+    position: absolute;
+    left: 88px;
+    top: -4px;
+    width: 16px;
+    height: 16px;
+    background: #00baff;
+    border-radius: 50%;
+    z-index: 6;
+    animation: antenna-bounce 1.2s infinite alternate;
+}
+
+@keyframes antenna-bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(8px);
+    }
+}
+
+/* Chest Intel logo */
+.robot-logo {
+    position: absolute;
+    left: 94px;
+    top: 96px;
+    width: 32px;
+    height: 24px;
+    background: #fff;
+    border: 3px solid #00baff;
+    border-radius: 14px 14px 14px 14px/12px 12px 12px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Segoe UI, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0068b5;
+    z-index: 7;
+    letter-spacing: -1px;
+}
+
+/* Animated spinning gear */
+.robot-gear {
+    position: absolute;
+    left: 140px;
+    top: 120px;
+    width: 36px;
+    height: 36px;
+    z-index: 1;
+    animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading text */
+.loading-text {
+    color: #0068b5;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 2.6rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin-top: 1rem;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* SPC Filter Box Styles */
+.spc-filter-box {
+    border: 1.5px solid #00baff;
+    border-radius: 14px;
+    padding: 2rem 2.5rem 1.5rem 2.5rem;
+    background: #fff;
+    width: 420px;
+    margin: 3rem 0;
+    box-shadow: 0 4px 24px rgba(0, 104, 181, 0.08);
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.spc-filter-header {
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: #0068b5;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.spc-filter-select-all {
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1.08rem;
+    color: #0068b5;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+
+.spc-filter-list {
+    max-height: 320px;
+    overflow-y: auto;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 0.7rem;
+}
+
+.spc-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.3em 0;
+    border-radius: 6px;
+    transition: background 0.15s;
+    cursor: pointer;
+}
+
+.spc-filter-item:hover {
+    background: #e6f1fa;
+}
+
+.spc-filter-checkbox {
+    accent-color: #00baff;
+    width: 1.1em;
+    height: 1.1em;
+    cursor: pointer;
+}
+
+.spc-filter-label {
+    font-size: 1.01rem;
+    color: #222;
+    cursor: pointer;
+    user-select: none;
+    flex: 1;
+    white-space: pre-line;
+}
+
+/* Custom scrollbar for filter list */
+.spc-filter-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.spc-filter-list::-webkit-scrollbar-thumb {
+    background: #cce6fa;
+    border-radius: 4px;
+}
+
+.spc-filter-list::-webkit-scrollbar-track {
+    background: #f4f8fb;
+}
