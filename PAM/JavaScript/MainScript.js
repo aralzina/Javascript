@@ -328,12 +328,12 @@ function pamTable(entity) {
     try {
         if (testCookies.length > 0) {
             spcData = dataIn(spcData, 'FILTER', testCookies)
-            if(spcData.length === 0){
+            if (spcData.length === 0) {
                 // clear filters if no spc data after filter applied
-                spcData = dataEquals(DATASETS.SPC.DATA,"ENTITY",entity)
+                spcData = dataEquals(DATASETS.SPC.DATA, "ENTITY", entity)
             }
         }
-    }catch (e) { }
+    } catch (e) { }
     buildSPCSection(spcData)
 
     // add Entity History section
@@ -366,7 +366,7 @@ function pamTable(entity) {
                 if (SPCbody.length === 0) {
                     tr = create('tr')
                     thead.appendChild(tr)
-                    th = create('th', { colspan: "13" }, { textContent: 'SPC' })
+                    th = create('th', { colspan: "14" }, { textContent: 'SPC' })
                     tr.appendChild(th)
                 }
 
@@ -375,8 +375,9 @@ function pamTable(entity) {
                 thead.appendChild(tr)
 
                 tr.append(
-                    create('th', { rowspan: '3' }, { textContent: 'Test Name' }),
+                    create('th', { rowspan: '3' }, { textContent: 'Module Monitor' }),
                     create('th', { rowspan: '3' }, { textContent: 'Monitor Set Name' }),
+                    create('th', { rowspan: '3' }, { textContent: 'Measurement Set Name' }),
                     create('th', { rowspan: '3' }, { textContent: 'Chart Type' }),
                     create('th', { rowspan: '3' }, { textContent: 'Chart Subset' }),
                     create('th', { colspan: `${(uniqueDates.length * 2).toString()}` }, { textContent: `Last ${uniqueDates.length.toString()} Run(s)` })
@@ -402,8 +403,8 @@ function pamTable(entity) {
                 SPCbody.push(thead)
 
 
-                // all test names and monitor set names will be the same for this block of data
-                tnLabel = tempData[0].TEST_NAME
+                // all module monitor and monitor set names will be the same for this block of data
+                tnLabel = tempData[0].MODULE_MONITOR
                 msnLabel = tempData[0].MONITOR_SET_NAME
 
                 // make the body and append it to the spc body array
@@ -414,7 +415,7 @@ function pamTable(entity) {
                 for (let i = tempData.length - 1; i >= 0; i--) {
 
                     let row = tempData[i]
-                    let key = row.CHART_TYPE + row.SPC_CHART_SUBSET
+                    let key = row.MEASUREMENT_SET_NAME + row.CHART_TYPE + row.SPC_CHART_SUBSET
                     let status
 
                     // add map
@@ -434,6 +435,7 @@ function pamTable(entity) {
 
                         // add next columns 
                         bodyRows[key].append(
+                            create('td', {}, { textContent: row.MEASUREMENT_SET_NAME }),
                             create('td', {}, { textContent: row.CHART_TYPE }),
                             create('td', {}, { textContent: row.SPC_CHART_SUBSET }),
                         )
@@ -550,7 +552,7 @@ function initNavComponents() {
     }
 
     // Attach to Test Names link in side nav
-    const testLink = Array.from(document.querySelectorAll('.side-nav a')).find(a => a.textContent.trim() === 'SPC Test Selection');
+    const testLink = Array.from(document.querySelectorAll('.side-nav a')).find(a => a.textContent.trim() === 'SPC Chart Filter');
     if (testLink) {
         testLink.addEventListener('click', function (e) {
             e.preventDefault();
@@ -1129,11 +1131,11 @@ function analyzeCandidates() {
 
 function buildTestFilter(filters) {
 
-   
-        spcData = unique(DATASETS.SPC.DATA, 'FILTER')
-    
 
-    
+    spcData = unique(DATASETS.SPC.DATA, 'FILTER')
+
+
+
 
     // Get filter box
     const filterBox = document.getElementById('test-filter-box');
@@ -1189,7 +1191,7 @@ function buildTestFilter(filters) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        !filters.includes(item) && filters > 0? checkbox.checked = false : checkbox.checked = true;
+        !filters.includes(item) && filters > 0 ? checkbox.checked = false : checkbox.checked = true;
         checkbox.id = 'spc-filter-' + idx;
         checkbox.value = item;
         checkbox.className = 'spc-filter-checkbox';
