@@ -312,12 +312,14 @@ function stringsLike(arr, matchArr) {
 
 function getPrefix(arr, n) {
     var results = []
-    arr.forEach(str => {
-        let slice = str.slice(0, n)
-        if (!results.includes(slice)) {
-            results.push(slice)
-        }
-    })
+    try {
+        arr.forEach(str => {
+            let slice = str.slice(0, n)
+            if (!results.includes(slice)) {
+                results.push(slice)
+            }
+        })
+    } catch (e) { return [] }
     return results
 }
 
@@ -811,10 +813,10 @@ function checkAndQuery() {
     // check cookies to initiate queries
     try {
         let ceidList = []
-        try{    
-            ceidList = getPrefix(JSON.parse(getCookie(CEID_COOKIE)),3)
-        }catch(e){
-            ceidList = getPrefix(CEID_LIST,3)
+
+        ceidList = getPrefix(JSON.parse(getCookie(CEID_COOKIE)), 3)
+        if (ceidList.length === 0) {
+            ceidList = getPrefix(CEID_LIST, 3)
         }
         return ceidList.length === 0 ? f() : t()
 
