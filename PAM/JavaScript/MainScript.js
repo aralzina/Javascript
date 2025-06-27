@@ -82,14 +82,7 @@ function hideLoading() {
  * This function also begins loading the page.
  */
 window.addEventListener('DOMContentLoaded', function () {
-    setTimeout(function () {
-        var header = document.querySelector('.pam-header');
-        if (header) {
-            header.classList.add('expanded');
-        }
-    }, PAM_HEADER_EXPAND_DELAY_MS);
     loadPage()
-
 });
 
 
@@ -859,6 +852,9 @@ function loadData(map) {
                 if (map.DATASET_NAME === 'SPC') {
                     map.DATA.forEach(row => {
                         row['FILTER'] = `${row.MONITOR_SET_NAME} - ${row.MODULE_MONITOR} - ${row.TEST_NAME}`
+                        if(row['ZONE'] === "999"){
+                            row['ZONE'] = " - "
+                        }
                     })
                 }
             } catch (e) {
@@ -1073,6 +1069,14 @@ function parseData() {
     }
     // hide loading overlay
     hideLoading()
+
+    // activate header animation
+     setTimeout(function () {
+        var header = document.querySelector('.pam-header');
+        if (header) {
+            header.classList.add('expanded');
+        }
+    }, PAM_HEADER_EXPAND_DELAY_MS);
 }
 
 function filterData() {
