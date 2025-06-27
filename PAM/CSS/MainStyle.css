@@ -416,7 +416,7 @@ tr:nth-child(even) {
     border-radius: 14px;
     padding: 2rem 2.5rem 1.5rem 2.5rem;
     background: #fff;
-    width: 420px;
+    width: auto;
     margin: 3rem 0;
     box-shadow: 0 4px 24px rgba(0, 104, 181, 0.08);
     font-family: 'Segoe UI', Arial, sans-serif;
