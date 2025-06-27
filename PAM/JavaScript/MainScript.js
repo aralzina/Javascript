@@ -810,7 +810,7 @@ function checkAndQuery() {
 
     // check cookies to initiate queries
     try {
-        let ceidList = JSON.parse(getCookie(CEID_COOKIE))
+        let ceidList = getPrefix(JSON.parse(getCookie(CEID_COOKIE)),3)
         return ceidList.length === 0 ? f() : t()
 
     } catch (e) {
