@@ -811,18 +811,17 @@ function initTables() {
 function checkAndQuery() {
 
     // check cookies to initiate queries
-    try {
-        let ceidList = []
 
-        ceidList = getPrefix(JSON.parse(getCookie(CEID_COOKIE)), 3)
-        if (ceidList.length === 0) {
-            ceidList = getPrefix(CEID_LIST, 3)
-        }
-        return ceidList.length === 0 ? f() : t()
+    let ceidList = []
 
-    } catch (e) {
-        alert(ERROR_MESSAGES["2"])
+    ceidList = getPrefix(JSON.parse(getCookie(CEID_COOKIE)), 3)
+    if (ceidList.length === 0) {
+        ceidList = getPrefix(CEID_LIST, 3)
+        return f()
     }
+    return t()
+
+
 
     function t() {
         // add parameter value to DATASETS
