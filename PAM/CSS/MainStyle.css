@@ -195,6 +195,7 @@ tr:nth-child(even) {
 .subtable td {
     border: 1px solid #cce6fa;
     padding: 0.5rem 1rem;
+    white-space: pre;
 }
 
 .subtable th {
