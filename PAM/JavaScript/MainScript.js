@@ -372,7 +372,7 @@ function pamTable(entity) {
             testNames.forEach((val) => {
 
                 // vars
-                let tempData, tnLabel, msnLabel, thead, tbody, tr, th, uniqueDates, bodyRows
+                let tempData, chartCategory, msnLabel, thead, tbody, tr, th, uniqueDates, bodyRows
 
                 // filter down data
                 tempData = dataEquals(SPCdata, 'TEST_NAME', val)
@@ -394,8 +394,8 @@ function pamTable(entity) {
                 thead.appendChild(tr)
 
                 tr.append(
-                    create('th', { rowspan: '3' }, { textContent: 'Module Monitor' }),
                     create('th', { rowspan: '3' }, { textContent: 'Monitor Set Name' }),
+                    create('th', { rowspan: '3' }, { textContent: 'Chart Category' }),
                     create('th', { rowspan: '3' }, { textContent: 'Measurement Set Name' }),
                     create('th', { rowspan: '3' }, { textContent: 'Chart Type' }),
                     create('th', { rowspan: '3' }, { textContent: 'Chart Subset' }),
@@ -423,7 +423,17 @@ function pamTable(entity) {
 
 
                 // all module monitor and monitor set names will be the same for this block of data
-                tnLabel = tempData[0].MODULE_MONITOR
+                chartCategory = ''
+                var categoryNames = ['CHEM', 'MODULE_MONITOR', 'SAMPLING_TYPE', 'SUBSTRATE']
+                categoryNames.forEach(cat => {
+                    if (tempData[0][cat].length > 0) {
+                        chartCategory = `${chartCategory}${cat}: ${tempData[0][cat]}`
+                        if (cat !== categoryNames[categoryNames.length - 1]) {
+                            chartCategory = `${chartCategory}\r\n`
+                        }
+                    }
+                })
+
                 msnLabel = tempData[0].MONITOR_SET_NAME
 
                 // make the body and append it to the spc body array
@@ -447,8 +457,8 @@ function pamTable(entity) {
                         // add first two columns only if very first row
                         if (veryFirstRow) {
                             bodyRows[key].append(
-                                create('td', { rowspan: tempData.length.toString() }, { textContent: tnLabel }),
-                                create('td', { rowspan: tempData.length.toString() }, { textContent: msnLabel })
+                                create('td', { rowspan: tempData.length.toString() }, { textContent: msnLabel }),
+                                create('td', { rowspan: tempData.length.toString() }, { textContent: chartCategory })
                             )
                         }
 
@@ -881,8 +891,15 @@ function loadData(map) {
                 map.LOADED = true
                 if (map.DATASET_NAME === 'SPC') {
                     map.DATA.forEach(row => {
-                        row['FILTER'] = `${row.MONITOR_SET_NAME} - ${row.MODULE_MONITOR} - ${row.TEST_NAME}`
-                        if (row['ZONE'] === "999") {
+                        var chartCategory = ''
+                        var categoryNames = ['CHEM', 'MODULE_MONITOR', 'SAMPLING_TYPE', 'SUBSTRATE']
+                        categoryNames.forEach(cat => {
+                            if (row[cat].length > 0) {
+                                chartCategory = `${chartCategory}${row[cat]} - `
+                            }
+                        })
+                        row['FILTER'] = `${row.MONITOR_SET_NAME} - ${chartCategory}${row.TEST_NAME}`
+                        if (row['ZONE'] === "999" || row['ZONE'] === '99') {
                             row['ZONE'] = " - "
                         }
                     })
