@@ -298,6 +298,30 @@ function addProp(element, args) {
     return element
 }
 
+function stringsLike(arr, matchArr) {
+    var results = []
+    arr.forEach(str => {
+        matchArr.forEach(match => {
+            if (str.includes(match)) {
+                results.push(str)
+            }
+        })
+    })
+    return results
+}
+
+function getPrefix(arr, n) {
+    var results = []
+    arr.forEach(str => {
+        let slice = str.slice(0, n)
+        if (!results.includes(slice)) {
+            results.push(slice)
+        }
+    })
+    return results
+}
+
+
 function pamTable(entity) {
     // Create the main table element
     let parentTable, testNames, sections, SPCbody;
@@ -533,7 +557,7 @@ function initNavComponents() {
         width: 'resolve',
         dropdownParent: $('#equipment-modal')
     });
-    populateCEIDMultiselect(CEID_LIST);
+    populateCEIDMultiselect(getPrefix(CEID_LIST, 3));
 
     // Attach to Equipment Groups link in side nav
     const eqLink = Array.from(document.querySelectorAll('.side-nav a')).find(a => a.textContent.trim() === 'Equipment Groups');
@@ -572,7 +596,7 @@ function showEquipmentModal() {
         let selected = getCookie(CEID_COOKIE);
         let selectedArr = [];
         if (selected) {
-            try { selectedArr = JSON.parse(selected); } catch { }
+            try { selectedArr = getPrefix(JSON.parse(selected), 3); } catch { }
         }
         $('#ceid-multiselect').val(selectedArr).trigger('change');
         $('#ceid-multiselect').select2('open');
@@ -582,7 +606,7 @@ function showEquipmentModal() {
 // Hide modal and update cookie with current select2 values
 function hideEquipmentModal() {
     const selected = $('#ceid-multiselect').val() || [];
-    setCookie(CEID_COOKIE, JSON.stringify(selected));
+    setCookie(CEID_COOKIE, JSON.stringify(stringsLike(CEID_LIST, selected)));
     document.getElementById('equipment-modal').style.display = 'none';
     $('#ceid-multiselect').select2('close');
     checkAndQuery() ? monitorStatus() : alert('Failed to query data.')
@@ -852,7 +876,7 @@ function loadData(map) {
                 if (map.DATASET_NAME === 'SPC') {
                     map.DATA.forEach(row => {
                         row['FILTER'] = `${row.MONITOR_SET_NAME} - ${row.MODULE_MONITOR} - ${row.TEST_NAME}`
-                        if(row['ZONE'] === "999"){
+                        if (row['ZONE'] === "999") {
                             row['ZONE'] = " - "
                         }
                     })
@@ -1071,7 +1095,7 @@ function parseData() {
     hideLoading()
 
     // activate header animation
-     setTimeout(function () {
+    setTimeout(function () {
         var header = document.querySelector('.pam-header');
         if (header) {
             header.classList.add('expanded');
