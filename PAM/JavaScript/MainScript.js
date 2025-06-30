@@ -385,7 +385,7 @@ function pamTable(entity) {
                 if (SPCbody.length === 0) {
                     tr = create('tr')
                     thead.appendChild(tr)
-                    th = create('th', { colspan: "14" }, { textContent: 'SPC' })
+                    th = create('th', { colspan: "14" ,style:'text-align: center; font-size: 2em;'}, { textContent: 'SPC' })
                     tr.appendChild(th)
                 }
 
@@ -512,7 +512,7 @@ function pamTable(entity) {
         var headerRow = document.createElement('tr');
         const columns = ['WORKORDERID', 'STATUSOPTIONNAME', 'DESCRIPTION', 'CREATEDON', 'LASTUPDATEDON','PROCESS','MONITORNAME','DEFECTTYPE','TRACERROOTCAUSE','RULENAME'];
 
-        var th = create('th', { colspan: columns.length }, { textContent: 'Work Orders' });
+        var th = create('th', { colspan: columns.length, style:'text-align: center; font-size: 2em;'}, { textContent: 'Work Orders' });
         headerRow.appendChild(th);
         thead.appendChild(headerRow);
 
