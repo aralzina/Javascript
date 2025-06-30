@@ -510,7 +510,7 @@ function pamTable(entity) {
         const table = create('table')
         const thead = document.createElement('thead');
         var headerRow = document.createElement('tr');
-        const columns = ['WORKORDERID', 'STATUSOPTIONNAME', 'DESCRIPTION', 'CREATEDON', 'LASTUPDATEDON'];
+        const columns = ['WORKORDERID', 'STATUSOPTIONNAME', 'DESCRIPTION', 'CREATEDON', 'LASTUPDATEDON','PROCESS','MONITORNAME','DEFECTTYPE','TRACERROOTCAUSE','RULENAME'];
 
         var th = create('th', { colspan: columns.length }, { textContent: 'Work Orders' });
         headerRow.appendChild(th);
@@ -530,10 +530,16 @@ function pamTable(entity) {
         const tbody = document.createElement('tbody');
         data.forEach(row => {
             const tr = document.createElement('tr');
+            if(row.MONITORNAME.length > 0){
+                tr.style.backgroundColor = '#FEA0A0'
+            }
             columns.forEach(col => {
                 const td = document.createElement('td');
                 td.style = "white-space: pre-wrap;"
                 td.textContent = row[col] !== undefined ? row[col].replaceAll('<br>', '\n') : '';
+                if(row[col].length === 0){
+                    td.style.backgroundColor = 'lightgrey';
+                }
                 tr.appendChild(td);
                 if (col === "WORKORDERID") {
                     td.textContent = ''; // Clear text content for the link
