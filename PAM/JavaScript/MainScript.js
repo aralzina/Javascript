@@ -905,7 +905,7 @@ function loadData(map) {
                             }
                         })
                         row['FILTER'] = `${row.MONITOR_SET_NAME} - ${chartCategory}${row.TEST_NAME}`
-                        if (row['ZONE'] === "999" || row['ZONE'] === '99') {
+                        if (row['ZONE'] === "999" || row['ZONE'] === '99' || row['ZONE'] === '-99' || row['ZONE'] === '-999') {
                             row['ZONE'] = " - "
                         }
                     })
