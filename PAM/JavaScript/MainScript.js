@@ -385,7 +385,7 @@ function pamTable(entity) {
                 if (SPCbody.length === 0) {
                     tr = create('tr')
                     thead.appendChild(tr)
-                    th = create('th', { colspan: "14" ,style:'text-align: center; font-size: 2em;'}, { textContent: 'SPC' })
+                    th = create('th', { colspan: "14", style: 'text-align: center; font-size: 2em;' }, { textContent: 'SPC' })
                     tr.appendChild(th)
                 }
 
@@ -510,9 +510,9 @@ function pamTable(entity) {
         const table = create('table')
         const thead = document.createElement('thead');
         var headerRow = document.createElement('tr');
-        const columns = ['WORKORDERID', 'STATUSOPTIONNAME', 'DESCRIPTION', 'CREATEDON', 'LASTUPDATEDON','PROCESS','MONITORNAME','DEFECTTYPE','TRACERROOTCAUSE','RULENAME'];
+        const columns = ['WORKORDERID', 'STATUSOPTIONNAME', 'DESCRIPTION', 'CREATEDON', 'LASTUPDATEDON', 'PROCESS', 'MONITORNAME', 'DEFECTTYPE', 'TRACERROOTCAUSE', 'RULENAME'];
 
-        var th = create('th', { colspan: columns.length, style:'text-align: center; font-size: 2em;'}, { textContent: 'Work Orders' });
+        var th = create('th', { colspan: columns.length, style: 'text-align: center; font-size: 2em;' }, { textContent: 'Work Orders' });
         headerRow.appendChild(th);
         thead.appendChild(headerRow);
 
@@ -530,14 +530,14 @@ function pamTable(entity) {
         const tbody = document.createElement('tbody');
         data.forEach(row => {
             const tr = document.createElement('tr');
-            if(row.MONITORNAME.length > 0){
+            if (row.MONITORNAME.length > 0) {
                 tr.style.backgroundColor = '#FEA0A0'
             }
             columns.forEach(col => {
                 const td = document.createElement('td');
                 td.style = "white-space: pre-wrap;"
                 td.textContent = row[col] !== undefined ? row[col].replaceAll('<br>', '\n') : '';
-                if(row[col].length === 0){
+                if (row[col].length === 0) {
                     td.style.backgroundColor = 'lightgrey';
                 }
                 tr.appendChild(td);
@@ -651,15 +651,13 @@ function showTestModal() {
         }
         buildTestFilter(selectedArr)
 
-
-
     }, 100);
 }
 
 // Hide modal and update cookie with current select2 values
 function hideTestModal() {
     document.getElementById('test-modal').style.display = 'none';
-    parseData()
+    analyzeCandidates()
 }
 
 
@@ -1138,32 +1136,34 @@ function filterData() {
 
 function spcFilter() {
     let data = DATASETS.SPC.DATA
-    let list = []
+    let cookie = getCookie(TEST_NAME_COOKIE)
 
-    data.forEach(row => {
-        if (!list.includes(row.ENTITY)) {
-            list.push(row.ENTITY)
-        }
-    })
-    return list
+    if (cookie) {
+        return dataIn(data, 'FILTER', JSON.parse(cookie))
+    }
+    return []
+
 }
 
-function testFilter(filter) {
-    return dataEquals(DATASETS.SPC.DATA, "FILTER", filter)
-}
 
 function analyzeCandidates() {
-    let filter = spcFilter()
+    let spcData = spcFilter()
     let passingFilter = []
+    let entities = unique(spcData, 'ENTITY')
 
-    DATASETS.ENTITY_LIST['BACKUP_DATA'] = DATASETS.ENTITY_LIST.DATA
-    DATASETS.ENTITY_LIST.DATA = dataIn(DATASETS.ENTITY_LIST.DATA, 'ENTITY', filter)
+    if (!DATASETS.ENTITY_LIST['BACKUP_DATA']) {
+        DATASETS.ENTITY_LIST['BACKUP_DATA'] = DATASETS.ENTITY_LIST.DATA
+    }
+
 
     // lets find out results from the last run of each
-    filter.forEach(entity => {
-        var entitySPCData = dataEquals(DATASETS.SPC.DATA, "ENTITY", entity)
+    entities.forEach(entity => {
+        var entitySPCData = dataEquals(spcData, "ENTITY", entity)
         var results = []
         var testNames = unique(entitySPCData, 'TEST_NAME')
+
+        // remove filtered test names
+
 
         // loop test names
         testNames.forEach(test => {
@@ -1248,7 +1248,7 @@ function buildTestFilter(filters) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        !filters.includes(item) && filters > 0 ? checkbox.checked = false : checkbox.checked = true;
+        !filters.includes(item) && filters.length > 0 ? checkbox.checked = false : checkbox.checked = true;
         checkbox.id = 'spc-filter-' + idx;
         checkbox.value = item;
         checkbox.className = 'spc-filter-checkbox';
