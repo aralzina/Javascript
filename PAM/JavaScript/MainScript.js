@@ -878,6 +878,9 @@ function resetFlags() {
 
     // Reset retry counter
     retry_counter = 0
+
+    // Reset backup data for ENTITY_LIST
+    DATASETS.ENTITY_LIST.BACKUP_DATA = null
 }
 
 
@@ -1200,8 +1203,15 @@ function analyzeCandidates() {
 function buildTestFilter(filters) {
 
 
-    spcData = unique(DATASETS.SPC.DATA, 'FILTER')
-
+    let spcData = unique(DATASETS.SPC.DATA, 'FILTER')
+    let emptySet = true
+    
+    // check to make sure that there is at least 1 test name in data from filters
+    spcData.forEach(tn=>{
+        if(filters.includes(tn)){
+            emptySet = false
+        }
+    })
 
 
 
@@ -1259,7 +1269,7 @@ function buildTestFilter(filters) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        !filters.includes(item) && filters.length > 0 ? checkbox.checked = false : checkbox.checked = true;
+        !filters.includes(item) && filters.length > 0 && !emptySet ? checkbox.checked = false : checkbox.checked = true;
         checkbox.id = 'spc-filter-' + idx;
         checkbox.value = item;
         checkbox.className = 'spc-filter-checkbox';
