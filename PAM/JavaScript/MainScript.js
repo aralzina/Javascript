@@ -63,6 +63,15 @@ const DATASETS = {
         ERROR: false,
         COOKIE_NAME: CEID_COOKIE
     },
+    COLLECTIVE_COMMENTS: {
+        PARAMETER_NAME: "ceids",
+        PARAMETER_VALUE: '',
+        DATASET_NAME: "COLLECTIVE_COMMENTS",
+        LOADED: false,
+        DATA: [],
+        ERROR: false,
+        COOKIE_NAME: CEID_COOKIE
+    },
 };
 
 
@@ -1153,6 +1162,8 @@ function analyzeCandidates() {
 
     if (!DATASETS.ENTITY_LIST['BACKUP_DATA']) {
         DATASETS.ENTITY_LIST['BACKUP_DATA'] = DATASETS.ENTITY_LIST.DATA
+    }else{
+        DATASETS.ENTITY_LIST.DATA = DATASETS.ENTITY_LIST.BACKUP_DATA
     }
 
 
