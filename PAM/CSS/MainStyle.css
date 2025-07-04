@@ -195,7 +195,6 @@ tr:nth-child(even) {
 .subtable td {
     border: 1px solid #cce6fa;
     padding: 0.5rem 1rem;
-    white-space: pre;
 }
 
 .subtable th {
@@ -417,7 +416,7 @@ tr:nth-child(even) {
     border-radius: 14px;
     padding: 2rem 2.5rem 1.5rem 2.5rem;
     background: #fff;
-    width: auto;
+    width: 420px;
     margin: 3rem 0;
     box-shadow: 0 4px 24px rgba(0, 104, 181, 0.08);
     font-family: 'Segoe UI', Arial, sans-serif;
@@ -495,4 +494,17 @@ tr:nth-child(even) {
 
 .spc-filter-list::-webkit-scrollbar-track {
     background: #f4f8fb;
+}
+
+#refresh-button{
+    width: 80%;
+    margin: 2px auto;
+    background: #e6f1fa;
+    box-shadow: gray 2px 2px 3px 0px;
+    color: #0068b5;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#refresh-button:hover{
+   background: cce6fa;
 }
