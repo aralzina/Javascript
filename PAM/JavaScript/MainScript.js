@@ -12,6 +12,19 @@ const ERROR_MESSAGES = {
     "2": "Error #2 - Exception occurred when checking for CEIDs. Please escalate this to the report owner by clicking email at the bottom of this page.",  // error message that pops up prompt
     "3": "Error #3 - Error creating table for " // error message when table fails to create
 }
+const VERSION = '1.0'
+const CHANGELOG = [
+    /* TEMPLATE
+    { 
+        DATE:'',
+        DESCRIPTION:''
+    },
+    */
+    {
+        DATE: '7/4/2025',
+        DESCRIPTION: 'Starting the changelog to record future changes.'
+    },
+]
 
 
 // CEID JSON list
@@ -578,6 +591,13 @@ function pamTable(entity) {
 
 // Attach modal open to Equipment Groups nav link
 function initNavComponents() {
+
+    // Wire refresh button
+    document.getElementById('refresh-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        checkAndQuery() ? monitorStatus() : alert('Failed to query data.')
+    })
+
     // Initialize select2 with dropdownParent set to modal for correct stacking
     $('#ceid-multiselect').select2({
         placeholder: "Select CEIDs",
@@ -603,6 +623,20 @@ function initNavComponents() {
             showTestModal();
         });
     }
+
+    // changelog modal init
+    const changelogLink = Array.from(document.querySelectorAll('.side-nav a')).find(a => a.textContent.trim() === 'Changelog');
+    if (changelogLink) {
+        changelogLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            showChangelogModal();
+        });
+    }
+
+    document.getElementById('close-changelog-modal').onclick = hideChangelogModal;
+    document.getElementById('changelog-modal').addEventListener('click', function (e) {
+        if (e.target === this) hideChangelogModal();
+    });
 }
 
 function initEqModal() {
@@ -668,6 +702,29 @@ function hideTestModal() {
     document.getElementById('test-modal').style.display = 'none';
     analyzeCandidates()
 }
+
+
+function showChangelogModal() {
+    const modal = document.getElementById('changelog-modal');
+    const content = document.getElementById('changelog-content');
+    if (typeof CHANGELOG !== "undefined" && Array.isArray(CHANGELOG)) {
+        content.innerHTML = CHANGELOG.map(entry => `
+          <div style="margin-bottom:1.2em;">
+            <div style="font-weight:bold; color:#0068b5;">${entry.DATE || ''}</div>
+            <div style="white-space:pre-line; color:#222;">${entry.DESCRIPTION || ''}</div>
+          </div>
+        `).join('');
+    } else {
+        content.innerHTML = "<em>No changelog data found.</em>";
+    }
+    modal.style.display = 'flex';
+}
+
+function hideChangelogModal() {
+    document.getElementById('changelog-modal').style.display = 'none';
+}
+
+
 
 
 // Helper: Extract chart attributes from all zone cells in the row
@@ -1165,7 +1222,7 @@ function analyzeCandidates() {
 
     if (!DATASETS.ENTITY_LIST['BACKUP_DATA']) {
         DATASETS.ENTITY_LIST['BACKUP_DATA'] = DATASETS.ENTITY_LIST.DATA
-    }else{
+    } else {
         DATASETS.ENTITY_LIST.DATA = DATASETS.ENTITY_LIST.BACKUP_DATA
     }
 
@@ -1205,10 +1262,10 @@ function buildTestFilter(filters) {
 
     let spcData = unique(DATASETS.SPC.DATA, 'FILTER')
     let emptySet = true
-    
+
     // check to make sure that there is at least 1 test name in data from filters
-    spcData.forEach(tn=>{
-        if(filters.includes(tn)){
+    spcData.forEach(tn => {
+        if (filters.includes(tn)) {
             emptySet = false
         }
     })
