@@ -506,5 +506,5 @@ tr:nth-child(even) {
     transition: background 0.2s;
 }
 #refresh-button:hover{
-   background: cce6fa;
+   background: #cce6fa;
 }
