@@ -48,7 +48,7 @@ const DATASETS = {
         ERROR: false,
         COOKIE_NAME: CEID_COOKIE,
         FILTER: []
-    },
+    },/*
     ENTITY_HISTORY: {
         PARAMETER_NAME: "ceids",
         PARAMETER_VALUE: '',
@@ -57,7 +57,7 @@ const DATASETS = {
         DATA: [],
         ERROR: false,
         COOKIE_NAME: CEID_COOKIE
-    },
+    },*/
     SPC: {
         PARAMETER_NAME: "ceids",
         PARAMETER_VALUE: '',
