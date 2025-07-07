@@ -161,6 +161,39 @@ function dataIn(data, key, values) {
 }
 
 /**
+   * Return a list of data where the key provided returns all values in the dataset that 
+   * are not provided in the array *values
+      Input is the raw data from an XMLHttpRequest
+   * @param {*} data 
+   * @param {string} key key name to filter on
+   * @param {Array|*} values values to include
+   * @returns {*}
+   */
+function dataNotIn (data, key, values) {
+  // fix simple error of values not being an array
+  values = !Array.isArray(values) ? [values] : values
+  let results = []
+  data.forEach(row => {
+    let check = row[key]
+    let found = false
+    //try {
+    values.forEach(val => {
+      if (val === check) {
+          found = true
+        //throw BreakException
+      }
+    })
+    if(!found){
+      results.push(row)
+    }
+    //} catch (e) {
+    // if (e !== BreakException) throw e
+    //}
+  })
+  return results
+}
+
+/**
  * Takes in data and column name and returns how many unique values are in the column
  * Function expects that the data from JSON.parse() 'data.value' will be supplied and that
  * the function only needs to reference data instead of data.value
@@ -242,6 +275,23 @@ function dataEquals(data, key, val, dataType) {
     return results
 }
 
+/**
+ * Return a list of data where the key value does not
+ * equal the supplied value
+ * @param {Array<Map>|*} data
+ * @param {string} key name of key with data to be excluded
+ * @param {*} val specific value of data to be excluded
+ * @returns
+ */
+function dataNotEquals (data, key, val) {
+  let results = []
+  data.forEach(row => {
+    if (row[key].toString().toUpperCase() !== val.toString().toUpperCase()) {
+      results.push(row)
+    }
+  })
+  return results
+}
 
 /**
  * Returns only data that matches the value provided
@@ -685,14 +735,14 @@ function showTestModal() {
     document.getElementById('test-modal').style.display = 'flex';
     // load test unique test names and maybe a few other columns for clarity
     setTimeout(() => {
-        // Get selected TestNames from cookie
+        // Get deselected TestNames from cookie
 
-        let selected = getCookie(TEST_NAME_COOKIE);
-        let selectedArr = [];
-        if (selected) {
-            try { selectedArr = JSON.parse(selected); } catch { }
+        let deselected = getCookie(TEST_NAME_COOKIE);
+        let deselectedArr = [];
+        if (deselected) {
+            try { deselectedArr = JSON.parse(deselected); } catch { }
         }
-        buildTestFilter(selectedArr)
+        buildTestFilter(deselectedArr)
 
     }, 100);
 }
@@ -1208,7 +1258,7 @@ function spcFilter() {
     let cookie = getCookie(TEST_NAME_COOKIE)
 
     if (cookie) {
-        return dataIn(data, 'FILTER', JSON.parse(cookie))
+        return dataNotIn(data, 'FILTER', JSON.parse(cookie))
     }
     return []
 
@@ -1315,7 +1365,7 @@ function buildTestFilter(filters) {
 
     // Helper to log selected items
     function logSelected() {
-        const selected = Array.from(listDiv.querySelectorAll('input[type="checkbox"]:checked'))
+        const selected = Array.from(listDiv.querySelectorAll('input[type="checkbox"]:not(:checked)'))
             .map(cb => cb.value);
         setCookie(TEST_NAME_COOKIE, JSON.stringify(selected));
     }
@@ -1326,7 +1376,7 @@ function buildTestFilter(filters) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        !filters.includes(item) && filters.length > 0 && !emptySet ? checkbox.checked = false : checkbox.checked = true;
+        filters.includes(item) ? checkbox.checked = false : checkbox.checked = true;
         checkbox.id = 'spc-filter-' + idx;
         checkbox.value = item;
         checkbox.className = 'spc-filter-checkbox';

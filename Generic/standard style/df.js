@@ -55,6 +55,39 @@ function dataIn (data, key, values) {
 }
 
 /**
+   * Return a list of data where the key provided returns all values in the dataset that 
+   * are not provided in the array *values
+      Input is the raw data from an XMLHttpRequest
+   * @param {*} data 
+   * @param {string} key key name to filter on
+   * @param {Array|*} values values to include
+   * @returns {*}
+   */
+function dataNotIn (data, key, values) {
+  // fix simple error of values not being an array
+  values = !Array.isArray(values) ? [values] : values
+  let results = []
+  data.forEach(row => {
+    let check = row[key]
+    let found = false
+    //try {
+    values.forEach(val => {
+      if (val === check) {
+          found = true
+        //throw BreakException
+      }
+    })
+    if(!found){
+      results.push(row)
+    }
+    //} catch (e) {
+    // if (e !== BreakException) throw e
+    //}
+  })
+  return results
+}
+
+/**
  * Return a list of data where the key value does not
  * equal the supplied value
  * @param {Array<Map>|*} data
