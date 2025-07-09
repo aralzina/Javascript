@@ -1362,7 +1362,7 @@ function spcFilter() {
     if (cookie) {
         return dataNotIn(data, 'FILTER', JSON.parse(cookie))
     }
-    return []
+    return data
 
 }
 
