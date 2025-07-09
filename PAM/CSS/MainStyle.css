@@ -496,7 +496,7 @@ tr:nth-child(even) {
     background: #f4f8fb;
 }
 
-#refresh-button{
+#refresh-button {
     width: 80%;
     margin: 2px auto;
     background: #e6f1fa;
@@ -505,6 +505,97 @@ tr:nth-child(even) {
     cursor: pointer;
     transition: background 0.2s;
 }
-#refresh-button:hover{
-   background: #cce6fa;
+
+#refresh-button:hover {
+    background: #cce6fa;
+}
+
+/*
+Make Entity table into something more appealing, like small clickable squares.
+*/
+
+.tool-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.tool-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    cursor: pointer;
+    width: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
+    border: 1px solid #e0e6eb;
+}
+
+.tool-header {
+    background: linear-gradient(135deg, #2644c9, #302739);
+    color: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tool-header h2 {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.tool-header span {
+    font-size: 0.85em;
+    opacity: 0.9;
+}
+
+.tool-content {
+    display: none;
+    padding: 20px;
+    background-color: #f9fafb;
+    color: #333;
+}
+
+.tool-card.expanded .tool-content {
+    display: block;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #e0e6ed;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+th {
+    background-color: #eef3f8;
+    font-weight: 600;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 999;
+    display: none;
+}
+
+.overlay.active {
+    display: block;
 }

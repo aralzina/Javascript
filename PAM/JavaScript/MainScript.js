@@ -25,6 +25,10 @@ const CHANGELOG = [
         DESCRIPTION: 'Starting the changelog to record future changes.'
     },
 ]
+let activeCard = null;
+let originalRect = null;
+
+
 
 
 // CEID JSON list
@@ -169,28 +173,28 @@ function dataIn(data, key, values) {
    * @param {Array|*} values values to include
    * @returns {*}
    */
-function dataNotIn (data, key, values) {
-  // fix simple error of values not being an array
-  values = !Array.isArray(values) ? [values] : values
-  let results = []
-  data.forEach(row => {
-    let check = row[key]
-    let found = false
-    //try {
-    values.forEach(val => {
-      if (val === check) {
-          found = true
-        //throw BreakException
-      }
+function dataNotIn(data, key, values) {
+    // fix simple error of values not being an array
+    values = !Array.isArray(values) ? [values] : values
+    let results = []
+    data.forEach(row => {
+        let check = row[key]
+        let found = false
+        //try {
+        values.forEach(val => {
+            if (val === check) {
+                found = true
+                //throw BreakException
+            }
+        })
+        if (!found) {
+            results.push(row)
+        }
+        //} catch (e) {
+        // if (e !== BreakException) throw e
+        //}
     })
-    if(!found){
-      results.push(row)
-    }
-    //} catch (e) {
-    // if (e !== BreakException) throw e
-    //}
-  })
-  return results
+    return results
 }
 
 /**
@@ -283,14 +287,14 @@ function dataEquals(data, key, val, dataType) {
  * @param {*} val specific value of data to be excluded
  * @returns
  */
-function dataNotEquals (data, key, val) {
-  let results = []
-  data.forEach(row => {
-    if (row[key].toString().toUpperCase() !== val.toString().toUpperCase()) {
-      results.push(row)
-    }
-  })
-  return results
+function dataNotEquals(data, key, val) {
+    let results = []
+    data.forEach(row => {
+        if (row[key].toString().toUpperCase() !== val.toString().toUpperCase()) {
+            results.push(row)
+        }
+    })
+    return results
 }
 
 /**
@@ -395,6 +399,55 @@ function getPrefix(arr, n) {
     return results
 }
 
+
+function expandCard(event, card) {
+    event.stopPropagation();
+    if (activeCard) return;
+
+    originalRect = card.getBoundingClientRect();
+    activeCard = card;
+
+    const overlay = document.getElementById('overlay');
+    overlay.classList.add('active');
+
+    card.style.position = 'fixed';
+    card.style.top = originalRect.top + 'px';
+    card.style.left = originalRect.left + 'px';
+    card.style.width = originalRect.width + 'px';
+    card.style.height = originalRect.height + 'px';
+    card.style.margin = 0;
+    card.style.zIndex = 1000;
+    card.classList.add('expanded');
+
+    requestAnimationFrame(() => {
+        card.style.transition = 'all 0.4s ease';
+        card.style.top = '50%';
+        card.style.left = '50%';
+        card.style.transform = 'translate(-50%, -50%)';
+        card.style.width = '90vw';
+        card.style.height = 'auto';
+    });
+}
+
+function closeCard() {
+    if (!activeCard || !originalRect) return;
+
+    const card = activeCard;
+    const overlay = document.getElementById('overlay');
+    overlay.classList.remove('active');
+
+    card.style.top = originalRect.top + 'px';
+    card.style.left = originalRect.left + 'px';
+    card.style.width = originalRect.width + 'px';
+    card.style.height = originalRect.height + 'px';
+    card.style.transform = 'none';
+
+    setTimeout(() => {
+        card.removeAttribute('style');
+        card.classList.remove('expanded');
+        activeCard = null;
+    }, 400);
+}
 
 function pamTable(entity) {
     // Create the main table element
@@ -936,6 +989,10 @@ function initTables() {
             setTimeout(attachZoneHoverListeners, 200);
         });
     });
+
+    document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeCard();
+        });
 }
 
 function checkAndQuery() {
@@ -1138,6 +1195,11 @@ function loadPage() {
     initEqModal()
     initTestSelectModal()
 
+    // add listener for cards
+     document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeCard();
+        });
+        
     // Step 2
     checkAndQuery() ? monitorStatus() : console.log('Failed check and query')
 
@@ -1172,7 +1234,7 @@ function parseData() {
     initTables()
 
     // broken out for readability
-    function entityTable(entity) {
+    function entityTable1(entity) {
         // make table
         const table = create('table', { id: `${entity}-table` })
 
@@ -1247,7 +1309,69 @@ function parseData() {
             header.classList.add('expanded');
         }
     }, PAM_HEADER_EXPAND_DELAY_MS);
+
+
+    /* Testing
+    *
+    */
+
+    function entityTable(entity) {
+        // get the data
+        const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0];
+
+        // Create the outer container
+        const container = create('div', { className: 'tool-card', 'data-entity': entity });
+        container.onclick = (e) => expandCard(e, container);
+
+        // Header
+        const header = create('div', { className: 'tool-header' });
+        header.appendChild(create('h2', {}, { textContent: entity }));
+        header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
+        container.appendChild(header);
+
+        // Content (initially hidden)
+        const content = create('div', { className: 'tool-content' });
+
+        // Subtable
+        const subtable = pamTable(entity);
+        content.appendChild(subtable);
+
+        container.appendChild(content);
+        return container;
+    }
+
 }
+
+/* Testing
+*
+*/
+
+
+function entityTable(entity) {
+    // get the data
+    const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0];
+
+    // Create the outer container
+    const container = create('div', { className: 'tool-card', 'data-entity': entity });
+    container.onclick = (e) => expandCard(e, container);
+
+    // Header
+    const header = create('div', { className: 'tool-header' });
+    header.appendChild(create('h2', {}, { textContent: entity }));
+    header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
+    container.appendChild(header);
+
+    // Content (initially hidden)
+    const content = create('div', { className: 'tool-content' });
+
+    // Subtable
+    const subtable = pamTable(entity);
+    content.appendChild(subtable);
+
+    container.appendChild(content);
+    return container;
+}
+
 
 function filterData() {
 
