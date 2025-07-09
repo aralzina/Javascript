@@ -991,8 +991,8 @@ function initTables() {
     });
 
     document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeCard();
-        });
+        if (e.key === 'Escape') closeCard();
+    });
 }
 
 function checkAndQuery() {
@@ -1196,10 +1196,10 @@ function loadPage() {
     initTestSelectModal()
 
     // add listener for cards
-     document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeCard();
-        });
-        
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeCard();
+    });
+
     // Step 2
     checkAndQuery() ? monitorStatus() : console.log('Failed check and query')
 
@@ -1320,11 +1320,11 @@ function parseData() {
         const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0];
 
         // Create the outer container
-        const container = create('div', { className: 'tool-card', 'data-entity': entity });
+        const container = create('div', {}, { className: 'tool-card', 'data-entity': entity });
         container.onclick = (e) => expandCard(e, container);
 
         // Header
-        const header = create('div', { className: 'tool-header' });
+        const header = create('div', {}, { className: 'tool-header' });
         header.appendChild(create('h2', {}, { textContent: entity }));
         header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
         container.appendChild(header);
