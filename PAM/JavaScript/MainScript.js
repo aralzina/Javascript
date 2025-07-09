@@ -972,6 +972,7 @@ function attachZoneHoverListeners() {
 function initTables() {
 
     // Toggle subtable visibility
+    /*
     document.querySelectorAll('.expandable').forEach(function (cell) {
         cell.addEventListener('click', function () {
             var subtableId = 'subtable-' + this.getAttribute('data-entity');
@@ -982,7 +983,7 @@ function initTables() {
                 subtableRow.classList.add('open');
             }
         });
-    });
+    });*/
     attachZoneHoverListeners()
     document.querySelectorAll('.expandable').forEach(function (cell) {
         cell.addEventListener('click', function () {
@@ -1234,6 +1235,47 @@ function parseData() {
     initTables()
 
     // broken out for readability
+    function entityTable(entity) {
+        // get the data
+        const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0];
+
+        // Create the outer container
+        const container = create('div', {}, { className: 'tool-card', 'data-entity': entity });
+        container.onclick = (e) => expandCard(e, container);
+
+                
+        // Header
+        const header = create('div', {'data-entity' :entity}, { className: 'tool-header' });
+        header.appendChild(create('h2', {}, { textContent: entity }));
+        header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
+        container.appendChild(header);
+
+        // Content (initially hidden)
+        const content = create('div', {},{ className: 'tool-content'});
+        const scrollDiv = create('div',{style:'overflow:auto; height: 800px;'})
+
+        // Subtable
+        const subtable = pamTable(entity);
+        content.appendChild(scrollDiv);
+        scrollDiv.appendChild(subtable)
+
+        container.appendChild(content);
+        return container;
+    }
+    // hide loading overlay
+    hideLoading()
+
+    // activate header animation
+    setTimeout(function () {
+        var header = document.querySelector('.pam-header');
+        if (header) {
+            header.classList.add('expanded');
+        }
+    }, PAM_HEADER_EXPAND_DELAY_MS);
+
+
+
+    /* old version
     function entityTable1(entity) {
         // make table
         const table = create('table', { id: `${entity}-table` })
@@ -1299,77 +1341,8 @@ function parseData() {
 
         return table
     }
-    // hide loading overlay
-    hideLoading()
-
-    // activate header animation
-    setTimeout(function () {
-        var header = document.querySelector('.pam-header');
-        if (header) {
-            header.classList.add('expanded');
-        }
-    }, PAM_HEADER_EXPAND_DELAY_MS);
-
-
-    /* Testing
-    *
     */
 
-    function entityTable(entity) {
-        // get the data
-        const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0];
-
-        // Create the outer container
-        const container = create('div', {}, { className: 'tool-card', 'data-entity': entity });
-        container.onclick = (e) => expandCard(e, container);
-
-        // Header
-        const header = create('div', {}, { className: 'tool-header' });
-        header.appendChild(create('h2', {}, { textContent: entity }));
-        header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
-        container.appendChild(header);
-
-        // Content (initially hidden)
-        const content = create('div', { className: 'tool-content' });
-
-        // Subtable
-        const subtable = pamTable(entity);
-        content.appendChild(subtable);
-
-        container.appendChild(content);
-        return container;
-    }
-
-}
-
-/* Testing
-*
-*/
-
-
-function entityTable(entity) {
-    // get the data
-    const data = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0];
-
-    // Create the outer container
-    const container = create('div', { className: 'tool-card', 'data-entity': entity });
-    container.onclick = (e) => expandCard(e, container);
-
-    // Header
-    const header = create('div', { className: 'tool-header' });
-    header.appendChild(create('h2', {}, { textContent: entity }));
-    header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
-    container.appendChild(header);
-
-    // Content (initially hidden)
-    const content = create('div', { className: 'tool-content' });
-
-    // Subtable
-    const subtable = pamTable(entity);
-    content.appendChild(subtable);
-
-    container.appendChild(content);
-    return container;
 }
 
 
