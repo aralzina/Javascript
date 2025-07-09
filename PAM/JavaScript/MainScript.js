@@ -20,6 +20,11 @@ const CHANGELOG = [
         DESCRIPTION:''
     },
     */
+   
+    { 
+        DATE:'7/9/2025',
+        DESCRIPTION:'Restyled the main GUI so that each entity is a small container that expands out. The previous version had too many tables that blended together.'
+    },
     {
         DATE: '7/4/2025',
         DESCRIPTION: 'Starting the changelog to record future changes.'
