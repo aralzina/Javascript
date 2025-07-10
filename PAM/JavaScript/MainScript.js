@@ -1251,7 +1251,7 @@ function parseData() {
                 
         // Header
         const header = create('div', {'data-entity' :entity}, { className: 'tool-header' });
-        header.appendChild(create('h2', {}, { textContent: entity }));
+        header.appendChild(create('h2', {}, { textContent: `${data.CEID}\r\n${entity}` }));
         header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
         container.appendChild(header);
 
