@@ -457,7 +457,7 @@ function closeCard() {
     }, 400);
 }
 
-function pamTable(entity) {
+function ampTable(entity) {
     // Create the main table element
     let parentTable, testNames, sections, SPCbody;
 
@@ -518,7 +518,7 @@ function pamTable(entity) {
                 if (SPCbody.length === 0) {
                     tr = create('tr')
                     thead.appendChild(tr)
-                    th = create('th', { colspan: "14", style: 'text-align: center; font-size: 2em;' }, { textContent: 'SPC' })
+                    th = create('th', { colspan: "14", style: 'text-align: center; font-size: 2em;' }, { textContent: 'SPC - (Hover over zone cell for chart)' })
                     tr.appendChild(th)
                 }
 
@@ -1267,7 +1267,7 @@ function parseData() {
         const scrollDiv = create('div',{style:'overflow:auto; height: 800px;'})
 
         // Subtable
-        const subtable = pamTable(entity);
+        const subtable = ampTable(entity);
         content.appendChild(scrollDiv);
         scrollDiv.appendChild(subtable)
 
