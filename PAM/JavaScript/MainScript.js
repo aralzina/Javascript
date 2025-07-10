@@ -20,7 +20,10 @@ const CHANGELOG = [
         DESCRIPTION:''
     },
     */
-   
+    { 
+        DATE:'7/10/2025',
+        DESCRIPTION:'Renamed report to AMP. Edited tool container colors.'
+    },
     { 
         DATE:'7/9/2025',
         DESCRIPTION:'Restyled the main GUI so that each entity is a small container that expands out. The previous version had too many tables that blended together.'
@@ -1222,13 +1225,16 @@ function parseData() {
 
     // get main
     const main = document.getElementsByClassName('main-content')[0]
+    const wrapDiv = create('div',{style:'display: flex; flex-wrap: wrap; gap: 8px; align-items: anchor-center;'},{})
+
     main.innerHTML = '<h1 style="text-align:center;">Down Entity Table</h1>'
+    main.appendChild(wrapDiv)
 
     // loop entities and build/attach tables
     unique(DATASETS.ENTITY_LIST.DATA, 'ENTITY').forEach(e => {
         try {
             if (e.length >= 6) {
-                main.appendChild(entityTable(e))
+                wrapDiv.appendChild(entityTable(e))
             }
         } catch (err) {
             //hide loading overlay
