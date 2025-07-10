@@ -536,7 +536,7 @@ Make Entity table into something more appealing, like small clickable squares.
 .tool-header {
     background: linear-gradient(135deg, #0068b5, #00233d);
     color: #ffffff;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     gap: 4px;
