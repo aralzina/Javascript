@@ -20,13 +20,13 @@ const CHANGELOG = [
         DESCRIPTION:''
     },
     */
-    { 
-        DATE:'7/10/2025',
-        DESCRIPTION:'Renamed report to AMP. Edited tool container colors.'
+    {
+        DATE: '7/10/2025',
+        DESCRIPTION: 'Renamed report to AMP. Edited tool container colors.'
     },
-    { 
-        DATE:'7/9/2025',
-        DESCRIPTION:'Restyled the main GUI so that each entity is a small container that expands out. The previous version had too many tables that blended together.'
+    {
+        DATE: '7/9/2025',
+        DESCRIPTION: 'Restyled the main GUI so that each entity is a small container that expands out. The previous version had too many tables that blended together.'
     },
     {
         DATE: '7/4/2025',
@@ -459,10 +459,20 @@ function closeCard() {
 
 function ampTable(entity) {
     // Create the main table element
-    let parentTable, testNames, sections, SPCbody;
+    let parentTable, testNames, sections, SPCbody,tr,td;
 
     // create table
     parentTable = create('table', {}, { className: 'subtable' })
+
+    // add RTM section if available
+    let rtmSection = buildRTMSection()
+    if(rtmSection){
+        tr = create('tr')
+        td = create('td')
+        parentTable.appendChild(tr)
+        tr.appendChild(td)
+        td.appendChild(rtmSection)
+    }
 
     // add Workorder section
     let workOrderData = dataEquals(DATASETS.WORK_ORDERS.DATA, 'TOOLNAME', entity)
@@ -692,6 +702,34 @@ function ampTable(entity) {
 
     function buildEntityHistorySection() {
         //TODO
+    }
+
+    function buildRTMSection() {
+        const PROCESS_CHECK = '1278'
+        try {
+            let entityData = dataEquals(DATASETS.ENTITY_LIST.DATA, 'ENTITY', entity)[0]
+            if (entityData.ENTITY_TYPE.includes(PROCESS_CHECK)) {
+                let rtmtable = create('table')
+                let rtmbody = create('tbody')
+
+                rtmtable.appendChild(rtmbody)
+                let rtmtr = create('tr')
+                rtmbody.appendChild(rtmtr)
+                rtmtr.appendChild(create('th',{style:'text-align: center; font-size: 2em;'},{textContent:'RTM Link'}))
+                rtmtr = create('tr')
+                rtmbody.appendChild(rtmtr)
+                let rtmtd = create('td',{style:'text-align: center;'})
+                rtmtr.appendChild(rtmtd)
+                rtmtd.appendChild(create('a',{target:'_blank',href:`https://f32sawitap.f32prod.mfg.intel.com/Home/RTMReport?Process=${PROCESS_CHECK}&CEID=${entityData.CEID}`},{textContent:'Click Here'}))
+                return rtmtable
+
+            } else {
+                return null
+            }
+        } catch (e) {
+            return null
+        }
+
     }
 
 
@@ -1225,9 +1263,9 @@ function parseData() {
 
     // get main
     const main = document.getElementsByClassName('main-content')[0]
-    const wrapDiv = create('div',{style:'display: flex; flex-wrap: wrap; gap: 8px; align-items: anchor-center;'},{})
+    const wrapDiv = create('div', { style: 'display: flex; flex-wrap: wrap; gap: 8px; align-items: anchor-center;' }, {})
 
-    main.innerHTML = '<h1 style="text-align:center;">Down Entity Table</h1>'
+    main.innerHTML = '<h1 style="text-align:center;">Entity List</h1>'
     main.appendChild(wrapDiv)
 
     // loop entities and build/attach tables
@@ -1254,17 +1292,17 @@ function parseData() {
         const container = create('div', {}, { className: 'tool-card', 'data-entity': entity });
         container.onclick = (e) => expandCard(e, container);
 
-                
+
         // Header
-        const header = create('div', {'data-entity' :entity}, { className: 'tool-header' });
+        const header = create('div', { 'data-entity': entity }, { className: 'tool-header' });
         header.appendChild(create('h2', {}, { textContent: `${data.CEID}` }));
-        header.appendChild(create('h2',{},{textContent:`${entity}`}))
+        header.appendChild(create('h2', {}, { textContent: `${entity}` }))
         header.appendChild(create('span', {}, { textContent: `Logged ${data.STATE} on ${data.LAST_EVENT_DATE}` }));
         container.appendChild(header);
 
         // Content (initially hidden)
-        const content = create('div', {},{ className: 'tool-content'});
-        const scrollDiv = create('div',{style:'overflow:auto; height: 800px;'})
+        const content = create('div', {}, { className: 'tool-content' });
+        const scrollDiv = create('div', { style: 'overflow:auto; height: 800px;' })
 
         // Subtable
         const subtable = ampTable(entity);
